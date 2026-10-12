@@ -200,6 +200,17 @@ export async function getLpsList() {
   return getLpsListCached();
 }
 
+export async function getVehicleCounts() {
+  const row = await dbOne<{ total: number; active: number; inactive: number }>(`
+    SELECT
+      COUNT(*)::int AS total,
+      COUNT(*) FILTER (WHERE active = TRUE)::int AS active,
+      COUNT(*) FILTER (WHERE active = FALSE)::int AS inactive
+    FROM vehicles
+  `);
+  return row || { total: 0, active: 0, inactive: 0 };
+}
+
 async function getDeviceListUncached() {
   return dbQuery<Record<string, string | number | boolean | null>>(`
     SELECT d.*,

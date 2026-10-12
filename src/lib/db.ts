@@ -430,6 +430,15 @@ async function ensureSerialDevice(client: PoolClient) {
 }
 
 async function syncOct2026MasterArmada(client: PoolClient) {
+  // Pastikan sinkronisasi awal master Oktober 2026 hanya dieksekusi sekali.
+  // Jangan menimpa status armada yang telah diaktifkan/dinonaktifkan secara manual oleh pengguna.
+  const syncCheck = await client.query<{ value: string }>(
+    "SELECT value FROM settings WHERE key = 'oct_2026_master_synced'"
+  );
+  if (syncCheck.rows[0]?.value === "true") {
+    return;
+  }
+
   const lpsRows = await client.query<{ id: number; code: string; name: string }>("SELECT id, code, name FROM lps");
   const lpsMap = new Map<string, number>();
   for (const l of lpsRows.rows) {
@@ -442,9 +451,9 @@ async function syncOct2026MasterArmada(client: PoolClient) {
 
   const octPlateSet = new Set(octArmada.map((a: any) => a.plate_normalized));
 
-  // Nonaktifkan armada lama di luar Harapan Jaya Oktober 2026
+  // Nonaktifkan armada lama di luar Harapan Jaya Oktober 2026 hanya jika belum ditandai
   await client.query(
-    "UPDATE vehicles SET active = FALSE, code = 'ARM-HIST-' || LPAD(id::text, 4, '0') WHERE plate_normalized NOT IN (" +
+    "UPDATE vehicles SET active = FALSE, code = 'ARM-HIST-' || LPAD(id::text, 4, '0') WHERE code NOT LIKE 'ARM-HIST-%' AND plate_normalized NOT IN (" +
       Array.from(octPlateSet).map((_, i) => `$${i + 1}`).join(", ") +
       ")",
     Array.from(octPlateSet)
@@ -569,6 +578,12 @@ async function syncOct2026MasterArmada(client: PoolClient) {
       );
     }
   }
+
+  await client.query(`
+    INSERT INTO settings (key, value)
+    VALUES ('oct_2026_master_synced', 'true')
+    ON CONFLICT (key) DO UPDATE SET value = 'true', updated_at = NOW()
+  `);
 }
 
 // Reset promise jika modul di-compile ulang oleh Next.js

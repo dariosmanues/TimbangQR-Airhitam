@@ -2,7 +2,7 @@ import Link from "next/link";
 import { QrCode, Search, ShieldCheck, Truck, MapPin, Building2, User } from "lucide-react";
 import VehicleCreateForm from "@/components/VehicleCreateForm";
 import VehicleStatusToggle from "@/components/VehicleStatusToggle";
-import { getLpsList, listVehicles } from "@/lib/queries";
+import { getLpsList, listVehicles, getVehicleCounts } from "@/lib/queries";
 import { formatNumber } from "@/lib/utils";
 
 export const runtime = "nodejs";
@@ -16,7 +16,11 @@ export default async function ArmadaPage({
   const params = await searchParams;
   const q = params.q || "";
   const filter = params.status || "active";
-  const [vehicles, lps] = await Promise.all([listVehicles(q, filter), getLpsList()]);
+  const [vehicles, lps, counts] = await Promise.all([
+    listVehicles(q, filter),
+    getLpsList(),
+    getVehicleCounts(),
+  ]);
 
   return (
     <>
@@ -31,7 +35,7 @@ export default async function ArmadaPage({
           <h1>Master Armada</h1>
           <p>
             {formatNumber(vehicles.length)} armada terdaftar dalam database jembatan timbang.
-            {filter === "active" && " Menampilkan 68 armada resmi TPS Wilayah Harapan Jaya."}
+            {filter === "active" && ` Menampilkan ${counts.active} armada resmi TPS Wilayah Harapan Jaya.`}
           </p>
         </div>
         <VehicleCreateForm lpsOptions={lps} />
@@ -56,19 +60,19 @@ export default async function ArmadaPage({
             href={`/armada?status=active${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             className={`btn btn-sm ${filter === "active" ? "btn-primary" : "btn-secondary"}`}
           >
-            Harapan Jaya (68 Aktif)
+            Harapan Jaya ({counts.active} Aktif)
           </Link>
           <Link
             href={`/armada?status=all${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             className={`btn btn-sm ${filter === "all" ? "btn-primary" : "btn-secondary"}`}
           >
-            Semua Data (86)
+            Semua Data ({counts.total})
           </Link>
           <Link
             href={`/armada?status=inactive${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             className={`btn btn-sm ${filter === "inactive" ? "btn-primary" : "btn-secondary"}`}
           >
-            Riwayat Nonaktif (18)
+            Riwayat Nonaktif ({counts.inactive})
           </Link>
         </div>
       </div>
