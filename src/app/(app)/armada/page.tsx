@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { QrCode, Search, ShieldCheck, Truck, MapPin, Building2, User } from "lucide-react";
 import VehicleCreateForm from "@/components/VehicleCreateForm";
+import VehicleStatusToggle from "@/components/VehicleStatusToggle";
 import { getLpsList, listVehicles } from "@/lib/queries";
 import { formatNumber } from "@/lib/utils";
 
@@ -149,9 +150,12 @@ export default async function ArmadaPage({
                     )}
                   </td>
                   <td style={{ textAlign: "center" }}>
-                    <span className={`badge ${vehicle.active ? "green" : "red"}`}>
-                      <span className="dot" /> {vehicle.active ? "Aktif" : "Nonaktif"}
-                    </span>
+                    <VehicleStatusToggle
+                      vehicleId={vehicle.id}
+                      initialActive={vehicle.active}
+                      plateNumber={vehicle.plate_number}
+                      code={vehicle.code}
+                    />
                   </td>
                   <td className="num">
                     <Link className="btn btn-soft btn-sm" href={`/armada/${vehicle.id}`}>

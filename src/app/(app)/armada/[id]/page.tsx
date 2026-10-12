@@ -3,6 +3,7 @@ import { ArrowLeft, Gauge, ShieldCheck, FileText, MapPin, User, Calendar, Truck 
 import Image from "next/image";
 import Link from "next/link";
 import PrintButton from "@/components/PrintButton";
+import VehicleStatusToggle from "@/components/VehicleStatusToggle";
 import { getVehicle } from "@/lib/queries";
 import { formatDateTime, formatNumber } from "@/lib/utils";
 
@@ -24,9 +25,12 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           </Link>
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
             <h1 style={{ margin: 0 }}>{vehicle.plate_number}</h1>
-            <span className={`badge ${vehicle.active ? "green" : "red"}`}>
-              <span className="dot" /> {vehicle.active ? "Aktif" : "Nonaktif"}
-            </span>
+            <VehicleStatusToggle
+              vehicleId={vehicle.id}
+              initialActive={vehicle.active}
+              plateNumber={vehicle.plate_number}
+              code={vehicle.code}
+            />
           </div>
           <p style={{ marginTop: 4 }}>
             <strong>{vehicle.code}</strong> · {vehicle.vehicle_type}
