@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Power, Loader2, Sparkles } from "lucide-react";
+import { Check, Power, Loader2, ExternalLink } from "lucide-react";
 
 interface VehicleStatusToggleProps {
   vehicleId: number;
@@ -21,8 +21,14 @@ export default function VehicleStatusToggle({
 }: VehicleStatusToggleProps) {
   const [active, setActive] = useState(initialActive);
   const [loading, setLoading] = useState(false);
+  const [justActivated, setJustActivated] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const router = useRouter();
+
+  // Keep state in sync if parent prop changes
+  useEffect(() => {
+    setActive(initialActive);
+  }, [initialActive]);
 
   async function handleToggle(e: React.MouseEvent) {
     e.preventDefault();
@@ -53,14 +59,35 @@ export default function VehicleStatusToggle({
         throw new Error(data.error || "Gagal mengubah status armada");
       }
 
+      // 1. Immediately update client UI to Active / Inactive
       setActive(targetActive);
-      setToastMessage(targetActive ? "Berhasil diaktifkan!" : "Dinonaktifkan");
+      if (targetActive) {
+        setJustActivated(true);
+      }
+      setToastMessage(targetActive ? `✓ ${plateNumber} BERHASIL DIAKTIFKAN` : `Dinonaktifkan`);
 
-      // Clear toast after 2.5 seconds
-      setTimeout(() => setToastMessage(null), 2500);
+      // Clear toast after 3.5 seconds
+      setTimeout(() => setToastMessage(null), 3500);
 
-      // Refresh server-rendered counts and lists
-      router.refresh();
+      // 2. Dispatch custom event for any other components on the page
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("vehicle-status-updated", {
+            detail: { vehicleId, active: targetActive, plateNumber },
+          })
+        );
+      }
+
+      // 3. Smart refresh:
+      // If the user is currently on the "status=inactive" tab, DO NOT immediately refresh
+      // because refreshing will filter out the newly-activated vehicle and make it vanish from view!
+      // Instead, let the row stay visible with the green "Aktif" badge so the user sees the confirmation.
+      const isInactiveTab =
+        typeof window !== "undefined" && window.location.search.includes("status=inactive");
+
+      if (!isInactiveTab) {
+        router.refresh();
+      }
     } catch (err) {
       alert(err instanceof Error ? err.message : "Terjadi kesalahan sistem");
     } finally {
@@ -74,7 +101,7 @@ export default function VehicleStatusToggle({
         display: "inline-flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 3,
+        gap: 4,
         position: "relative",
       }}
     >
@@ -112,15 +139,17 @@ export default function VehicleStatusToggle({
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            padding: "5px 10px",
+            padding: "5px 12px",
             borderRadius: "999px",
             fontSize: 11,
             fontWeight: 800,
+            background: active ? "rgba(8,120,79,0.12)" : "rgba(195,61,61,0.1)",
+            color: active ? "#08784f" : "#c33d3d",
             boxShadow: active
               ? "0 2px 6px rgba(8,120,79,0.18)"
               : "0 2px 6px rgba(195,61,61,0.18)",
             border: active
-              ? "1px solid rgba(8,120,79,0.25)"
+              ? "1.5px solid rgba(8,120,79,0.35)"
               : "1px solid rgba(195,61,61,0.25)",
             cursor: "pointer",
             transition: "all 0.2s ease",
@@ -133,8 +162,15 @@ export default function VehicleStatusToggle({
             </>
           ) : (
             <>
-              <span className="dot" />
+              <span
+                className="dot"
+                style={{
+                  background: active ? "#08784f" : "#c33d3d",
+                  boxShadow: active ? "0 0 6px #08784f" : undefined,
+                }}
+              />
               <span>{active ? "Aktif" : "Nonaktif"}</span>
+
               {!active && (
                 <span
                   style={{
@@ -142,22 +178,24 @@ export default function VehicleStatusToggle({
                     alignItems: "center",
                     gap: 3,
                     marginLeft: 3,
-                    padding: "2px 6px",
+                    padding: "3px 8px",
                     background: "var(--primary, #08784f)",
                     color: "white",
                     borderRadius: "6px",
-                    fontSize: 9.5,
+                    fontSize: 10,
                     fontWeight: 900,
                     letterSpacing: "0.02em",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
                   }}
                 >
-                  <Power size={9} /> Aktifkan
+                  <Power size={10} /> Aktifkan
                 </span>
               )}
+
               {active && (
                 <Check
-                  size={11}
-                  style={{ opacity: 0.8, color: "var(--primary, #08784f)" }}
+                  size={12}
+                  style={{ color: "#08784f", strokeWidth: 3 }}
                 />
               )}
             </>
@@ -165,7 +203,26 @@ export default function VehicleStatusToggle({
         </span>
       </button>
 
-      {/* Instant visual feedback message */}
+      {/* Persistent success badge if activated on this view */}
+      {justActivated && active && (
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 3,
+            fontSize: 10,
+            fontWeight: 800,
+            color: "#08784f",
+            background: "rgba(8,120,79,0.08)",
+            padding: "2px 6px",
+            borderRadius: 4,
+          }}
+        >
+          <Check size={10} strokeWidth={3} /> Status Kini Aktif
+        </span>
+      )}
+
+      {/* Instant visual popup toast message */}
       {toastMessage && (
         <span
           style={{
@@ -174,15 +231,18 @@ export default function VehicleStatusToggle({
             left: "50%",
             transform: "translateX(-50%)",
             marginTop: 4,
-            padding: "2px 8px",
+            padding: "3px 10px",
             background: active ? "#08784f" : "#c33d3d",
             color: "white",
-            fontSize: 10,
-            fontWeight: 700,
+            fontSize: 10.5,
+            fontWeight: 800,
             borderRadius: 6,
             whiteSpace: "nowrap",
-            zIndex: 10,
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            zIndex: 30,
+            boxShadow: "0 4px 14px rgba(0,0,0,0.2)",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
           }}
         >
           {toastMessage}
