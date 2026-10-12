@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import ExcelJS from "exceljs";
 import { getSession } from "@/lib/auth";
 import { dbQuery } from "@/lib/db";
-import { getMonthlyReport } from "@/lib/queries";
+import { DATA_START_DATE, getMonthlyReport } from "@/lib/queries";
 import { monthLabel } from "@/lib/utils";
 
 export const runtime = "nodejs";
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const url = new URL(request.url);
-  const month = url.searchParams.get("month") || "2026-05";
+  const month = url.searchParams.get("month") || new Date().toISOString().slice(0, 7);
   if (!/^\d{4}-\d{2}$/.test(month)) {
     return NextResponse.json({ error: "Format bulan tidak valid." }, { status: 400 });
   }
@@ -25,8 +25,9 @@ export async function GET(request: Request) {
       status, source_note
     FROM weighings
     WHERE to_char(timezone($1, weighed_at), 'YYYY-MM') = $2
+      AND timezone($1, weighed_at) >= ($3::text || ' 00:00:00')::timestamp
     ORDER BY weighed_at, id
-  `, [appTimeZone, month]);
+  `, [appTimeZone, month, DATA_START_DATE]);
 
   const vehicles = await dbQuery<Record<string, string | number | null>>(`
     SELECT

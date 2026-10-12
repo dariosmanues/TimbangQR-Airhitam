@@ -11,7 +11,8 @@ export default async function ReportPage({
   searchParams: Promise<{ month?: string }>;
 }) {
   const params = await searchParams;
-  const month = params.month || "2026-05";
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const month = params.month || currentMonth;
   const rows = await getMonthlyReport(month);
   const grandTotal = rows.reduce((sum, row) => sum + row.total, 0);
   const grandRitasi = rows.reduce((sum, row) => sum + row.ritasi, 0);

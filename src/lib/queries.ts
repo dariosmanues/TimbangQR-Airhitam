@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import type { AssignmentRow, VehicleRow, WeighingRow } from "./types";
 
 const appTimeZone = (process.env.APP_TIMEZONE || "Asia/Jakarta").trim();
+export const DATA_START_DATE = (process.env.DATA_START_DATE || "2026-10-12").trim();
 
 async function getDashboardDataUncached() {
   const latestMonthRow = await dbOne<{ month: string }>(`
@@ -11,7 +12,8 @@ async function getDashboardDataUncached() {
       to_char(timezone($1, NOW()), 'YYYY-MM')
     ) AS month
     FROM weighings
-  `, [appTimeZone]);
+    WHERE timezone($1, weighed_at) >= ($2::text || ' 00:00:00')::timestamp
+  `, [appTimeZone, DATA_START_DATE]);
   const latestMonth = latestMonthRow?.month || new Date().toISOString().slice(0, 7);
 
   const totals = await dbOne<{ transactions: number; tonnage: number; ritasi: number }>(`
@@ -22,7 +24,8 @@ async function getDashboardDataUncached() {
     FROM weighings
     WHERE status = 'COMPLETED'
       AND to_char(timezone($1, weighed_at), 'YYYY-MM') = $2
-  `, [appTimeZone, latestMonth]) || { transactions: 0, tonnage: 0, ritasi: 0 };
+      AND timezone($1, weighed_at) >= ($3::text || ' 00:00:00')::timestamp
+  `, [appTimeZone, latestMonth, DATA_START_DATE]) || { transactions: 0, tonnage: 0, ritasi: 0 };
 
   const vehicleRow = await dbOne<{ count: number }>(
     "SELECT COUNT(*)::int AS count FROM vehicles WHERE active = TRUE"
@@ -39,10 +42,11 @@ async function getDashboardDataUncached() {
     FROM weighings
     WHERE status = 'COMPLETED'
       AND to_char(timezone($1, weighed_at), 'YYYY-MM') = $2
+      AND timezone($1, weighed_at) >= ($3::text || ' 00:00:00')::timestamp
     GROUP BY lps_name
     ORDER BY total_kg DESC
     LIMIT 8
-  `, [appTimeZone, latestMonth]);
+  `, [appTimeZone, latestMonth, DATA_START_DATE]);
 
   const daily = await dbQuery<{ day: string; total_kg: number }>(`
     SELECT
@@ -51,17 +55,19 @@ async function getDashboardDataUncached() {
     FROM weighings
     WHERE status = 'COMPLETED'
       AND to_char(timezone($1, weighed_at), 'YYYY-MM') = $2
+      AND timezone($1, weighed_at) >= ($3::text || ' 00:00:00')::timestamp
     GROUP BY day
     ORDER BY day
-  `, [appTimeZone, latestMonth]);
+  `, [appTimeZone, latestMonth, DATA_START_DATE]);
 
   const latest = await dbQuery<WeighingRow>(`
     SELECT id, ticket_number, weighed_at, plate_number, driver_name, lps_name,
       gross_kg, tare_kg, netto_1_kg, rafaksi_kg, netto_2_kg, ritasi, tare_source, status
     FROM weighings
+    WHERE timezone($1, weighed_at) >= ($2::text || ' 00:00:00')::timestamp
     ORDER BY weighed_at DESC, id DESC
     LIMIT 10
-  `);
+  `, [appTimeZone, DATA_START_DATE]);
 
   const reconciliationRow = await dbOne<{ value: string }>(
     "SELECT value FROM settings WHERE key = 'source_reconciliation'"
@@ -94,7 +100,7 @@ async function getDashboardDataUncached() {
 
 const getDashboardDataCached = unstable_cache(
   getDashboardDataUncached,
-  ["timbangqr-dashboard", appTimeZone],
+  ["timbangqr-dashboard", appTimeZone, DATA_START_DATE],
   { revalidate: 10 }
 );
 
@@ -150,9 +156,10 @@ export async function getVehicle(id: number) {
       gross_kg, tare_kg, netto_1_kg, rafaksi_kg, netto_2_kg, ritasi, tare_source, status
     FROM weighings
     WHERE vehicle_id = $1
+      AND timezone($2, weighed_at) >= ($3::text || ' 00:00:00')::timestamp
     ORDER BY weighed_at DESC, id DESC
     LIMIT 20
-  `, [id]);
+  `, [id, appTimeZone, DATA_START_DATE]);
 
   return { vehicle, assignments, weighings };
 }
@@ -179,9 +186,10 @@ export async function listWeighings(filters: {
       OR lps_name ILIKE $1)
       AND ($2 = '' OR to_char(timezone($3, weighed_at), 'YYYY-MM') = $2)
       AND ($4 = '' OR lps_name = $4)
+      AND timezone($3, weighed_at) >= ($5::text || ' 00:00:00')::timestamp
     ORDER BY weighed_at DESC, id DESC
-    LIMIT $5
-  `, [search, month, appTimeZone, lps, limit]);
+    LIMIT $6
+  `, [search, month, appTimeZone, lps, DATA_START_DATE, limit]);
 }
 
 async function getLpsListUncached() {
@@ -249,9 +257,10 @@ export async function getMonthlyReport(month: string) {
     FROM weighings
     WHERE status = 'COMPLETED'
       AND to_char(timezone($1, weighed_at), 'YYYY-MM') = $2
+      AND timezone($1, weighed_at) >= ($3::text || ' 00:00:00')::timestamp
     GROUP BY lps_name, day
     ORDER BY lps_name, day
-  `, [appTimeZone, month]);
+  `, [appTimeZone, month, DATA_START_DATE]);
 
   const map = new Map<string, { name: string; days: number[]; total: number; ritasi: number }>();
   for (const row of rows) {

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, Crop, Eye, EyeOff, RefreshCw, RotateCcw, Cpu, CheckCircle2, Save, Settings, Link2, Copy, Check, X } from "lucide-react";
 import type { Worker } from "tesseract.js";
+import { getCameraStreamWithFallback, formatCameraErrorMessage } from "@/lib/cameraHelper";
 
 export type LedWeightReading = {
   weightKg: number;
@@ -1046,14 +1047,10 @@ export default function LedWeightScanner({
     yoloFailCountRef.current = 0;
     try {
       const activeCamId = targetCamId !== undefined ? targetCamId : cameraId;
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: {
-          deviceId: activeCamId ? { exact: activeCamId } : undefined,
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: "environment",
-        },
+      const stream = await getCameraStreamWithFallback(activeCamId || undefined, {
+        facingMode: "environment",
+        preferredWidth: 1280,
+        preferredHeight: 720,
       });
       streamRef.current = stream;
       if (videoRef.current) {
@@ -1069,7 +1066,7 @@ export default function LedWeightScanner({
       }, 120);
     } catch (error) {
       stop();
-      setMessage(error instanceof Error ? error.message : "Kamera LED tidak dapat diaktifkan.");
+      setMessage(formatCameraErrorMessage(error, "Kamera LED"));
     }
   }
 

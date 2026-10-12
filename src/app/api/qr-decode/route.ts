@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-const DEFAULT_YOLO_URL = "https://width-frankfurt-recent-courtesy.trycloudflare.com";
+const DEFAULT_YOLO_URL = process.env.YOLO_OCR_URL || "http://127.0.0.1:5001";
 
 function resolveTargetUrl(request: Request, body?: { yoloUrl?: string }): string {
   const headerUrl = request.headers.get("x-yolo-url");

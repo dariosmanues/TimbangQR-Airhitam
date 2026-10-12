@@ -167,7 +167,7 @@ async function createSchema(client: PoolClient) {
 
     ALTER TABLE vehicles DROP CONSTRAINT IF EXISTS vehicles_plate_normalized_key;
     CREATE INDEX IF NOT EXISTS idx_vehicles_plate_normalized ON vehicles(plate_normalized);
-    CREATE UNIQUE INDEX IF NOT EXISTS idx_vehicles_nomor_izin ON vehicles(nomor_izin);
+    CREATE INDEX IF NOT EXISTS idx_vehicles_nomor_izin ON vehicles(nomor_izin);
 
     CREATE TABLE IF NOT EXISTS vehicle_assignments (
       id SERIAL PRIMARY KEY,

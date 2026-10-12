@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { QrCode, ShieldCheck, Usb } from "lucide-react";
@@ -5,9 +6,25 @@ import LoginForm from "./LoginForm";
 
 export const runtime = "nodejs";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string; next?: string; yolo_url?: string; yoloUrl?: string }>;
+}) {
   const user = await getSession();
-  if (user) redirect("/dashboard");
+  const params = await searchParams;
+
+  if (user) {
+    const target = params.redirect || params.next;
+    if (target) {
+      redirect(target);
+    } else if (params.yolo_url || params.yoloUrl) {
+      const yUrl = params.yolo_url || params.yoloUrl;
+      redirect(`/scan?yolo_url=${encodeURIComponent(yUrl || "")}`);
+    } else {
+      redirect("/dashboard");
+    }
+  }
 
   return (
     <main className="login-page">
@@ -24,7 +41,9 @@ export default async function LoginPage() {
             <span><Usb size={17} style={{ verticalAlign: "middle", marginRight: 8 }} /> Koneksi langsung melalui adapter USB–RS232/RS485</span>
           </div>
         </div>
-        <LoginForm />
+        <Suspense fallback={<div>Memuat form login...</div>}>
+          <LoginForm />
+        </Suspense>
       </section>
     </main>
   );

@@ -25,7 +25,10 @@ dist/
 !models/7segment_yolo.pt
 !models/7segment_yolo.onnx
 crop_media*.png
+crop_*.png
 hasil_opencv_*.png
 debug_yolo_outputs/
 bridge-desktop/dist/
 cloudflared.exe
+__pycache__/
+*.pyc

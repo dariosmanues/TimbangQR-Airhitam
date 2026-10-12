@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, CheckCircle2, Keyboard, RefreshCw, ScanLine, Sparkles, Upload } from "lucide-react";
 import { tokenFromValue } from "@/lib/qr-token";
 import { decodeQrRgba } from "@/lib/qr-image-decode";
+import { getCameraStreamWithFallback, formatCameraErrorMessage } from "@/lib/cameraHelper";
 
 declare global {
   interface Window {
@@ -144,16 +145,11 @@ export default function QrScanner({ onToken }: { onToken: (token: string) => voi
     isDecodingRef.current = false;
 
     try {
-      const constraints: MediaStreamConstraints = {
-        video: {
-          deviceId: cameraId ? { exact: cameraId } : undefined,
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-          facingMode: { ideal: "environment" },
-        },
-      };
-
-      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      const stream = await getCameraStreamWithFallback(cameraId || undefined, {
+        facingMode: "environment",
+        preferredWidth: 1280,
+        preferredHeight: 720,
+      });
       streamRef.current = stream;
 
       if (!videoRef.current) return;
@@ -265,7 +261,7 @@ export default function QrScanner({ onToken }: { onToken: (token: string) => voi
       }, 90);
     } catch (error) {
       stop();
-      setMessage(error instanceof Error ? error.message : "Kamera tidak dapat diaktifkan.");
+      setMessage(formatCameraErrorMessage(error, "Kamera QR"));
     }
   }
 

@@ -1,15 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { LogIn } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { LogIn, Zap } from "lucide-react";
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("admin@lps.local");
   const [password, setPassword] = useState("Admin123!");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Ambil parameter redirect dan yolo_url
+  const redirectParam = searchParams.get("redirect") || searchParams.get("next") || "";
+  const yoloUrlParam = searchParams.get("yolo_url") || searchParams.get("yoloUrl") || "";
+
+  // Simpan yolo_url ke localStorage segera agar tidak hilang
+  useEffect(() => {
+    if (yoloUrlParam && typeof window !== "undefined") {
+      localStorage.setItem("timbangqr_yolo_url", yoloUrlParam.trim());
+    }
+  }, [yoloUrlParam]);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -24,7 +36,18 @@ export default function LoginForm() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Login gagal");
-      router.replace("/dashboard");
+
+      // Tentukan target redirect: utamakan redirectParam, lalu scan jika ada yolo_url, atau dashboard
+      let target = redirectParam;
+      if (!target) {
+        if (yoloUrlParam) {
+          target = `/scan?yolo_url=${encodeURIComponent(yoloUrlParam)}`;
+        } else {
+          target = "/dashboard";
+        }
+      }
+
+      router.replace(target);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login gagal");
@@ -39,6 +62,30 @@ export default function LoginForm() {
         <h2>Masuk ke aplikasi</h2>
         <p>Gunakan akun operator atau administrator.</p>
       </div>
+
+      {yoloUrlParam && (
+        <div style={{
+          background: "#ecfdf5",
+          border: "1px solid #a7f3d0",
+          borderRadius: 8,
+          padding: "10px 12px",
+          fontSize: 12,
+          color: "#065f46",
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginBottom: 14
+        }}>
+          <Zap size={16} color="#059669" />
+          <div>
+            <strong>Koneksi YOLO AI Cloud Aktif</strong>
+            <div style={{ fontSize: 11, color: "#047857" }}>
+              Setelah masuk, Anda akan otomatis dialihkan ke halaman Scan & Timbang.
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="field">
         <label>Email</label>
         <input className="input" value={email} onChange={(e) => setEmail(e.target.value)} type="email" required />
@@ -49,7 +96,7 @@ export default function LoginForm() {
       </div>
       {error && <div className="error">{error}</div>}
       <button className="btn btn-primary" disabled={loading} type="submit">
-        <LogIn size={18} /> {loading ? "Memeriksa..." : "Masuk"}
+        <LogIn size={18} /> {loading ? "Memeriksa..." : yoloUrlParam ? "Masuk & Lanjut ke Timbang" : "Masuk"}
       </button>
       <div className="help">
         Akun awal: <strong>admin@lps.local</strong> / <strong>Admin123!</strong>. Ganti lewat berkas <code>.env</code> sebelum database pertama kali dibuat.
