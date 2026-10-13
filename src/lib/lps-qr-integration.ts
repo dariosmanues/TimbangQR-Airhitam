@@ -84,16 +84,26 @@ export async function linkVerifiedLpsArmada(armada: LpsArmada): Promise<Resolved
     // a vehicle by plate alone when another permit uses that plate.
     let candidate: VehicleLookup | null = vehicleRows[0] || null;
     if (vehicleRows.length > 1) {
+      const activeRows = vehicleRows.filter(v => v.active);
+      const rowsToMatch = activeRows.length > 0 ? activeRows : vehicleRows;
       const matchedPermit = armada.noIzinOperasi
-        ? vehicleRows.filter(v => v.nomor_izin === armada.noIzinOperasi)
+        ? rowsToMatch.filter(v => v.nomor_izin === armada.noIzinOperasi)
         : [];
       const matches = matchedPermit.length
         ? matchedPermit
-        : vehicleRows.filter(v => v.nama_lps && normalizeLpsName(v.nama_lps) === normalizeLpsName(armada.namaLps));
-      if (matches.length !== 1) {
+        : rowsToMatch.filter(v => v.nama_lps && normalizeLpsName(v.nama_lps) === normalizeLpsName(armada.namaLps));
+      if (matches.length > 1) {
+        const uniqueLps = new Set(matches.map(v => normalizeLpsName(v.nama_lps || "")));
+        if (uniqueLps.size === 1) {
+          candidate = matches.find(v => v.code && !v.code.startsWith("OLD-")) || matches[0];
+        } else {
+          throw new LpsQrError("Nomor polisi digunakan beberapa LPS; identitas izin QR tidak cukup untuk memilih armada.", 409);
+        }
+      } else if (matches.length === 1) {
+        candidate = matches[0];
+      } else {
         throw new LpsQrError("Nomor polisi digunakan beberapa LPS; identitas izin QR tidak cukup untuk memilih armada.", 409);
       }
-      candidate = matches[0];
     }
     if (candidate && !candidate.active) {
       throw new LpsQrError("Armada pada TimbangQR sudah dinonaktifkan. Aktifkan melalui master armada dahulu.", 409);

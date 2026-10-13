@@ -5,7 +5,7 @@ import type { AssignmentRow, VehicleRow } from "@/lib/types";
 import { normalizeLpsName, normalizePlate, LpsQrError } from "@/lib/lps-qr-identity";
 
 export function parseLegacyArmadaQr(token: string): string | null {
-  const match = /^ARMADA-([A-Z]{1,3}\d{1,6}[A-Z]{0,4})$/i.exec(token.trim());
+  const match = /^ARMADA-([A-Z]{1,3}\d{1,6}[A-Z]{0,4})(?:-[A-Za-z0-9]+)?$/i.exec(token.trim());
   return match ? normalizePlate(match[1]) : null;
 }
 
@@ -121,7 +121,15 @@ export async function assertLegacyQrNotRevoked(
   const result = body as {
     success?: boolean;
     valid?: boolean;
-    data?: { normalizedPlate?: string; platNomor?: string; qrCode?: string; isActive?: boolean };
+    isMultiLpsVerified?: boolean;
+    isMultiLps?: boolean;
+    data?: {
+      normalizedPlate?: string;
+      platNomor?: string;
+      qrCode?: string;
+      isActive?: boolean;
+      isMultiLpsVerified?: boolean;
+    };
   };
   if (result.success !== true || !result.data ||
       typeof result.data.qrCode !== "string" ||
@@ -132,6 +140,13 @@ export async function assertLegacyQrNotRevoked(
   if (result.valid !== true || result.data.isActive !== true) {
     throw new LpsQrError("Armada sedang tidak aktif di LPS.", 403);
   }
+
+  // Jika armada melayani lebih dari 1 LPS dan sudah diverifikasi oleh operator:
+  // Buka akses QR fisik ARMADA-{plate} agar operator timbangan dapat memilih LPS yang sedang membawa muatan sampah
+  if (result.isMultiLpsVerified === true || result.data.isMultiLpsVerified === true) {
+    return;
+  }
+
   // Exact payload comparison, never "same plate" matching.
   if (result.data.qrCode !== presentedQr) {
     throw new LpsQrError(
