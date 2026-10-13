@@ -115,7 +115,14 @@ export async function POST(request: Request) {
       const id = inserted.rows[0].id;
 
       // Catat token QR sebagai HANGUS agar tidak bisa discan/dipakai ulang
-      if (input.qrToken && input.qrToken.trim()) {
+      // PENTING: QR MASTER ARMADA bersifat PERMANEN dan TIDAK PERNAH DIHANGUSKAN!
+      // Hanya token slip sekali pakai LPS (berawalan LPS-) yang dicatat ke burned_qr_tokens.
+      const isMasterQr = !input.qrToken ||
+        /^ARMADA-/i.test(input.qrToken.trim()) ||
+        /^QR-ARMADA-/i.test(input.qrToken.trim()) ||
+        !input.qrToken.trim().toUpperCase().startsWith("LPS-");
+
+      if (input.qrToken && input.qrToken.trim() && !isMasterQr) {
         try {
           await client.query(`
             INSERT INTO burned_qr_tokens (qr_token, plate_number, ticket_number, vehicle_id, burned_at)

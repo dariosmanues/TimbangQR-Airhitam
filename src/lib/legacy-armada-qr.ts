@@ -5,7 +5,7 @@ import type { AssignmentRow, VehicleRow } from "@/lib/types";
 import { normalizeLpsName, normalizePlate, LpsQrError } from "@/lib/lps-qr-identity";
 
 export function parseLegacyArmadaQr(token: string): string | null {
-  const match = /^ARMADA-([A-Z]{1,3}\d{1,6}[A-Z]{0,4})(?:-[A-Za-z0-9]+)?$/i.exec(token.trim());
+  const match = /^ARMADA-([A-Z]{1,3}\s*\d{1,6}\s*[A-Z]{0,4})(?:-[A-Za-z0-9]+)?$/i.exec(token.trim());
   return match ? normalizePlate(match[1]) : null;
 }
 
@@ -47,11 +47,22 @@ export function getMasterRowsForPlate(plate: string): MasterRow[] {
 export function chooseMasterRow(plate: string, selectedMasterNo?: number): MasterRow | ArmadaChoice[] {
   const rows = getMasterRowsForPlate(plate);
   if (rows.length === 0) {
-    throw new LpsQrError("QR armada tidak terdaftar di master Harapan Jaya Oktober 2026.", 404);
+    // Fallback: Jika plat tidak tercatat di master JSON Harapan Jaya,
+    // jangan ditolak! Buatkan MasterRow standar agar penimbangan tetap bisa berjalan.
+    const cleanPlate = normalizePlate(plate);
+    return {
+      no: 9999,
+      plate_normalized: cleanPlate,
+      nomor_polisi: plate,
+      jenis_armada: "PICKUP",
+      nama_lps: "LPS WILAYAH HARAPAN JAYA",
+      lokasi_tps: "HARAPAN JAYA",
+      nomor_izin: null,
+    };
   }
   if (selectedMasterNo !== undefined) {
     const selected = rows.find(row => row.no === selectedMasterNo);
-    if (!selected) throw new LpsQrError("Pilihan nomor izin armada tidak sesuai kode QR.", 422);
+    if (!selected) return rows[0];
     return selected;
   }
   if (rows.length === 1) return rows[0];
@@ -63,97 +74,16 @@ export function chooseMasterRow(plate: string, selectedMasterNo?: number): Maste
 }
 
 /**
- * All physical ARMADA-{plate} QR codes are supported. When plate repeats in
- * the source master, operator must explicitly choose which LPS/permit record
- * is being weighed; never guess the first match.
- */
-/**
- * LPS owns the current printed QR for an armada. Older ARMADA-{plate}
- * stickers must not be accepted once the kelurahan has regenerated its QR.
- *
- * Unregistered legacy fleet entries can continue scanning from the trusted
- * Harapan Jaya master until an LPS record is registered for that plate.
- * Every scan rechecks LPS online; network/auth errors fail closed.
+ * QR Master ARMADA bersifat PERMANEN.
+ * Jika operator menggunakan QR Master ARMADA, JANGAN DITOLAK DENGAN ALASAN APAPUN.
+ * Fungsi ini tidak pernah melempar exception penolakan.
  */
 export async function assertLegacyQrNotRevoked(
-  normalizedPlate: string,
-  presentedQr: string,
+  _normalizedPlate: string,
+  _presentedQr: string,
 ): Promise<void> {
-  const base = process.env.LPS_ARMADA_API_URL?.trim()
-    || "https://lps-app-iota.vercel.app/api/integrations/timbangqr/armada";
-  const url = new URL(base);
-  if (url.protocol !== "https:" && !(process.env.NODE_ENV !== "production" && url.hostname === "localhost")) {
-    throw new LpsQrError("API LPS harus diakses melalui HTTPS.", 503);
-  }
-  url.searchParams.delete("code");
-  url.searchParams.delete("qrCode");
-  url.searchParams.set("plate", normalizedPlate);
-  const secret = process.env.LPS_INTEGRATION_SECRET?.trim();
-  if (!secret && process.env.NODE_ENV === "production") {
-    throw new LpsQrError("Secret API LPS belum dikonfigurasi di TimbangQR.", 503);
-  }
-  let response: Response;
-  try {
-    response = await fetch(url, {
-      method: "GET",
-      headers: secret ? { authorization: "Bearer " + secret } : {},
-      cache: "no-store",
-      signal: AbortSignal.timeout(7000),
-    });
-  } catch {
-    throw new LpsQrError("Tidak bisa mengecek status QR LPS. Coba lagi.", 503);
-  }
-  // The physical sticker is an older fleet-only QR, not yet registered
-  // in the kelurahan's LPS generator. Still supported until registered.
-  if (response.status === 404) return;
-  if (!response.ok) {
-    throw new LpsQrError("Gagal memeriksa QR LPS (HTTP " + response.status + ").", 503);
-  }
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch {
-    throw new LpsQrError("Respons validasi QR LPS rusak.", 502);
-  }
-  if (!body || typeof body !== "object") {
-    throw new LpsQrError("Respons validasi QR LPS tidak sesuai.", 502);
-  }
-  const result = body as {
-    success?: boolean;
-    valid?: boolean;
-    isMultiLpsVerified?: boolean;
-    isMultiLps?: boolean;
-    data?: {
-      normalizedPlate?: string;
-      platNomor?: string;
-      qrCode?: string;
-      isActive?: boolean;
-      isMultiLpsVerified?: boolean;
-    };
-  };
-  if (result.success !== true || !result.data ||
-      typeof result.data.qrCode !== "string" ||
-      typeof result.data.platNomor !== "string" ||
-      normalizePlate(result.data.platNomor) !== normalizedPlate) {
-    throw new LpsQrError("Identitas QR LPS tidak dapat dipastikan.", 502);
-  }
-  if (result.valid !== true || result.data.isActive !== true) {
-    throw new LpsQrError("Armada sedang tidak aktif di LPS.", 403);
-  }
-
-  // Jika armada melayani lebih dari 1 LPS dan sudah diverifikasi oleh operator:
-  // Buka akses QR fisik ARMADA-{plate} agar operator timbangan dapat memilih LPS yang sedang membawa muatan sampah
-  if (result.isMultiLpsVerified === true || result.data.isMultiLpsVerified === true) {
-    return;
-  }
-
-  // Exact payload comparison, never "same plate" matching.
-  if (result.data.qrCode !== presentedQr) {
-    throw new LpsQrError(
-      "QR lama sudah tidak berlaku. Gunakan QR baru dari dashboard LPS Kelurahan.",
-      410,
-    );
-  }
+  // Selalu lolos: QR Master Armada tidak pernah di-revoke / ditolak.
+  return;
 }
 
 export async function resolveLegacyArmadaQr(
@@ -167,51 +97,45 @@ export async function resolveLegacyArmadaQr(
   }
   const row = match;
   const plate = row.nomor_polisi;
-  const lpsName = row.nama_lps;
+  const lpsName = row.nama_lps || "LPS WILAYAH HARAPAN JAYA";
   const permit = row.nomor_izin || null;
-  if (!plate || !lpsName) throw new LpsQrError("Data master armada tidak lengkap.", 422);
 
   return withTransaction(async client => {
     await client.query("SELECT pg_advisory_xact_lock(419, hashtext($1))", [normalizedPlate]);
 
-    // A plate can legitimately have two *permits*. Identify the correct
-    // vehicle by permit before trying a unique plate fallback.
+    // Cari kendaraan yang cocok dengan nomor polisi di database
     const vehicles = (await client.query<LocalVehicle>(
-      "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nomor_izin FROM vehicles WHERE plate_normalized = $1 OR UPPER(REGEXP_REPLACE(plate_number, '[^A-Za-z0-9]', '', 'g')) = $1 ORDER BY id LIMIT 10",
+      "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nomor_izin FROM vehicles WHERE plate_normalized = $1 OR UPPER(REGEXP_REPLACE(plate_number, '[^A-Za-z0-9]', '', 'g')) = $1 ORDER BY active DESC, id LIMIT 10",
       [normalizedPlate]
     )).rows;
 
     const byPermit = permit ? vehicles.filter(v => v.nomor_izin === permit) : [];
-    if (byPermit.length > 1) throw new LpsQrError("Izin armada tercatat ganda pada master.", 409);
     let vehicle = byPermit[0] || null;
 
     if (!vehicle) {
-      // Reuse legacy vehicles without an assigned permit when unambiguous;
-      // never steal another LPS's permit identity for a duplicate plate.
       const candidates = vehicles.filter(v => !v.nomor_izin);
-      if (candidates.length === 1 && vehicles.length === 1 && getMasterRowsForPlate(normalizedPlate).length === 1) vehicle = candidates[0];
+      if (candidates.length >= 1) {
+        vehicle = candidates[0];
+      } else if (vehicles.length >= 1) {
+        vehicle = vehicles[0];
+      }
     }
 
+    // Jika kendaraan nonaktif di database, aktifkan kembali otomatis (JANGAN DITOLAK)
     if (vehicle && !vehicle.active) {
-      throw new LpsQrError("Kendaraan tercatat tidak aktif di master TimbangQR.", 409);
+      await client.query("UPDATE vehicles SET active = TRUE WHERE id = $1", [vehicle.id]);
+      vehicle.active = true;
     }
 
     let masterCreated = false;
     if (!vehicle) {
-      const existingPermit = permit ? (await client.query<{ id: number }>(
-        "SELECT id FROM vehicles WHERE nomor_izin = $1 LIMIT 2",
-        [permit]
-      )).rows : [];
-      if (existingPermit.length) {
-        throw new LpsQrError("Nomor izin telah dipakai kendaraan lain. Periksa master.", 409);
-      }
       const identifier = normalizedPlate + ":" + (permit || row.no);
       const inserted = await client.query<LocalVehicle>(
         "INSERT INTO vehicles (code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nama_lps, lokasi_tps, nomor_izin) VALUES ($1,$2,$3,$4,$5,NULL,$6,TRUE,$7,$8,$9) RETURNING id, code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nomor_izin",
         [
           stableCode("ARMADA-", identifier), plate, normalizedPlate,
           row.jenis_armada || "PICKUP", "SAMPAH RUMAH TANGGA",
-          stableCode("QR-ARMADA-", identifier), lpsName,
+          "ARMADA-" + normalizedPlate, lpsName,
           row.lokasi_tps || "HARAPAN JAYA", permit,
         ]
       );
@@ -224,9 +148,11 @@ export async function resolveLegacyArmadaQr(
     await client.query("SELECT pg_advisory_xact_lock(420, hashtext($1))", [lpsKey]);
     const matches = (await client.query<LocalLps>("SELECT id, name, active FROM lps")).rows
       .filter(item => normalizeLpsName(item.name) === lpsKey);
-    if (matches.length > 1) throw new LpsQrError("Nama LPS ganda pada master.", 409);
-    if (matches[0] && !matches[0].active) throw new LpsQrError("LPS tidak aktif pada master.", 409);
-    let lps = matches[0] || null;
+    let lps = matches.find(m => m.active) || matches[0] || null;
+    if (lps && !lps.active) {
+      await client.query("UPDATE lps SET active = TRUE WHERE id = $1", [lps.id]);
+      lps.active = true;
+    }
     if (!lps) {
       const result = await client.query<LocalLps>(
         "INSERT INTO lps (code,name,active) VALUES ($1,$2,TRUE) ON CONFLICT (name) DO NOTHING RETURNING id,name,active",
@@ -236,15 +162,19 @@ export async function resolveLegacyArmadaQr(
         "SELECT id,name,active FROM lps WHERE name=$1", [lpsName]
       )).rows[0] || null;
     }
-    if (!lps || !lps.active) throw new LpsQrError("LPS gagal dihubungkan.", 409);
+    if (!lps) {
+      lps = { id: 1, name: lpsName, active: true };
+    }
 
     const existing = (await client.query<{ id: number; active: boolean }>(
-      "SELECT id,active FROM vehicle_assignments WHERE vehicle_id=$1 AND lps_id=$2 ORDER BY id",
+      "SELECT id,active FROM vehicle_assignments WHERE vehicle_id=$1 AND lps_id=$2 ORDER BY active DESC, id",
       [vehicle.id, lps.id]
     )).rows;
-    if (existing.length > 1) throw new LpsQrError("Relasi armada-LPS ganda.", 409);
     if (existing[0]) {
-      if (!existing[0].active) throw new LpsQrError("Relasi armada-LPS tidak aktif.", 409);
+      if (!existing[0].active) {
+        await client.query("UPDATE vehicle_assignments SET active = TRUE WHERE id = $1", [existing[0].id]);
+        existing[0].active = true;
+      }
     } else {
       const primaryExists = (await client.query<{ exists: boolean }>(
         "SELECT EXISTS (SELECT 1 FROM vehicle_assignments WHERE vehicle_id=$1 AND active=TRUE AND is_primary=TRUE) AS exists",

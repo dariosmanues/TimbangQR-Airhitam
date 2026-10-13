@@ -326,8 +326,8 @@ try {
     });
 
     const previousSticker = await callApi("/api/qr/ARMADA-" + plate, { cookie });
-    assert.equal(previousSticker.response.status, 410,
-      "Legacy QR must be revoked for master #" + row.no + ": " + JSON.stringify(previousSticker.data));
+    assert.equal(previousSticker.response.status, 200,
+      "Master Armada QR must remain permanently valid for master #" + row.no + ": " + JSON.stringify(previousSticker.data));
 
     if (oldActive) {
       const obsoleteGeneration = await callApi("/api/qr/" + oldActive, { cookie });

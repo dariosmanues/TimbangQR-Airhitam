@@ -185,9 +185,14 @@ export default function WeighingWorkspace({ initialToken = "" }: { initialToken?
         }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Transaksi gagal disimpan");
+      const tokenUsed = scannedQrToken || token;
+      const isMaster = /^ARMADA-/i.test(tokenUsed) || !tokenUsed.toUpperCase().startsWith("LPS-");
       setResult({ ticketNumber: data.ticketNumber, netto2Kg: data.netto2Kg });
-      setMessage(`✓ Transaksi berhasil disimpan (Tiket #${data.ticketNumber}). QR Code telah hangus.`);
+      setMessage(
+        isMaster
+          ? `✓ Transaksi berhasil disimpan (Tiket #${data.ticketNumber}). QR Master Armada tetap aktif & siap digunakan kembali.`
+          : `✓ Transaksi berhasil disimpan (Tiket #${data.ticketNumber}). QR Code LPS sekali pakai telah selesai.`
+      );
       setScannedQrToken("");
       setToken("");
       setPayload(null);

@@ -38,7 +38,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           </p>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
-          <Link className="btn btn-secondary" href={`/scan?token=${vehicle.qr_token}`}>
+          <Link className="btn btn-secondary" href={`/scan?token=ARMADA-${vehicle.plate_normalized || vehicle.plate_number.replace(/\s+/g, "")}`}>
             <Gauge size={17} /> Timbang armada
           </Link>
           <PrintButton />
@@ -55,17 +55,20 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
             unoptimized
           />
           <h2 style={{ letterSpacing: "0.08em" }}>{vehicle.plate_number}</h2>
-          <p style={{ marginBottom: 6 }}>{vehicle.code}</p>
+          <p style={{ marginBottom: 4 }}><strong>{vehicle.code}</strong></p>
+          <div style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: "var(--primary)", marginBottom: 8 }}>
+            ARMADA-{vehicle.plate_normalized || vehicle.plate_number.replace(/\s+/g, "")}
+          </div>
           {vehicle.nomor_izin && (
             <span className="badge" style={{ fontSize: 11, marginBottom: 8, fontFamily: "monospace" }}>
               {vehicle.nomor_izin}
             </span>
           )}
-          <span className={`badge ${vehicle.active ? "green" : "red"}`}>
-            {vehicle.active ? "QR AKTIF · SIAP TIMBANG" : "NONAKTIF"}
+          <span className="badge green" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+            <ShieldCheck size={13} /> QR MASTER PERMANEN · SIAP TIMBANG
           </span>
           <div className="help" style={{ marginTop: 14 }}>
-            Tempelkan QR pada kaca depan atau bodi armada untuk scan cepat di jembatan timbang.
+            QR Master Armada Permanen resmi TPS Harapan Jaya. Dapat digunakan berulang kali untuk penimbangan tanpa batas waktu dan tidak pernah hangus.
           </div>
         </article>
 
