@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PrintButton from "@/components/PrintButton";
 import VehicleStatusToggle from "@/components/VehicleStatusToggle";
+import VehicleDetailQrButtons from "@/components/VehicleDetailQrButtons";
 import { getVehicle } from "@/lib/queries";
 import { formatDateTime, formatNumber } from "@/lib/utils";
 
@@ -37,7 +38,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
             {vehicle.nomor_izin && ` · Izin: ${vehicle.nomor_izin}`}
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
           <Link className="btn btn-secondary" href={`/scan?token=ARMADA-${vehicle.plate_normalized || vehicle.plate_number.replace(/\s+/g, "")}`}>
             <Gauge size={17} /> Timbang armada
           </Link>
@@ -67,6 +68,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           <span className="badge green" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
             <ShieldCheck size={13} /> QR MASTER PERMANEN · SIAP TIMBANG
           </span>
+          <VehicleDetailQrButtons vehicle={vehicle} />
           <div className="help" style={{ marginTop: 14 }}>
             QR Master Armada Permanen resmi TPS Harapan Jaya. Dapat digunakan berulang kali untuk penimbangan tanpa batas waktu dan tidak pernah hangus.
           </div>

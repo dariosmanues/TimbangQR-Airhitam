@@ -2,6 +2,8 @@ import Link from "next/link";
 import { QrCode, Search, ShieldCheck, Truck, MapPin, Building2, User } from "lucide-react";
 import VehicleCreateForm from "@/components/VehicleCreateForm";
 import VehicleStatusToggle from "@/components/VehicleStatusToggle";
+import ArmadaRowActions from "@/components/ArmadaRowActions";
+import ArmadaQuickQrModal from "@/components/ArmadaQuickQrModal";
 import { getLpsList, listVehicles, getVehicleCounts } from "@/lib/queries";
 import { formatNumber } from "@/lib/utils";
 
@@ -38,7 +40,10 @@ export default async function ArmadaPage({
             {filter === "active" && ` Menampilkan ${counts.active} armada resmi TPS Wilayah Harapan Jaya.`}
           </p>
         </div>
-        <VehicleCreateForm lpsOptions={lps} />
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <ArmadaQuickQrModal vehicles={vehicles} />
+          <VehicleCreateForm lpsOptions={lps} />
+        </div>
       </div>
 
       <div className="toolbar" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", marginBottom: 18 }}>
@@ -162,9 +167,7 @@ export default async function ArmadaPage({
                     />
                   </td>
                   <td className="num">
-                    <Link className="btn btn-soft btn-sm" href={`/armada/${vehicle.id}`}>
-                      <QrCode size={14} /> Detail & QR
-                    </Link>
+                    <ArmadaRowActions vehicle={vehicle} />
                   </td>
                 </tr>
               ))}
