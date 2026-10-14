@@ -105,7 +105,7 @@ const getDashboardDataCached = unstable_cache(
 );
 
 export async function getDashboardData() {
-  return getDashboardDataCached();
+  return getDashboardDataUncached();
 }
 
 export async function listVehicles(search = "", filter: "active" | "all" | "inactive" = "active") {

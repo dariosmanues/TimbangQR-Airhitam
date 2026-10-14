@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getSession } from "@/lib/auth";
 import { dbOne, withTransaction } from "@/lib/db";
@@ -169,6 +170,9 @@ export async function POST(request: Request) {
       indicatorRaw: input.indicatorRaw || undefined,
       qrCode: input.qrToken || undefined,
     });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/transaksi");
 
     return NextResponse.json({
       ok: true,
