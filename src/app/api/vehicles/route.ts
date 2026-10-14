@@ -8,15 +8,27 @@ import type { VehicleRow } from "@/lib/types";
 
 export const runtime = "nodejs";
 const createSchema = z.object({
-  plateNumber: z.string().min(3),
+  plateNumber: z.string().min(3, "Nomor polisi minimal 3 karakter"),
   driverName: z.string().optional().default(""),
   vehicleType: z.string().min(1).default("PICKUP"),
+  wasteType: z.string().min(1).default("SAMPAH RUMAH TANGGA"),
+  tareKg: z.union([z.string(), z.number()]).optional().nullable(),
   lpsId: z.preprocess(
     (value) => value === "" || value == null ? undefined : value,
-    z.coerce.number().int().positive().optional()
+    z.coerce.number().int().positive().optional().nullable()
   ),
-  tareKg: z.union([z.string(), z.number()]).optional(),
-  wasteType: z.string().min(1).default("SAMPAH RUMAH TANGGA"),
+  nomorIzin: z.string().optional().nullable(),
+  noUrut: z.preprocess(
+    (value) => value === "" || value == null ? undefined : value,
+    z.coerce.number().int().optional().nullable()
+  ),
+  namaLps: z.string().optional().nullable(),
+  namaKetuaLps: z.string().optional().nullable(),
+  kelurahanLps: z.string().optional().nullable(),
+  kecamatanLps: z.string().optional().nullable(),
+  wilayahKerja: z.string().optional().nullable(),
+  lokasiTps: z.string().optional().default("HARAPAN JAYA"),
+  active: z.boolean().optional().default(true),
 });
 
 export async function GET(request: Request) {
@@ -26,10 +38,11 @@ export async function GET(request: Request) {
   const q = `%${url.searchParams.get("q") || ""}%`;
   const rows = await dbQuery<VehicleRow>(`
     SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type,
-      default_tare_kg, qr_token, active
+      default_tare_kg, qr_token, active, no_urut, nomor_izin, nama_lps,
+      kelurahan_lps, kecamatan_lps, wilayah_kerja, lokasi_tps
     FROM vehicles
-    WHERE plate_number ILIKE $1 OR code ILIKE $1
-    ORDER BY plate_normalized
+    WHERE plate_number ILIKE $1 OR code ILIKE $1 OR nomor_izin ILIKE $1 OR nama_lps ILIKE $1
+    ORDER BY no_urut ASC NULLS LAST, plate_normalized
   `, [q]);
   return NextResponse.json(rows);
 }
@@ -42,49 +55,107 @@ export async function POST(request: Request) {
     const input = createSchema.parse(await request.json());
     const normalized = normalizePlate(input.plateNumber);
     const plateNumber = displayPlate(input.plateNumber);
-    const existing = await dbOne<{ id: number }>(
-      "SELECT id FROM vehicles WHERE plate_normalized = $1",
-      [normalized]
-    );
+
+    // Cek duplikasi armada
+    let existingQuery = "SELECT id FROM vehicles WHERE plate_normalized = $1";
+    const existingParams: unknown[] = [normalized];
+    if (input.nomorIzin && input.nomorIzin.trim()) {
+      existingQuery += " AND nomor_izin = $2";
+      existingParams.push(input.nomorIzin.trim());
+    }
+    const existing = await dbOne<{ id: number }>(existingQuery, existingParams);
     if (existing) {
-      return NextResponse.json({ error: "Nomor polisi sudah terdaftar." }, { status: 409 });
+      return NextResponse.json(
+        { error: `Armada dengan nomor polisi ${plateNumber} sudah terdaftar.` },
+        { status: 409 }
+      );
     }
 
-    const qrToken = crypto.randomBytes(20).toString("hex");
-    const tareKg = input.tareKg === "" || input.tareKg === undefined ? null : toInt(input.tareKg);
+    let resolvedNamaLps = input.namaLps?.trim() || null;
+    if (input.lpsId && !resolvedNamaLps) {
+      const lpsRow = await dbOne<{ name: string }>("SELECT name FROM lps WHERE id = $1", [input.lpsId]);
+      if (lpsRow) resolvedNamaLps = lpsRow.name;
+    }
 
-    const vehicleId = await withTransaction(async (client) => {
-      // Menjaga pembuatan kode armada tetap unik ketika ada dua operator menambah data bersamaan.
+    const tareKg = input.tareKg === "" || input.tareKg == null ? null : toInt(input.tareKg);
+
+    const result = await withTransaction(async (client) => {
+      // Menjaga pembuatan kode armada tetap unik
       await client.query("SELECT pg_advisory_xact_lock($1)", [903202609]);
-      const countResult = await client.query<{ count: number }>(
-        "SELECT COUNT(*)::int AS count FROM vehicles"
+
+      const maxCodeResult = await client.query<{ max_code: string | null }>(
+        "SELECT MAX(code) AS max_code FROM vehicles WHERE code LIKE 'ARM-HJ-%'"
       );
-      const code = `ARM-HJ-${String((countResult.rows[0]?.count || 0) + 1).padStart(4, "0")}`;
+      let nextSeq = 1;
+      if (maxCodeResult.rows[0]?.max_code) {
+        const match = maxCodeResult.rows[0].max_code.match(/ARM-HJ-(\d+)/);
+        if (match) {
+          nextSeq = parseInt(match[1], 10) + 1;
+        }
+      }
+      const code = `ARM-HJ-${String(nextSeq).padStart(4, "0")}`;
+
+      const baseToken = `ARMADA-${normalized}`;
+      const tokenExists = await client.query("SELECT id FROM vehicles WHERE qr_token = $1", [baseToken]);
+      const qrToken = tokenExists.rows.length === 0 ? baseToken : `${baseToken}-${nextSeq}`;
 
       const inserted = await client.query<{ id: number }>(`
-        INSERT INTO vehicles
-          (code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING id
-      `, [code, plateNumber, normalized, input.vehicleType, input.wasteType, tareKg, qrToken]);
+        INSERT INTO vehicles (
+          code, plate_number, plate_normalized, vehicle_type, waste_type,
+          default_tare_kg, qr_token, active, no_urut, nomor_izin,
+          nama_lps, nama_ketua_lps, kelurahan_lps, kecamatan_lps,
+          wilayah_kerja, lokasi_tps
+        ) VALUES (
+          $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16
+        ) RETURNING id
+      `, [
+        code,
+        plateNumber,
+        normalized,
+        input.vehicleType,
+        input.wasteType,
+        tareKg,
+        qrToken,
+        input.active ?? true,
+        input.noUrut ?? null,
+        input.nomorIzin?.trim() || null,
+        resolvedNamaLps,
+        input.namaKetuaLps?.trim() || null,
+        input.kelurahanLps?.trim() || null,
+        input.kecamatanLps?.trim() || null,
+        input.wilayahKerja?.trim() || null,
+        input.lokasiTps?.trim() || "HARAPAN JAYA",
+      ]);
       const id = inserted.rows[0].id;
 
       if (input.lpsId) {
         await client.query(`
-          INSERT INTO vehicle_assignments (vehicle_id, lps_id, driver_name, tare_kg, is_primary)
-          VALUES ($1, $2, $3, $4, TRUE)
-        `, [id, input.lpsId, input.driverName || null, tareKg]);
+          INSERT INTO vehicle_assignments (vehicle_id, lps_id, driver_name, tare_kg, is_primary, active)
+          VALUES ($1, $2, $3, $4, TRUE, TRUE)
+        `, [id, input.lpsId, input.driverName || input.namaKetuaLps || null, tareKg]);
       }
 
       await client.query(`
         INSERT INTO audit_logs (user_id, action, entity_type, entity_id, new_data)
         VALUES ($1, 'CREATE', 'VEHICLE', $2, $3::jsonb)
-      `, [user.id, id, JSON.stringify({ code, plateNumber, normalized })]);
+      `, [user.id, id, JSON.stringify({
+        code,
+        plateNumber,
+        normalized,
+        tareKg,
+        namaLps: resolvedNamaLps,
+      })]);
 
-      return id;
+      return { id, code, plateNumber };
     });
 
-    return NextResponse.json({ ok: true, id: vehicleId }, { status: 201 });
+    return NextResponse.json({
+      ok: true,
+      id: result.id,
+      code: result.code,
+      plateNumber: result.plateNumber,
+      message: `Armada ${result.plateNumber} (${result.code}) berhasil ditambahkan.`,
+    }, { status: 201 });
   } catch (error) {
     return NextResponse.json({
       error: error instanceof Error ? error.message : "Data armada tidak valid.",

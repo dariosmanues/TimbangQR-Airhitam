@@ -2,16 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Download, QrCode, ExternalLink } from "lucide-react";
+import { Download, QrCode, Pencil, Trash2, Eye } from "lucide-react";
 import { downloadArmadaQrCard, type VehicleCardData } from "@/lib/qr-card-canvas";
 import ArmadaQrModal from "@/components/ArmadaQrModal";
+import ArmadaFormModal from "@/components/ArmadaFormModal";
+import ArmadaDeleteModal from "@/components/ArmadaDeleteModal";
 
 interface ArmadaRowActionsProps {
   vehicle: VehicleCardData;
+  lpsOptions?: Array<{ id: number; name: string }>;
 }
 
-export default function ArmadaRowActions({ vehicle }: ArmadaRowActionsProps) {
-  const [modalOpen, setModalOpen] = useState(false);
+export default function ArmadaRowActions({ vehicle, lpsOptions = [] }: ArmadaRowActionsProps) {
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
   async function handleDirectDownload(e: React.MouseEvent) {
@@ -34,20 +39,47 @@ export default function ArmadaRowActions({ vehicle }: ArmadaRowActionsProps) {
         style={{
           display: "inline-flex",
           alignItems: "center",
-          gap: 6,
+          gap: 5,
           justifyContent: "flex-end",
           whiteSpace: "nowrap",
         }}
       >
-        {/* Tombol Buka Modal Preview & Unduh */}
+        {/* Tombol Edit Armada (Update) */}
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          onClick={() => setEditModalOpen(true)}
+          title="Edit data & perizinan armada"
+          style={{ padding: "5px 9px", gap: 4 }}
+        >
+          <Pencil size={13} /> Edit
+        </button>
+
+        {/* Tombol Hapus Armada (Delete) */}
+        <button
+          type="button"
+          className="btn btn-sm"
+          onClick={() => setDeleteModalOpen(true)}
+          title="Hapus atau nonaktifkan armada"
+          style={{
+            padding: "5px 8px",
+            color: "var(--danger)",
+            backgroundColor: "#fff0f0",
+            border: "1px solid #fed7d7",
+          }}
+        >
+          <Trash2 size={13} />
+        </button>
+
+        {/* Tombol Buka Modal Preview & Unduh QR */}
         <button
           type="button"
           className="btn btn-primary btn-sm"
-          onClick={() => setModalOpen(true)}
+          onClick={() => setQrModalOpen(true)}
           title="Buka pratinjau dan menu unduh QR Armada"
-          style={{ gap: 5 }}
+          style={{ gap: 4, padding: "5px 9px" }}
         >
-          <QrCode size={13} /> QR & Unduh
+          <QrCode size={13} /> QR
         </button>
 
         {/* Tombol Unduh Cepat 1-Klik PNG */}
@@ -56,27 +88,44 @@ export default function ArmadaRowActions({ vehicle }: ArmadaRowActionsProps) {
           className="btn btn-soft btn-sm"
           onClick={handleDirectDownload}
           disabled={downloading}
-          title="Download langsung Kartu Stiker QR PNG (Lengkap No. Plat & Nama LPS)"
-          style={{ width: 34, height: 34, padding: 0 }}
+          title="Download langsung Kartu Stiker QR PNG"
+          style={{ width: 32, height: 32, padding: 0 }}
         >
           <Download size={13} />
         </button>
 
-        {/* Link ke Halaman Detail Armada */}
+        {/* Link ke Halaman Detail Armada (Read Detail) */}
         <Link
           className="btn btn-secondary btn-sm"
           href={`/armada/${vehicle.id}`}
           title="Lihat detail lengkap & riwayat penimbangan armada"
+          style={{ width: 32, height: 32, padding: 0, display: "grid", placeItems: "center" }}
         >
-          Detail
+          <Eye size={13} />
         </Link>
       </div>
 
       {/* Modal Dialog QR Card */}
       <ArmadaQrModal
         vehicle={vehicle}
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        isOpen={qrModalOpen}
+        onClose={() => setQrModalOpen(false)}
+      />
+
+      {/* Modal Dialog Edit Armada (Update) */}
+      <ArmadaFormModal
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        mode="edit"
+        vehicle={vehicle}
+        lpsOptions={lpsOptions}
+      />
+
+      {/* Modal Dialog Hapus Armada (Delete) */}
+      <ArmadaDeleteModal
+        isOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        vehicle={vehicle}
       />
     </>
   );

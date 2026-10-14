@@ -167,7 +167,7 @@ export default async function ArmadaPage({
                     />
                   </td>
                   <td className="num">
-                    <ArmadaRowActions vehicle={vehicle} />
+                    <ArmadaRowActions vehicle={vehicle} lpsOptions={lps} />
                   </td>
                 </tr>
               ))}

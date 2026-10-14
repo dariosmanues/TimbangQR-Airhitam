@@ -5,7 +5,8 @@ import Link from "next/link";
 import PrintButton from "@/components/PrintButton";
 import VehicleStatusToggle from "@/components/VehicleStatusToggle";
 import VehicleDetailQrButtons from "@/components/VehicleDetailQrButtons";
-import { getVehicle } from "@/lib/queries";
+import ArmadaDetailActions from "@/components/ArmadaDetailActions";
+import { getVehicle, getLpsList } from "@/lib/queries";
 import { formatDateTime, formatNumber } from "@/lib/utils";
 
 export const runtime = "nodejs";
@@ -13,7 +14,10 @@ export const dynamic = "force-dynamic";
 
 export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const result = await getVehicle(Number(id));
+  const [result, lps] = await Promise.all([
+    getVehicle(Number(id)),
+    getLpsList(),
+  ]);
   if (!result) return notFound();
   const { vehicle, assignments, weighings } = result;
 
@@ -39,6 +43,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           </p>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <ArmadaDetailActions vehicle={vehicle} lpsOptions={lps} />
           <Link className="btn btn-secondary" href={`/scan?token=ARMADA-${vehicle.plate_normalized || vehicle.plate_number.replace(/\s+/g, "")}`}>
             <Gauge size={17} /> Timbang armada
           </Link>
