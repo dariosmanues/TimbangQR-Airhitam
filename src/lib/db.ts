@@ -341,13 +341,8 @@ async function seedDatabase(client: PoolClient) {
     await client.query(`
       INSERT INTO vehicle_assignments
         (vehicle_id, lps_id, driver_name, tare_kg, is_primary)
-      SELECT $1, $2, $3, $4, $5
-      WHERE NOT EXISTS (
-        SELECT 1 FROM vehicle_assignments
-        WHERE vehicle_id = $1 AND lps_id = $2
-          AND COALESCE(driver_name, '') = COALESCE($3, '')
-          AND COALESCE(tare_kg, -1) = COALESCE($4, -1)
-      )
+      VALUES ($1, $2, $3, $4, $5)
+      ON CONFLICT DO NOTHING
     `, [vehicleId, lpsId, assignment.driverName, assignment.tareKg, assignment.isPrimary]);
   }
 
