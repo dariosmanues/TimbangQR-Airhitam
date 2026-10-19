@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import master from "../../data/master_armada_harapan_jaya_okt2026.json";
+import master from "../../data/master_armada_air_hitam_palas_216_okt2026.json";
 import { withTransaction } from "@/lib/db";
 import type { AssignmentRow, VehicleRow } from "@/lib/types";
 import { normalizeLpsName, normalizePlate, LpsQrError } from "@/lib/lps-qr-identity";
@@ -47,7 +47,7 @@ export function getMasterRowsForPlate(plate: string): MasterRow[] {
 export function chooseMasterRow(plate: string, selectedMasterNo?: number): MasterRow | ArmadaChoice[] {
   const rows = getMasterRowsForPlate(plate);
   if (rows.length === 0) {
-    // Fallback: Jika plat tidak tercatat di master JSON Harapan Jaya,
+    // Fallback: Jika plat tidak tercatat di master JSON Air Hitam,
     // jangan ditolak! Buatkan MasterRow standar agar penimbangan tetap bisa berjalan.
     const cleanPlate = normalizePlate(plate);
     return {
@@ -55,8 +55,8 @@ export function chooseMasterRow(plate: string, selectedMasterNo?: number): Maste
       plate_normalized: cleanPlate,
       nomor_polisi: plate,
       jenis_armada: "PICKUP",
-      nama_lps: "LPS WILAYAH HARAPAN JAYA",
-      lokasi_tps: "HARAPAN JAYA",
+      nama_lps: "LPS WILAYAH AIR HITAM",
+      lokasi_tps: "AIR HITAM",
       nomor_izin: null,
     };
   }
@@ -97,7 +97,7 @@ export async function resolveLegacyArmadaQr(
   }
   const row = match;
   const plate = row.nomor_polisi;
-  const lpsName = row.nama_lps || "LPS WILAYAH HARAPAN JAYA";
+  const lpsName = row.nama_lps || "LPS WILAYAH AIR HITAM";
   const permit = row.nomor_izin || null;
 
   return withTransaction(async client => {
@@ -136,7 +136,7 @@ export async function resolveLegacyArmadaQr(
           stableCode("ARMADA-", identifier), plate, normalizedPlate,
           row.jenis_armada || "PICKUP", "SAMPAH RUMAH TANGGA",
           "ARMADA-" + normalizedPlate, lpsName,
-          row.lokasi_tps || "HARAPAN JAYA", permit,
+          row.lokasi_tps || "AIR HITAM", permit,
         ]
       );
       vehicle = inserted.rows[0];

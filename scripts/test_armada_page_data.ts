@@ -1,20 +1,24 @@
-import { listVehicles } from "../src/lib/queries";
+import { listVehicles, getVehicleCounts } from "../src/lib/queries";
 import { closeDatabase } from "../src/lib/db";
 
 async function main() {
+  const counts = await getVehicleCounts();
+  console.log("Counts in DB:", counts);
+
   const activeVehicles = await listVehicles("", "active");
-  console.log(`Active vehicles count: ${activeVehicles.length}`);
-  console.log("First 3 active:");
-  for (const v of activeVehicles.slice(0, 3)) {
-    console.log(`- ${v.no_urut} | ${v.code} | ${v.plate_number} | ${v.nomor_izin} | ${v.nama_lps} | ${v.wilayah_kerja}`);
-  }
-  console.log("Last 3 active:");
-  for (const v of activeVehicles.slice(-3)) {
-    console.log(`- ${v.no_urut} | ${v.code} | ${v.plate_number} | ${v.nomor_izin} | ${v.nama_lps} | ${v.wilayah_kerja}`);
+  console.log(`Semua aktif count: ${activeVehicles.length}`);
+
+  const ahVehicles = await listVehicles("", "air_hitam");
+  console.log(`Air Hitam count: ${ahVehicles.length}`);
+
+  const palasVehicles = await listVehicles("", "palas");
+  console.log(`Palas count: ${palasVehicles.length}`);
+
+  console.log("\nSample 3 armada Palas:");
+  for (const v of palasVehicles.slice(0, 3)) {
+    console.log(`- ${v.no_urut} | ${v.code} | ${v.plate_number} | ${v.nomor_izin} | ${v.nama_lps} | TPS: ${v.lokasi_tps}`);
   }
 
-  const allVehicles = await listVehicles("", "all");
-  console.log(`Total all vehicles (with history): ${allVehicles.length}`);
   await closeDatabase();
 }
 

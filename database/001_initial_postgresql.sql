@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS vehicles (
   kelurahan_lps TEXT,
   kecamatan_lps TEXT,
   wilayah_kerja TEXT,
-  lokasi_tps TEXT DEFAULT 'HARAPAN JAYA',
+  lokasi_tps TEXT DEFAULT 'AIR HITAM',
   tanggal_terbit_izin TEXT,
   lampiran_camat TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

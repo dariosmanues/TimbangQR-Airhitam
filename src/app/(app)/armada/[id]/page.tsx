@@ -75,7 +75,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           </span>
           <VehicleDetailQrButtons vehicle={vehicle} />
           <div className="help" style={{ marginTop: 14 }}>
-            QR Master Armada Permanen resmi TPS Harapan Jaya. Dapat digunakan berulang kali untuk penimbangan tanpa batas waktu dan tidak pernah hangus.
+            QR Master Armada Permanen resmi TPS Air Hitam. Dapat digunakan berulang kali untuk penimbangan tanpa batas waktu dan tidak pernah hangus.
           </div>
         </article>
 
@@ -101,7 +101,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
               </div>
               <div className="summary-item">
                 <span>Lokasi TPS</span>
-                <strong style={{ fontSize: 14, color: "var(--primary)" }}>{vehicle.lokasi_tps || "HARAPAN JAYA"}</strong>
+                <strong style={{ fontSize: 14, color: "var(--primary)" }}>{vehicle.lokasi_tps || "AIR HITAM"}</strong>
               </div>
             </div>
 

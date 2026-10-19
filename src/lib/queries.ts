@@ -108,7 +108,10 @@ export async function getDashboardData() {
   return getDashboardDataUncached();
 }
 
-export async function listVehicles(search = "", filter: "active" | "all" | "inactive" = "active") {
+export async function listVehicles(
+  search = "",
+  filter: "active" | "all" | "inactive" | "air_hitam" | "palas" = "active"
+) {
   const term = `%${search.trim()}%`;
   return dbQuery<VehicleRow>(`
     SELECT
@@ -133,6 +136,8 @@ export async function listVehicles(search = "", filter: "active" | "all" | "inac
         $2 = 'all'
         OR ($2 = 'active' AND v.active = TRUE)
         OR ($2 = 'inactive' AND v.active = FALSE)
+        OR ($2 = 'air_hitam' AND v.lokasi_tps = 'AIR HITAM')
+        OR ($2 = 'palas' AND v.lokasi_tps = 'PALAS')
       )
     GROUP BY v.id
     ORDER BY v.no_urut ASC NULLS LAST, v.code ASC
@@ -209,14 +214,22 @@ export async function getLpsList() {
 }
 
 export async function getVehicleCounts() {
-  const row = await dbOne<{ total: number; active: number; inactive: number }>(`
+  const row = await dbOne<{
+    total: number;
+    active: number;
+    inactive: number;
+    airHitam: number;
+    palas: number;
+  }>(`
     SELECT
       COUNT(*)::int AS total,
       COUNT(*) FILTER (WHERE active = TRUE)::int AS active,
-      COUNT(*) FILTER (WHERE active = FALSE)::int AS inactive
+      COUNT(*) FILTER (WHERE active = FALSE)::int AS inactive,
+      COUNT(*) FILTER (WHERE lokasi_tps = 'AIR HITAM')::int AS "airHitam",
+      COUNT(*) FILTER (WHERE lokasi_tps = 'PALAS')::int AS "palas"
     FROM vehicles
   `);
-  return row || { total: 0, active: 0, inactive: 0 };
+  return row || { total: 0, active: 0, inactive: 0, airHitam: 0, palas: 0 };
 }
 
 async function getDeviceListUncached() {

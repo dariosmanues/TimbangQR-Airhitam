@@ -22,7 +22,7 @@ export default async function ReportPage({
       <div className="page-head">
         <div>
           <h1>Rekap tonase bulanan</h1>
-          <p>Format matriks tanggal 1–31 mengikuti rekap Excel Harapan Jaya.</p>
+          <p>Format matriks tanggal 1–31 mengikuti rekap Excel Transdepo Air Hitam.</p>
         </div>
         <a className="btn btn-primary" href={`/api/reports/export?month=${month}`}>
           <Download size={17} /> Unduh Excel

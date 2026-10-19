@@ -1,5 +1,5 @@
 import { ClipboardCheck } from "lucide-react";
-import master from "../../../../data/master_armada_harapan_jaya_okt2026.json";
+import master from "../../../../data/master_armada_air_hitam_okt2026.json";
 import FleetQrAudit from "@/components/FleetQrAudit";
 
 export const runtime = "nodejs";
@@ -11,7 +11,7 @@ export default function LiveQrAuditPage() {
       <div className="page-head">
         <div>
           <h1>Verifikasi QR Seluruh Armada</h1>
-          <p>Pengujian langsung pada aplikasi Vercel produksi Harapan Jaya.</p>
+          <p>Pengujian langsung pada sistem verifikasi QR Transdepo Air Hitam.</p>
         </div>
         <span className="badge green"><ClipboardCheck size={14} /> Pemeriksaan operasional</span>
       </div>

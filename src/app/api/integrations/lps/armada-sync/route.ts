@@ -252,7 +252,7 @@ export async function POST(request: Request) {
                 tanggal_sk_lps = COALESCE($12, tanggal_sk_lps),
                 tanggal_terbit_izin = COALESCE($13, tanggal_terbit_izin),
                 qr_token = COALESCE($14, qr_token),
-                lokasi_tps = 'HARAPAN JAYA',
+                lokasi_tps = 'AIR HITAM',
                 active = TRUE,
                 updated_at = NOW()
               WHERE id = $15`,
@@ -276,7 +276,7 @@ export async function POST(request: Request) {
             );
           } else {
             action = "created";
-            const code = `ARM-HJ-${String(nextCodeNum++).padStart(4, "0")}`;
+            const code = `ARM-AH-${String(nextCodeNum++).padStart(4, "0")}`;
 
             const insertResult = await client.query<{ id: number }>(
               `INSERT INTO vehicles (
@@ -290,7 +290,7 @@ export async function POST(request: Request) {
                 NULL, $5, TRUE, $6,
                 $7, $8, $9,
                 $10, $11, $12, $13,
-                $13, $14, 'HARAPAN JAYA', $15
+                $13, $14, 'AIR HITAM', $15
               ) RETURNING id`,
               [
                 code,

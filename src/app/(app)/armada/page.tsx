@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function ArmadaPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; status?: "active" | "all" | "inactive" }>;
+  searchParams: Promise<{ q?: string; status?: "active" | "all" | "inactive" | "air_hitam" | "palas" }>;
 }) {
   const params = await searchParams;
   const q = params.q || "";
@@ -30,14 +30,14 @@ export default async function ArmadaPage({
         <div>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
             <span className="badge green">
-              <ShieldCheck size={14} /> TPS WILAYAH HARAPAN JAYA
+              <ShieldCheck size={14} /> TPS WILAYAH AIR HITAM & PALAS
             </span>
             <span className="badge">UPDATE OKTOBER 2026</span>
           </div>
           <h1>Master Armada</h1>
           <p>
-            {formatNumber(vehicles.length)} armada terdaftar dalam database jembatan timbang.
-            {filter === "active" && ` Menampilkan ${counts.active} armada resmi TPS Wilayah Harapan Jaya.`}
+            {formatNumber(vehicles.length)} armada terdaftar dalam database jembatan timbang
+            ({counts.airHitam} Air Hitam + {counts.palas} Palas).
           </p>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -60,24 +60,30 @@ export default async function ArmadaPage({
           </button>
         </form>
 
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           <Link
             href={`/armada?status=active${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             className={`btn btn-sm ${filter === "active" ? "btn-primary" : "btn-secondary"}`}
           >
-            Harapan Jaya ({counts.active} Aktif)
+            Semua Aktif ({counts.active})
+          </Link>
+          <Link
+            href={`/armada?status=air_hitam${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+            className={`btn btn-sm ${filter === "air_hitam" ? "btn-primary" : "btn-secondary"}`}
+          >
+            Air Hitam ({counts.airHitam})
+          </Link>
+          <Link
+            href={`/armada?status=palas${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+            className={`btn btn-sm ${filter === "palas" ? "btn-primary" : "btn-secondary"}`}
+          >
+            Palas ({counts.palas})
           </Link>
           <Link
             href={`/armada?status=all${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             className={`btn btn-sm ${filter === "all" ? "btn-primary" : "btn-secondary"}`}
           >
-            Semua Data ({counts.total})
-          </Link>
-          <Link
-            href={`/armada?status=inactive${q ? `&q=${encodeURIComponent(q)}` : ""}`}
-            className={`btn btn-sm ${filter === "inactive" ? "btn-primary" : "btn-secondary"}`}
-          >
-            Riwayat Nonaktif ({counts.inactive})
+            Total ({counts.total})
           </Link>
         </div>
       </div>

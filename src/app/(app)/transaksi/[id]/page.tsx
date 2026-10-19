@@ -32,7 +32,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
       <article className="card" style={{ maxWidth: 780, margin: "0 auto" }}>
         <div className="card-body" style={{ padding: 34 }}>
           <div style={{ textAlign: "center", borderBottom: "2px solid var(--text)", paddingBottom: 18, marginBottom: 22 }}>
-            <h2 style={{ margin: 0 }}>TRANSDEPO HARAPAN JAYA</h2>
+            <h2 style={{ margin: 0 }}>TRANSDEPO AIR HITAM</h2>
             <div className="muted">TIKET PENIMBANGAN ARMADA SAMPAH</div>
           </div>
 

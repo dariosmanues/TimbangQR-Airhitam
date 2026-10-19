@@ -32,7 +32,7 @@ export default function Sidebar({ userName, userEmail }: { userName: string; use
         <div className="brand-mark"><QrCode size={23} /></div>
         <div>
           <strong>TimbangQR</strong>
-          <small>Harapan Jaya</small>
+          <small>Air Hitam</small>
         </div>
       </div>
       <div className="nav-section">Operasional</div>

@@ -194,7 +194,7 @@ export default function ArmadaQuickQrModal({ vehicles }: ArmadaQuickQrModalProps
                 <div style={{ display: "grid", gap: "8px" }}>
                   {filteredVehicles.map((v) => {
                     const formattedPlate = displayPlate(v.plate_number);
-                    const lps = v.nama_lps || v.lps_names || "LPS TPS Harapan Jaya";
+                    const lps = v.nama_lps || v.lps_names || "LPS TPS Air Hitam";
                     const isDownloading = downloadingId === v.id;
 
                     return (

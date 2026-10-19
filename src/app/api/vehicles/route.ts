@@ -27,7 +27,7 @@ const createSchema = z.object({
   kelurahanLps: z.string().optional().nullable(),
   kecamatanLps: z.string().optional().nullable(),
   wilayahKerja: z.string().optional().nullable(),
-  lokasiTps: z.string().optional().default("HARAPAN JAYA"),
+  lokasiTps: z.string().optional().default("AIR HITAM"),
   active: z.boolean().optional().default(true),
 });
 
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
         input.kelurahanLps?.trim() || null,
         input.kecamatanLps?.trim() || null,
         input.wilayahKerja?.trim() || null,
-        input.lokasiTps?.trim() || "HARAPAN JAYA",
+        input.lokasiTps?.trim() || "AIR HITAM",
       ]);
       const id = inserted.rows[0].id;
 

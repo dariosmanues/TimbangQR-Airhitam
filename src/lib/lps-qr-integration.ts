@@ -8,7 +8,7 @@ export { LpsQrError, parseLpsQrToken } from "./lps-qr-identity";
 
 export async function fetchVerifiedLpsArmada(identity: LpsIdentity): Promise<LpsArmada> {
   const baseUrl = process.env.LPS_ARMADA_API_URL?.trim()
-    || "https://lps-app-iota.vercel.app/api/integrations/timbangqr/armada";
+    || "https://lps-flame.vercel.app/api/integrations/timbangqr/armada";
   const url = new URL(baseUrl);
   if (url.protocol !== "https:" && !(process.env.NODE_ENV !== "production" && url.hostname === "localhost")) {
     throw new LpsQrError("Konfigurasi API LPS harus menggunakan HTTPS.", 503);
@@ -115,7 +115,7 @@ export async function linkVerifiedLpsArmada(armada: LpsArmada): Promise<Resolved
       const code = stableCode("LPS-ARM-", armada.id);
       const rows = await client.query<VehicleLookup>(
         "INSERT INTO vehicles (code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nama_lps, lokasi_tps, nomor_izin) VALUES ($1,$2,$3,$4,$5,NULL,$6,TRUE,$7,$8,$9) RETURNING id, code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nama_lps, nomor_izin",
-        [code, armada.platNomor, armada.normalizedPlate, armada.jenisArmada || "BELUM DIISI", "SAMPAH RUMAH TANGGA", armada.qrCode, armada.namaLps, process.env.LPS_TRANSDEPO || "HARAPAN_JAYA", armada.noIzinOperasi],
+        [code, armada.platNomor, armada.normalizedPlate, armada.jenisArmada || "BELUM DIISI", "SAMPAH RUMAH TANGGA", armada.qrCode, armada.namaLps, process.env.LPS_TRANSDEPO || "AIR_HITAM", armada.noIzinOperasi],
       );
       vehicle = rows.rows[0];
       masterCreated = true;

@@ -43,7 +43,7 @@ export default function ArmadaFormModal({
   const [kelurahanLps, setKelurahanLps] = useState("");
   const [kecamatanLps, setKecamatanLps] = useState("");
   const [wilayahKerja, setWilayahKerja] = useState("");
-  const [lokasiTps, setLokasiTps] = useState("HARAPAN JAYA");
+  const [lokasiTps, setLokasiTps] = useState("AIR HITAM");
 
   useEffect(() => {
     if (!isOpen) {
@@ -68,7 +68,7 @@ export default function ArmadaFormModal({
       setKelurahanLps(vehicle.kelurahan_lps || "");
       setKecamatanLps(vehicle.kecamatan_lps || vehicle.kecamatan || "");
       setWilayahKerja(vehicle.wilayah_kerja || "");
-      setLokasiTps(vehicle.lokasi_tps || "HARAPAN JAYA");
+      setLokasiTps(vehicle.lokasi_tps || "AIR HITAM");
 
       // Match LPS ID if possible
       const matched = lpsOptions.find(
@@ -91,7 +91,7 @@ export default function ArmadaFormModal({
       setKelurahanLps("");
       setKecamatanLps("");
       setWilayahKerja("");
-      setLokasiTps("HARAPAN JAYA");
+      setLokasiTps("AIR HITAM");
     }
   }, [isOpen, mode, vehicle, lpsOptions]);
 
@@ -126,7 +126,7 @@ export default function ArmadaFormModal({
       kelurahanLps: kelurahanLps.trim() || undefined,
       kecamatanLps: kecamatanLps.trim() || undefined,
       wilayahKerja: wilayahKerja.trim() || undefined,
-      lokasiTps: lokasiTps.trim() || "HARAPAN JAYA",
+      lokasiTps: lokasiTps.trim() || "AIR HITAM",
       active,
     };
 
@@ -207,7 +207,7 @@ export default function ArmadaFormModal({
           <div>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
               <span className="badge green" style={{ fontSize: 11 }}>
-                <ShieldCheck size={12} /> TPS HARAPAN JAYA
+                <ShieldCheck size={12} /> TPS AIR HITAM
               </span>
               <span className="badge" style={{ fontSize: 11 }}>
                 {mode === "edit" ? "MODE EDIT ARMADA" : "TAMBAH ARMADA BARU"}

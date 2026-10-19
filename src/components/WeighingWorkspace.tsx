@@ -81,7 +81,7 @@ export default function WeighingWorkspace({ initialToken = "" }: { initialToken?
           ? "QR LPS berhasil diverifikasi. Master armada baru terdaftar; pastikan jenis armada dan isi tare sebelum menyimpan."
           : "QR LPS berhasil diverifikasi. Armada, LPS dan pengemudi tersambung.")
         : parsed.source === "ARMADA"
-          ? "QR Armada Harapan Jaya dikenali. Nomor polisi dan LPS terhubung; lengkapi pengemudi serta tare jika belum tersedia."
+          ? "QR Armada Air Hitam dikenali. Nomor polisi dan LPS terhubung; lengkapi pengemudi serta tare jika belum tersedia."
           : "✓ Data armada ditemukan & valid.");
     } catch (error) {
       setPayload(null);

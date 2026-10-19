@@ -9,7 +9,7 @@ export default function AppTopbar() {
   return (
     <header className="topbar">
       <div className="topbar-title">
-        <strong>Transdepo Harapan Jaya</strong>
+        <strong>Transdepo Air Hitam</strong>
         <span>{now}</span>
       </div>
       <form action="/api/auth/logout" method="post">

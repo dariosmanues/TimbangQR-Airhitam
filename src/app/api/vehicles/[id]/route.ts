@@ -148,7 +148,7 @@ export async function PATCH(
     const kelurahanLps = body.kelurahanLps !== undefined ? (body.kelurahanLps?.trim() || null) : existing.kelurahan_lps;
     const kecamatanLps = body.kecamatanLps !== undefined ? (body.kecamatanLps?.trim() || null) : existing.kecamatan_lps;
     const wilayahKerja = body.wilayahKerja !== undefined ? (body.wilayahKerja?.trim() || null) : existing.wilayah_kerja;
-    const lokasiTps = body.lokasiTps !== undefined ? (body.lokasiTps?.trim() || "HARAPAN JAYA") : (existing.lokasi_tps || "HARAPAN JAYA");
+    const lokasiTps = body.lokasiTps !== undefined ? (body.lokasiTps?.trim() || "AIR HITAM") : (existing.lokasi_tps || "AIR HITAM");
     const active = typeof body.active === "boolean" ? body.active : existing.active;
 
     // Resolusi nama LPS

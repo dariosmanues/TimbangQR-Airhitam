@@ -150,8 +150,8 @@ export default function FleetQrAudit({ fleet }: { fleet: FleetEntry[] }) {
     <div className="card">
       <div className="card-head">
         <div>
-          <h2>Uji seluruh QR armada Harapan Jaya</h2>
-          <p>Uji langsung API scan pada deployment Vercel yang sedang aktif, menggunakan sesi login operator.</p>
+          <h2>Uji seluruh QR armada Air Hitam</h2>
+          <p>Uji langsung API scan pada sistem yang sedang aktif, menggunakan sesi login operator.</p>
         </div>
       </div>
       <div className="card-body">

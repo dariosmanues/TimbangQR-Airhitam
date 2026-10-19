@@ -53,7 +53,7 @@ export async function GET(request: Request) {
   `);
 
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "TimbangQR Harapan Jaya";
+  workbook.creator = "TimbangQR Air Hitam";
   workbook.created = new Date();
 
   const green = "0B7A50";
@@ -168,7 +168,7 @@ export async function GET(request: Request) {
     v.kelurahan_lps || "-",
     v.kecamatan_lps || "-",
     v.wilayah_kerja || "-",
-    v.lokasi_tps || "HARAPAN JAYA",
+    v.lokasi_tps || "AIR HITAM",
     v.tanggal_terbit_izin || "-",
     v.tare_kg,
   ]));

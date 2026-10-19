@@ -101,10 +101,11 @@ export async function generateArmadaQrCardCanvas(
   ctx.font = "bold 15px Inter, Arial, sans-serif";
   ctx.fillText("DINAS LINGKUNGAN HIDUP DAN KEBERSIHAN KOTA PEKANBARU", width / 2, cardY + 45);
 
-  // Teks Header 2 (TPS Harapan Jaya)
+  // Teks Header 2 (TPS Wilayah)
+  const lokasiTitle = `TPS WILAYAH ${(vehicle.lokasi_tps || "AIR HITAM").toUpperCase()}`;
   ctx.fillStyle = "#ffffff";
   ctx.font = "900 32px Inter, Arial, sans-serif";
-  ctx.fillText("TPS WILAYAH HARAPAN JAYA", width / 2, cardY + 86);
+  ctx.fillText(lokasiTitle, width / 2, cardY + 86);
 
   // Badge Header Pill
   const pillW = 460;
@@ -250,7 +251,7 @@ export async function generateArmadaQrCardCanvas(
   ctx.fillText("NAMA LPS / PENGELOLA", col1X, row1Y);
   ctx.fillText("TARE ACUAN KENDARAAN", col2X, row1Y);
 
-  const lpsName = vehicle.nama_lps || vehicle.lps_names || "LPS TPS Harapan Jaya";
+  const lpsName = vehicle.nama_lps || vehicle.lps_names || "LPS TPS Air Hitam";
   ctx.fillStyle = "#0f172a";
   ctx.font = "900 19px Inter, Arial, sans-serif";
   ctx.fillText(truncateText(ctx, lpsName, maxColWidth), col1X, row1Y + 22);
@@ -287,7 +288,7 @@ export async function generateArmadaQrCardCanvas(
 
   ctx.fillStyle = "#1e293b";
   ctx.font = "bold 14px Inter, Arial, sans-serif";
-  ctx.fillText(truncateText(ctx, vehicle.wilayah_kerja || "Wilayah Harapan Jaya", maxColWidth), col2X, row3Y + 20);
+  ctx.fillText(truncateText(ctx, vehicle.wilayah_kerja || "Wilayah Air Hitam", maxColWidth), col2X, row3Y + 20);
 
   // Baris 4: Lokasi Transdepo / TPS
   const row4Y = row3Y + 48;
@@ -297,7 +298,7 @@ export async function generateArmadaQrCardCanvas(
 
   ctx.fillStyle = "#065f3e";
   ctx.font = "bold 14px Inter, Arial, sans-serif";
-  ctx.fillText(vehicle.lokasi_tps || "TPS WILAYAH HARAPAN JAYA", col1X, row4Y + 18);
+  ctx.fillText(vehicle.lokasi_tps ? `TPS WILAYAH ${vehicle.lokasi_tps.toUpperCase()}` : "TPS WILAYAH AIR HITAM", col1X, row4Y + 18);
 
   // 7. Footer Verifikasi Resmi
   const footerH = 92;
@@ -327,7 +328,7 @@ export async function generateArmadaQrCardCanvas(
   }).format(new Date());
   ctx.fillStyle = "#6ee7b7";
   ctx.font = "11px ui-monospace, Menlo, Consolas, monospace";
-  ctx.fillText(`Dicetak: ${todayStr} · TimbangQR Harapan Jaya`, width / 2, footerY + 76);
+  ctx.fillText(`Dicetak: ${todayStr} · TimbangQR Air Hitam`, width / 2, footerY + 76);
 
   ctx.restore();
 

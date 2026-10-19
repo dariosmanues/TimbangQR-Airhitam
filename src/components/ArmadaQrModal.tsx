@@ -61,7 +61,7 @@ export default function ArmadaQrModal({ vehicle, isOpen, onClose }: ArmadaQrModa
   const cleanPlate = vehicle.plate_normalized || normalizePlate(vehicle.plate_number);
   const targetToken = `ARMADA-${cleanPlate}`;
   const formattedPlate = displayPlate(vehicle.plate_number);
-  const lpsName = vehicle.nama_lps || vehicle.lps_names || "LPS TPS Harapan Jaya";
+  const lpsName = vehicle.nama_lps || vehicle.lps_names || "LPS TPS Air Hitam";
 
   async function handleDownloadCard() {
     if (!vehicle) return;
@@ -154,7 +154,7 @@ export default function ArmadaQrModal({ vehicle, isOpen, onClose }: ArmadaQrModa
                 <ShieldCheck size={12} /> QR MASTER RESMI
               </span>
               <span className="badge" style={{ fontSize: 11 }}>
-                TPS HARAPAN JAYA
+                TPS {vehicle.lokasi_tps || "AIR HITAM"}
               </span>
             </div>
             <h2 style={{ margin: 0, fontSize: "19px", color: "var(--text)" }}>
