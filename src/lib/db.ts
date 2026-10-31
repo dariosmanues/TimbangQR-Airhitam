@@ -429,6 +429,42 @@ async function seedDatabase(client: PoolClient) {
   }
 }
 
+export async function ensureAdminUsers(client: PoolClient) {
+  const superAdminEmail = (process.env.SUPERADMIN_EMAIL || "superadmin@lps.local").trim();
+  const superAdminPassword = (process.env.SUPERADMIN_PASSWORD || "SuperAdmin123!").trim();
+
+  const adminEmail = (process.env.ADMIN_EMAIL || "admin@lps.local").trim();
+  const adminPassword = (process.env.ADMIN_PASSWORD || "Admin123!").trim();
+
+  const txAdminEmail = (process.env.ADMIN_TRANSAKSI_EMAIL || "admin.transaksi@lps.local").trim();
+  const txAdminPassword = (process.env.ADMIN_TRANSAKSI_PASSWORD || "AdminTransaksi123!").trim();
+
+  await client.query(`
+    INSERT INTO users (email, name, password_hash, role, active)
+    VALUES ($1, 'Super Administrator LPS', $2, 'SUPER_ADMIN', TRUE)
+    ON CONFLICT (email) DO UPDATE SET
+      role = 'SUPER_ADMIN',
+      name = 'Super Administrator LPS',
+      active = TRUE
+  `, [superAdminEmail, bcrypt.hashSync(superAdminPassword, 12)]);
+
+  await client.query(`
+    INSERT INTO users (email, name, password_hash, role, active)
+    VALUES ($1, 'Administrator LPS', $2, 'ADMIN', TRUE)
+    ON CONFLICT (email) DO UPDATE SET
+      role = 'ADMIN',
+      active = TRUE
+  `, [adminEmail, bcrypt.hashSync(adminPassword, 12)]);
+
+  await client.query(`
+    INSERT INTO users (email, name, password_hash, role, active)
+    VALUES ($1, 'Admin Transaksi LPS', $2, 'ADMIN_TRANSAKSI', TRUE)
+    ON CONFLICT (email) DO UPDATE SET
+      role = 'ADMIN_TRANSAKSI',
+      active = TRUE
+  `, [txAdminEmail, bcrypt.hashSync(txAdminPassword, 12)]);
+}
+
 async function ensureSerialDevice(client: PoolClient) {
   const deviceKey = process.env.SERIAL_API_KEY || "serial-local-key-ganti-sebelum-produksi";
   await client.query(`
@@ -503,8 +539,8 @@ async function syncAirHitamMasterArmada(client: PoolClient) {
       lpsMap.get(`LPS ${kel}`);
 
     const existingByIzin = await client.query<{ id: number }>(
-      "SELECT id FROM vehicles WHERE nomor_izin = $1",
-      [item.nomor_izin]
+      "SELECT id FROM vehicles WHERE nomor_izin = $1 OR (qr_token = $2 AND nomor_izin IS NULL) OR code = $3 LIMIT 1",
+      [item.nomor_izin, item.qr_token, code]
     );
 
     let vehicleId: number;
@@ -519,8 +555,9 @@ async function syncAirHitamMasterArmada(client: PoolClient) {
           nomor_surat_permohonan = $11, tanggal_permohonan = $12, nama_lps_2 = $13,
           nama_ketua_lps = $14, alamat_lps = $15, kelurahan_lps = $16,
           kecamatan_lps = $17, wilayah_kerja = $18, lokasi_tps = $19,
-          tanggal_terbit_izin = $20, lampiran_camat = $21, qr_token = $22, updated_at = NOW()
-        WHERE id = $23`,
+          tanggal_terbit_izin = $20, lampiran_camat = $21, qr_token = $22,
+          nomor_izin = $23, updated_at = NOW()
+        WHERE id = $24`,
         [
           code, plateNumber, plateNormalized, vehicleType, wasteType,
           item.no_urut, item.nomor_sk_lps, item.tanggal_sk_lps, item.kecamatan,
@@ -528,7 +565,7 @@ async function syncAirHitamMasterArmada(client: PoolClient) {
           item.nama_lps_2, item.nama_ketua_lps, item.alamat_lps,
           item.kelurahan_lps, item.kecamatan_lps, item.wilayah_kerja,
           item.lokasi_tps || "AIR HITAM", item.tanggal_terbit_izin,
-          item.lampiran_camat, item.qr_token, vehicleId
+          item.lampiran_camat, item.qr_token, item.nomor_izin, vehicleId
         ]
       );
     } else {
@@ -606,6 +643,7 @@ export async function ensureDatabase() {
       await client.query("BEGIN");
       await createSchema(client);
       await seedDatabase(client);
+      await ensureAdminUsers(client);
       await syncAirHitamMasterArmada(client);
       await ensureSerialDevice(client);
       await client.query("COMMIT");

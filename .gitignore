@@ -32,3 +32,4 @@ bridge-desktop/dist/
 cloudflared.exe
 __pycache__/
 *.pyc
+.vercel

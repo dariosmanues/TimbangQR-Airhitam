@@ -1,32 +1,71 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
 import PrintButton from "@/components/PrintButton";
-import { dbOne } from "@/lib/db";
+import TransactionDetailActions from "@/components/TransactionDetailActions";
+import { getSession, canManageTransactions } from "@/lib/auth";
+import { dbOne, dbQuery } from "@/lib/db";
+import { getLpsList } from "@/lib/queries";
 import { formatDateTime, formatNumber } from "@/lib/utils";
+import type { WeighingRow } from "@/lib/types";
+import type { TransactionFormVehicle } from "@/components/TransactionFormModal";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function TicketPage({ params }: { params: Promise<{ id: string }> }) {
+  const user = await getSession();
+  const canManage = canManageTransactions(user);
+
   const { id } = await params;
-  const row = await dbOne<Record<string, string | number | null>>(`
+  const row = await dbOne<WeighingRow & { device_code?: string | null }>(`
     SELECT w.*, d.device_code
     FROM weighings w
     LEFT JOIN weighbridge_devices d ON d.id = w.device_id
     WHERE w.id = $1
   `, [Number(id)]);
+
   if (!row) return notFound();
+
+  const [lpsList, vehicles] = await Promise.all([
+    getLpsList(),
+    canManage
+      ? dbQuery<TransactionFormVehicle>(`
+          SELECT id, plate_number, code, vehicle_type, waste_type, default_tare_kg, nama_lps
+          FROM vehicles
+          WHERE active = TRUE
+          ORDER BY plate_number ASC
+        `)
+      : Promise.resolve([]),
+  ]);
 
   return (
     <>
       <div className="page-head no-print">
         <div>
-          <Link className="muted" href="/transaksi"><ArrowLeft size={15} style={{ verticalAlign: "middle" }} /> Kembali</Link>
-          <h1 style={{ marginTop: 8 }}>Tiket timbang</h1>
-          <p>{String(row.ticket_number)}</p>
+          <Link className="muted" href="/transaksi">
+            <ArrowLeft size={15} style={{ verticalAlign: "middle" }} /> Kembali ke daftar transaksi
+          </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
+            <h1 style={{ margin: 0 }}>Tiket timbang</h1>
+            {canManage && (
+              <span className="badge green" style={{ fontSize: 11 }}>
+                <ShieldCheck size={12} /> AKSES EDIT & HAPUS
+              </span>
+            )}
+          </div>
+          <p style={{ margin: "4px 0 0" }}>{String(row.ticket_number)}</p>
         </div>
-        <PrintButton />
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          {canManage && (
+            <TransactionDetailActions
+              weighing={row}
+              lpsOptions={lpsList}
+              vehicleOptions={vehicles}
+            />
+          )}
+          <PrintButton />
+        </div>
       </div>
 
       <article className="card" style={{ maxWidth: 780, margin: "0 auto" }}>
@@ -37,9 +76,18 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           </div>
 
           <div className="summary-box">
-            <div className="summary-item"><span>No. tiket</span><strong>{String(row.ticket_number)}</strong></div>
-            <div className="summary-item"><span>Tanggal</span><strong style={{ fontSize: 14 }}>{formatDateTime(String(row.weighed_at))}</strong></div>
-            <div className="summary-item"><span>No. polisi</span><strong className="plate">{String(row.plate_number)}</strong></div>
+            <div className="summary-item">
+              <span>No. tiket</span>
+              <strong>{String(row.ticket_number)}</strong>
+            </div>
+            <div className="summary-item">
+              <span>Tanggal</span>
+              <strong style={{ fontSize: 14 }}>{formatDateTime(String(row.weighed_at))}</strong>
+            </div>
+            <div className="summary-item">
+              <span>No. polisi</span>
+              <strong className="plate">{String(row.plate_number)}</strong>
+            </div>
           </div>
 
           <div style={{ height: 18 }} />
@@ -50,6 +98,10 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               <tr><td>Pengirim / LPS</td><td><strong>{String(row.lps_name)}</strong></td></tr>
               <tr><td>Jenis sampah</td><td><strong>{String(row.waste_type)}</strong></td></tr>
               <tr><td>Perangkat</td><td><strong>{String(row.device_code || "INPUT MANUAL")}</strong></td></tr>
+              <tr><td>Sumber / Metode</td><td><span className="badge">{String(row.source || "APPLICATION")}</span></td></tr>
+              {row.source_note && (
+                <tr><td>Catatan</td><td><span className="muted">{String(row.source_note)}</span></td></tr>
+              )}
             </tbody>
           </table>
 

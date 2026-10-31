@@ -182,7 +182,8 @@ export async function listWeighings(filters: {
 
   return dbQuery<WeighingRow>(`
     SELECT id, ticket_number, weighed_at, plate_number, driver_name, lps_name,
-      gross_kg, tare_kg, netto_1_kg, rafaksi_kg, netto_2_kg, ritasi, tare_source, status
+      gross_kg, tare_kg, netto_1_kg, rafaksi_kg, netto_2_kg, ritasi, tare_source, status,
+      vehicle_id, lps_id, vehicle_type, waste_type, source_note
     FROM weighings
     WHERE ($1 = '%%'
       OR ticket_number ILIKE $1

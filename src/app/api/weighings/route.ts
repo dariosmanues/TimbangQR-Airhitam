@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { getSession } from "@/lib/auth";
+import { getSession, canManageTransactions } from "@/lib/auth";
 import { dbOne, withTransaction } from "@/lib/db";
 import { jakartaIsoNow } from "@/lib/utils";
 import { syncCompletedWeighingToLps } from "@/lib/lps-sync";
@@ -16,10 +16,12 @@ const schema = z.object({
   tareKg: z.coerce.number().int().nonnegative(),
   rafaksiKg: z.coerce.number().int().nonnegative().default(0),
   tareSource: z.enum(["DATABASE", "ACTUAL_WEIGHING", "MANUAL"]).default("DATABASE"),
-  measurementSource: z.literal("OCR_LED"),
-  ocrStable: z.literal(true),
+  measurementSource: z.enum(["OCR_LED", "MANUAL"]).default("OCR_LED"),
+  ocrStable: z.boolean().optional(),
   indicatorRaw: z.string().max(2000).optional().default(""),
   qrToken: z.string().max(255).optional().default(""),
+  weighedAt: z.string().optional(),
+  sourceNote: z.string().max(500).optional().default(""),
 });
 
 async function nextTicket(client: PoolClient) {
@@ -47,9 +49,23 @@ export async function POST(request: Request) {
 
   try {
     const input = schema.parse(await request.json());
-    if (!input.indicatorRaw.startsWith("OCR_LED:")) {
-      return NextResponse.json({ error: "Pembacaan OCR LED tidak valid. Arahkan kamera ke display LED sampai status stabil." }, { status: 400 });
+
+    if (input.measurementSource === "MANUAL") {
+      if (!canManageTransactions(user)) {
+        return NextResponse.json(
+          { error: "Akses ditolak: Hanya Super Admin, Administrator, atau Admin Transaksi yang dapat membuat transaksi manual." },
+          { status: 403 }
+        );
+      }
+    } else {
+      if (!input.indicatorRaw.startsWith("OCR_LED:")) {
+        return NextResponse.json(
+          { error: "Pembacaan OCR LED tidak valid. Arahkan kamera ke display LED sampai status stabil." },
+          { status: 400 }
+        );
+      }
     }
+
     if (input.grossKg <= input.tareKg) {
       return NextResponse.json({ error: "Gross harus lebih besar daripada tare." }, { status: 400 });
     }
@@ -80,17 +96,22 @@ export async function POST(request: Request) {
 
     const result = await withTransaction(async (client) => {
       const ticket = await nextTicket(client);
-      const weighedAt = jakartaIsoNow();
+      const weighedAt = input.weighedAt && !isNaN(new Date(input.weighedAt).getTime())
+        ? new Date(input.weighedAt).toISOString()
+        : jakartaIsoNow();
+      const source = input.measurementSource === "MANUAL" ? "MANUAL" : "OCR_LED";
+      const sourceNote = input.sourceNote?.trim() || (input.measurementSource === "MANUAL" ? "Input manual oleh Super Admin / Admin" : null);
+
       const inserted = await client.query<{ id: number }>(`
         INSERT INTO weighings (
           ticket_number, weighed_at, vehicle_id, plate_number, driver_name, vehicle_type,
           lps_id, lps_name, waste_type, gross_kg, tare_kg, netto_1_kg, rafaksi_kg,
-          netto_2_kg, ritasi, tare_source, device_id, indicator_raw, status, source, created_by,
-          qr_token
+          netto_2_kg, ritasi, tare_source, device_id, indicator_raw, status, source,
+          source_note, created_by, qr_token
         ) VALUES (
           $1, $2::timestamptz, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-          $12, $13, $14, 1, $15, NULL, $16, 'COMPLETED', 'OCR_LED', $17,
-          $18
+          $12, $13, $14, 1, $15, NULL, $16, 'COMPLETED', $17,
+          $18, $19, $20
         )
         RETURNING id
       `, [
@@ -110,6 +131,8 @@ export async function POST(request: Request) {
         netto2,
         input.tareSource,
         input.indicatorRaw || null,
+        source,
+        sourceNote,
         user.id,
         input.qrToken?.trim() || null,
       ]);

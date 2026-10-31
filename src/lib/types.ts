@@ -1,8 +1,10 @@
+export type UserRole = "SUPER_ADMIN" | "ADMIN" | "ADMIN_TRANSAKSI" | "OPERATOR" | string;
+
 export type SessionUser = {
   id: number;
   email: string;
   name: string;
-  role: string;
+  role: UserRole;
 };
 
 export type VehicleRow = {
@@ -70,4 +72,12 @@ export type WeighingRow = {
   ritasi: number;
   tare_source: string;
   status: string;
+  vehicle_id?: number | null;
+  lps_id?: number | null;
+  vehicle_type?: string | null;
+  waste_type?: string | null;
+  source?: string | null;
+  source_note?: string | null;
+  indicator_raw?: string | null;
 };
+
