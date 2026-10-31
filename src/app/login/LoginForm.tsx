@@ -95,47 +95,9 @@ export default function LoginForm() {
         <input className="input" value={password} onChange={(e) => setPassword(e.target.value)} type="password" required />
       </div>
       {error && <div className="error">{error}</div>}
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "4px 0" }}>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          style={{ fontSize: 11, padding: "4px 8px", backgroundColor: "#fef3c7", color: "#92400e", borderColor: "#fde68a", fontWeight: 600 }}
-          onClick={() => {
-            setEmail("superadmin@lps.local");
-            setPassword("SuperAdmin123!");
-          }}
-        >
-          👑 Isi Super Admin
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          style={{ fontSize: 11, padding: "4px 8px" }}
-          onClick={() => {
-            setEmail("admin@lps.local");
-            setPassword("Admin123!");
-          }}
-        >
-          🛡️ Isi Administrator
-        </button>
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          style={{ fontSize: 11, padding: "4px 8px" }}
-          onClick={() => {
-            setEmail("admin.transaksi@lps.local");
-            setPassword("AdminTransaksi123!");
-          }}
-        >
-          📊 Isi Admin Transaksi
-        </button>
-      </div>
       <button className="btn btn-primary" disabled={loading} type="submit">
         <LogIn size={18} /> {loading ? "Memeriksa..." : yoloUrlParam ? "Masuk & Lanjut ke Timbang" : "Masuk"}
       </button>
-      <div className="help">
-        Akun Super Admin: <strong>superadmin@lps.local</strong> / <strong>SuperAdmin123!</strong> | Admin: <strong>admin@lps.local</strong> / <strong>Admin123!</strong> | Admin Transaksi: <strong>admin.transaksi@lps.local</strong> / <strong>AdminTransaksi123!</strong>
-      </div>
     </form>
   );
 }
