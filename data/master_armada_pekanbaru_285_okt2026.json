@@ -264,7 +264,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8361TJ"
+    "qr_token": "ARMADA-BM8361TJ",
+    "default_tare_kg": 1340,
+    "driver_name": "SARAGIH, SARAGI, JONI, JONNY, JONNI, JONY, JULI HARTONO"
   },
   {
     "no": 13,
@@ -311,7 +313,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Oktober 2026",
     "lampiran_camat": "Bukit Raya",
-    "qr_token": "ARMADA-BM8964QS"
+    "qr_token": "ARMADA-BM8964QS",
+    "default_tare_kg": 1210,
+    "driver_name": "SIHOMBING"
   },
   {
     "no": 15,
@@ -336,7 +340,8 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8010QQ"
+    "qr_token": "ARMADA-BM8010QQ",
+    "default_tare_kg": 1120
   },
   {
     "no": 16,
@@ -471,7 +476,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8523ZA"
+    "qr_token": "ARMADA-BM8523ZA",
+    "default_tare_kg": 1160
   },
   {
     "no": 22,
@@ -518,7 +524,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "14 September 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM3666ACK"
+    "qr_token": "ARMADA-BM3666ACK",
+    "default_tare_kg": 490,
+    "driver_name": "SAFARUDIN, SAPARUDIN"
   },
   {
     "no": 24,
@@ -543,7 +551,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "14 September 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM4372ACK"
+    "qr_token": "ARMADA-BM4372ACK",
+    "default_tare_kg": 480,
+    "driver_name": "SAFRIL, SYAFRIL, INDRA, SAPRIL, MASAPRIL"
   },
   {
     "no": 25,
@@ -568,7 +578,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM3665ACK"
+    "qr_token": "ARMADA-BM3665ACK",
+    "default_tare_kg": 490,
+    "driver_name": "AJO"
   },
   {
     "no": 26,
@@ -593,7 +605,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8451FB"
+    "qr_token": "ARMADA-BM8451FB",
+    "default_tare_kg": 1440,
+    "driver_name": "PEDO, HENDRI"
   },
   {
     "no": 27,
@@ -640,7 +654,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM9047FT"
+    "qr_token": "ARMADA-BM9047FT",
+    "default_tare_kg": 960,
+    "driver_name": "SITANGGANG, REGAR, SITANGGNAG"
   },
   {
     "no": 29,
@@ -665,7 +681,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8829QG"
+    "qr_token": "ARMADA-BM8829QG",
+    "default_tare_kg": 1190,
+    "driver_name": "SARAGIH, SARAGI"
   },
   {
     "no": 30,
@@ -690,7 +708,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8860TH"
+    "qr_token": "ARMADA-BM8860TH",
+    "default_tare_kg": 1310,
+    "driver_name": "REGAR, SIREGAR"
   },
   {
     "no": 31,
@@ -715,7 +735,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "15 September 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8445QQ"
+    "qr_token": "ARMADA-BM8445QQ",
+    "default_tare_kg": 1310,
+    "driver_name": "BRASA, JOSEP, ATA, BERASA"
   },
   {
     "no": 32,
@@ -740,7 +762,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Pekanbaru Kota",
-    "qr_token": "ARMADA-BG8185BI"
+    "qr_token": "ARMADA-BG8185BI",
+    "default_tare_kg": 1160,
+    "driver_name": "RINALDI, SARAGI, SARAGI 2"
   },
   {
     "no": 33,
@@ -765,7 +789,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Pekanbaru Kota",
-    "qr_token": "ARMADA-BG8185BI-33"
+    "qr_token": "ARMADA-BG8185BI-33",
+    "default_tare_kg": 1280,
+    "driver_name": "INDRA RIAWAN"
   },
   {
     "no": 34,
@@ -801,9 +827,9 @@
     "nomor_surat_permohonan": "01/LPS-SBA/XII/2025",
     "tanggal_permohonan": "12 Desember 2025",
     "nama_lps_2": "SAHABAT BUMI AGRO CANDRA ALPIAT,S.Pd JL. SRIKURNIA RT 05 RW 05 AGROWISATA",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "CANDRA ALPIAT,S.Pd",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "AGROWISATA",
     "kecamatan_lps": "RUMBAI BARAT",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8058 QQ",
@@ -812,7 +838,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8058QQ"
+    "qr_token": "ARMADA-BM8058QQ",
+    "default_tare_kg": 1220,
+    "driver_name": "RONAL, RONALD"
   },
   {
     "no": 36,
@@ -826,9 +854,9 @@
     "nomor_surat_permohonan": "01/LPS",
     "tanggal_permohonan": "02 Februari 2026",
     "nama_lps_2": "RANTAU PANJANG BERSIH USWAH HASAN JL TOMAN RT 01 RW 02 RANTAU PANJANG",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "USWAH HASAN",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "RANTAU PANJANG",
     "kecamatan_lps": "RUMBAI BARAT",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8942 QE",
@@ -837,7 +865,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "23 Februari 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8942QE"
+    "qr_token": "ARMADA-BM8942QE",
+    "default_tare_kg": 1280,
+    "driver_name": "SIHITE, ADI, SIITE, HITE, ADIT"
   },
   {
     "no": 37,
@@ -939,9 +969,9 @@
     "nomor_surat_permohonan": "003/LPS/DELIMA",
     "tanggal_permohonan": "11 Desember 2025",
     "nama_lps_2": "DELIMA ASRI TEGO LASONO JL.SWADAYA DELIMA",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "TEGO LASONO",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "DELIMA",
     "kecamatan_lps": "BINAWIDYA",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8100 QM",
@@ -950,7 +980,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8100QM"
+    "qr_token": "ARMADA-BM8100QM",
+    "default_tare_kg": 1320,
+    "driver_name": "SIPRIANUS, SPRIANUS, SAPRIANUS, SUPRIANUS, SUPRIANO, OCU IPIT"
   },
   {
     "no": 42,
@@ -975,7 +1007,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8607QJ"
+    "qr_token": "ARMADA-BM8607QJ",
+    "default_tare_kg": 1190,
+    "driver_name": "DINUL, DEHA"
   },
   {
     "no": 43,
@@ -989,9 +1023,9 @@
     "nomor_surat_permohonan": "003/LPS/DELIMA",
     "tanggal_permohonan": "11 Desember 2025",
     "nama_lps_2": "DELIMA ASRI TEGO LASONO JL.SWADAYA DELIMA",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "TEGO LASONO",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "DELIMA",
     "kecamatan_lps": "BINAWIDYA",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8356 LQ",
@@ -1000,7 +1034,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8356LQ"
+    "qr_token": "ARMADA-BM8356LQ",
+    "default_tare_kg": 1660,
+    "driver_name": "SIMATUPANG, TUPANG, SITANGGANG"
   },
   {
     "no": 44,
@@ -1025,7 +1061,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9949AV"
+    "qr_token": "ARMADA-BM9949AV",
+    "default_tare_kg": 2350,
+    "driver_name": "JUNAIDI"
   },
   {
     "no": 45,
@@ -1039,9 +1077,9 @@
     "nomor_surat_permohonan": "003/LPS/DELIMA",
     "tanggal_permohonan": "11 Desember 2025",
     "nama_lps_2": "DELIMA ASRI TEGO LASONO JL.SWADAYA DELIMA",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "TEGO LASONO",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "DELIMA",
     "kecamatan_lps": "BINAWIDYA",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 9402 TX",
@@ -1050,7 +1088,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9402TX"
+    "qr_token": "ARMADA-BM9402TX",
+    "default_tare_kg": 1300,
+    "driver_name": "ANGEL, ENJEL, INDRA, HENDRA SAPUTRA, INDRA SAPUTRA"
   },
   {
     "no": 46,
@@ -1064,9 +1104,9 @@
     "nomor_surat_permohonan": "003/LPS/DELIMA",
     "tanggal_permohonan": "11 Desember 2025",
     "nama_lps_2": "DELIMA ASRI TEGO LASONO JL.SWADAYA DELIMA",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "TEGO LASONO",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "DELIMA",
     "kecamatan_lps": "BINAWIDYA",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8890 QG",
@@ -1075,7 +1115,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8890QG"
+    "qr_token": "ARMADA-BM8890QG",
+    "default_tare_kg": 1360,
+    "driver_name": "AWEN, AWE"
   },
   {
     "no": 47,
@@ -1089,7 +1131,7 @@
     "nomor_surat_permohonan": "019/LPS-UMBN-SR/I/2026",
     "tanggal_permohonan": "05 Januari 2026",
     "nama_lps_2": "BERDAMAI DENGAN SAMPAH SUPRAPTO JL UMBAN SARI NO 159",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "SUPRAPTO",
     "alamat_lps": "",
     "kelurahan_lps": "UMBAN SARI",
     "kecamatan_lps": "RUMBAI",
@@ -1100,7 +1142,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8622TR"
+    "qr_token": "ARMADA-BM8622TR",
+    "default_tare_kg": 1240,
+    "driver_name": "PURBA"
   },
   {
     "no": 48,
@@ -1125,7 +1169,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8770AK"
+    "qr_token": "ARMADA-BM8770AK",
+    "default_tare_kg": 1520,
+    "driver_name": "FAUZI"
   },
   {
     "no": 49,
@@ -1150,7 +1196,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8992QP"
+    "qr_token": "ARMADA-BM8992QP",
+    "default_tare_kg": 1290,
+    "driver_name": "ARIZON, HARIZON, ARIJON, PEDO"
   },
   {
     "no": 50,
@@ -1200,7 +1248,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9107TX"
+    "qr_token": "ARMADA-BM9107TX",
+    "default_tare_kg": 1310,
+    "driver_name": "PASARIBU"
   },
   {
     "no": 52,
@@ -1225,7 +1275,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8574QN"
+    "qr_token": "ARMADA-BM8574QN",
+    "default_tare_kg": 1160,
+    "driver_name": "NAINGGOLAN, NAINGGOLANG, NAINGGOLAN P, NAIGGOLAN, NAINGGOLANG P"
   },
   {
     "no": 53,
@@ -1250,7 +1302,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9077AI"
+    "qr_token": "ARMADA-BM9077AI",
+    "default_tare_kg": 1480,
+    "driver_name": "PARLIN"
   },
   {
     "no": 54,
@@ -1275,7 +1329,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8026QQ"
+    "qr_token": "ARMADA-BM8026QQ",
+    "default_tare_kg": 1330,
+    "driver_name": "PASARIBU, PASASRIBU"
   },
   {
     "no": 55,
@@ -1300,7 +1356,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM8874QE"
+    "qr_token": "ARMADA-BM8874QE",
+    "default_tare_kg": 1210,
+    "driver_name": "JEFRI, RAMLI"
   },
   {
     "no": 56,
@@ -1325,7 +1383,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8330MQ"
+    "qr_token": "ARMADA-BM8330MQ",
+    "default_tare_kg": 1150,
+    "driver_name": "SAUDI, RIFAI, ANAN, ANANG, RIVAI"
   },
   {
     "no": 57,
@@ -1339,9 +1399,9 @@
     "nomor_surat_permohonan": "07/LPS/TAMPAN",
     "tanggal_permohonan": "14 Desember 2025",
     "nama_lps_2": "TAMPAN LESTARI MAULANA JL. KAYU MANIS NO.133 TAMPAN",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "MAULANA",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "TAMPAN",
     "kecamatan_lps": "PAYUNG SEKAKI",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8865 QE",
@@ -1350,7 +1410,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8865QE"
+    "qr_token": "ARMADA-BM8865QE",
+    "default_tare_kg": 1510,
+    "driver_name": "SITANGGANG, SIPANGGANG, SITANGANG"
   },
   {
     "no": 58,
@@ -1485,7 +1547,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8910QM"
+    "qr_token": "ARMADA-BM8910QM",
+    "default_tare_kg": 1110,
+    "driver_name": "JEFRI, JEPRI, ABIL"
   },
   {
     "no": 64,
@@ -1510,7 +1574,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8253QQ"
+    "qr_token": "ARMADA-BM8253QQ",
+    "default_tare_kg": 1370,
+    "driver_name": "FAREL, VAREL, ARIF"
   },
   {
     "no": 65,
@@ -1535,7 +1601,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9361TY"
+    "qr_token": "ARMADA-BM9361TY",
+    "default_tare_kg": 1280,
+    "driver_name": "YAHYA"
   },
   {
     "no": 66,
@@ -1560,7 +1628,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8786QG"
+    "qr_token": "ARMADA-BM8786QG",
+    "default_tare_kg": 1300,
+    "driver_name": "HELMI, HEMI"
   },
   {
     "no": 67,
@@ -1585,7 +1655,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8093QD"
+    "qr_token": "ARMADA-BM8093QD",
+    "default_tare_kg": 1320,
+    "driver_name": "ILYAS, ILIAS"
   },
   {
     "no": 68,
@@ -1610,7 +1682,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8594AB"
+    "qr_token": "ARMADA-BM8594AB",
+    "default_tare_kg": 1430,
+    "driver_name": "M KADIR, KHADIR, KADIR, KAIDIR, NADIR"
   },
   {
     "no": 69,
@@ -1635,7 +1709,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8468QG"
+    "qr_token": "ARMADA-BM8468QG",
+    "default_tare_kg": 1340,
+    "driver_name": "IGO, NAINGGOLANG"
   },
   {
     "no": 70,
@@ -1704,7 +1780,8 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM3229ACH"
+    "qr_token": "ARMADA-BM3229ACH",
+    "default_tare_kg": 450
   },
   {
     "no": 73,
@@ -1729,7 +1806,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM5276ACH"
+    "qr_token": "ARMADA-BM5276ACH",
+    "default_tare_kg": 440,
+    "driver_name": "SANGKOT, RAMOT, RAMOT SIREGAR, RAMOD, SANGKON, LEOARDI, SANGGON"
   },
   {
     "no": 74,
@@ -1864,7 +1943,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9033TK"
+    "qr_token": "ARMADA-BM9033TK",
+    "default_tare_kg": 1350,
+    "driver_name": "HENDRA, HENMDRA"
   },
   {
     "no": 80,
@@ -1878,9 +1959,9 @@
     "nomor_surat_permohonan": "020/LPS",
     "tanggal_permohonan": "11 Desember 2025",
     "nama_lps_2": "MUARA FAJAR BARAT JENDRI MUSLIM JL YOS SUDARSO KM 17 MUARA FAJAR BARAT",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "JENDRI MUSLIM",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "MUARA FAJAR BARAT",
     "kecamatan_lps": "RUMBAI BARAT",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8545 QG",
@@ -1889,7 +1970,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8545QG"
+    "qr_token": "ARMADA-BM8545QG",
+    "default_tare_kg": 1270,
+    "driver_name": "MEISARI, MEYSARI, MAISARI, MUSARI"
   },
   {
     "no": 81,
@@ -1914,7 +1997,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Pekanbaru Kota",
-    "qr_token": "ARMADA-BM8590QA"
+    "qr_token": "ARMADA-BM8590QA",
+    "default_tare_kg": 1040,
+    "driver_name": "ASRUL"
   },
   {
     "no": 82,
@@ -1939,7 +2024,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9017TQ"
+    "qr_token": "ARMADA-BM9017TQ",
+    "default_tare_kg": 1470,
+    "driver_name": "MULYADI"
   },
   {
     "no": 83,
@@ -1964,7 +2051,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8290QE"
+    "qr_token": "ARMADA-BM8290QE",
+    "default_tare_kg": 1340,
+    "driver_name": "SITANGGANG, SITANNGANG, SITANGGNGA, SITANGGANGA"
   },
   {
     "no": 84,
@@ -1989,7 +2078,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8816QE"
+    "qr_token": "ARMADA-BM8816QE",
+    "default_tare_kg": 1200,
+    "driver_name": "RIZAL, RIJAL, IJAL"
   },
   {
     "no": 85,
@@ -2014,7 +2105,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9714TR"
+    "qr_token": "ARMADA-BM9714TR",
+    "default_tare_kg": 1230,
+    "driver_name": "ARIANJA, ARIANZA"
   },
   {
     "no": 86,
@@ -2039,7 +2132,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8801QK"
+    "qr_token": "ARMADA-BM8801QK",
+    "default_tare_kg": 1140,
+    "driver_name": "ROBI, ROBY, ROBBY, BUNGA, BOBBY"
   },
   {
     "no": 87,
@@ -2064,7 +2159,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8919QM"
+    "qr_token": "ARMADA-BM8919QM",
+    "default_tare_kg": 1150,
+    "driver_name": "BUHA"
   },
   {
     "no": 88,
@@ -2089,7 +2186,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8369QQ"
+    "qr_token": "ARMADA-BM8369QQ",
+    "default_tare_kg": 1110,
+    "driver_name": "L SIHOTANG, RENOL"
   },
   {
     "no": 89,
@@ -2114,7 +2213,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8525LA"
+    "qr_token": "ARMADA-BM8525LA",
+    "default_tare_kg": 2350,
+    "driver_name": "MASRIL"
   },
   {
     "no": 90,
@@ -2139,7 +2240,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8405QR"
+    "qr_token": "ARMADA-BM8405QR",
+    "default_tare_kg": 1240,
+    "driver_name": "FAISAL, PAISAL"
   },
   {
     "no": 91,
@@ -2189,7 +2292,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8583AH"
+    "qr_token": "ARMADA-BM8583AH",
+    "default_tare_kg": 1520,
+    "driver_name": "FAUZI"
   },
   {
     "no": 93,
@@ -2239,7 +2344,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8729PI"
+    "qr_token": "ARMADA-BM8729PI",
+    "default_tare_kg": 1350,
+    "driver_name": "H. FIRMAN ARIANTO"
   },
   {
     "no": 95,
@@ -2264,7 +2371,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8729PI-95"
+    "qr_token": "ARMADA-BM8729PI-95",
+    "default_tare_kg": 1350,
+    "driver_name": "NASRUL, NASRUL SD"
   },
   {
     "no": 96,
@@ -2289,7 +2398,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8381QE"
+    "qr_token": "ARMADA-BM8381QE",
+    "default_tare_kg": 1300,
+    "driver_name": "SUGIANTO, SUGIYANTO, SUGIONO"
   },
   {
     "no": 97,
@@ -2328,9 +2439,9 @@
     "nomor_surat_permohonan": "15/PIO-LPS",
     "tanggal_permohonan": "08 Desember 2025",
     "nama_lps_2": "SAGO KAISAR ARJO JL. SAMRATULANGI SAGO",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "KAISAR ARJO",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "SAGO",
     "kecamatan_lps": "SENAPELAN",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8936 TD",
@@ -2389,7 +2500,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8977DM"
+    "qr_token": "ARMADA-BM8977DM",
+    "default_tare_kg": 1260,
+    "driver_name": "AMEK, AMWK, HENDRA, ALEK"
   },
   {
     "no": 101,
@@ -2414,7 +2527,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8891KF"
+    "qr_token": "ARMADA-BM8891KF",
+    "default_tare_kg": 1140,
+    "driver_name": "ANDRY, ANDRI, ANDI"
   },
   {
     "no": 102,
@@ -2428,9 +2543,9 @@
     "nomor_surat_permohonan": "06/LPS-ADB/2025",
     "tanggal_permohonan": "29 Desember 2025",
     "nama_lps_2": "ABDI DAMAI BERSIH MARDIANTO JL. LEMBAH DAMAI RT 01 RW LEMBAH DAMAI",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "MARDIANTO",
     "alamat_lps": "",
-    "kelurahan_lps": "",
+    "kelurahan_lps": "LEMBAH DAMAI",
     "kecamatan_lps": "RUMBAI",
     "jenis_armada": "PICKUP",
     "nomor_polisi": "BM 8985 QM",
@@ -2439,7 +2554,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8985QM"
+    "qr_token": "ARMADA-BM8985QM",
+    "default_tare_kg": 1130,
+    "driver_name": "M NUR, ABDUL RAIS, MANUT"
   },
   {
     "no": 103,
@@ -2464,7 +2581,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM9673TX"
+    "qr_token": "ARMADA-BM9673TX",
+    "default_tare_kg": 1460,
+    "driver_name": "SIANTURI, SIAHNTURI"
   },
   {
     "no": 104,
@@ -2514,7 +2633,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8624TV"
+    "qr_token": "ARMADA-BM8624TV",
+    "default_tare_kg": 1090,
+    "driver_name": "MASWIR"
   },
   {
     "no": 106,
@@ -2539,7 +2660,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM9693TG"
+    "qr_token": "ARMADA-BM9693TG",
+    "default_tare_kg": 1000,
+    "driver_name": "ARDI"
   },
   {
     "no": 107,
@@ -2564,7 +2687,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8430TM"
+    "qr_token": "ARMADA-BM8430TM",
+    "default_tare_kg": 910,
+    "driver_name": "ROBIN"
   },
   {
     "no": 108,
@@ -2589,7 +2714,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8067AA"
+    "qr_token": "ARMADA-BM8067AA",
+    "default_tare_kg": 1420,
+    "driver_name": "HOTMIN, OTMIN"
   },
   {
     "no": 109,
@@ -2658,7 +2785,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Bukit Raya",
-    "qr_token": "ARMADA-BM8658QN"
+    "qr_token": "ARMADA-BM8658QN",
+    "default_tare_kg": 1270,
+    "driver_name": "DONI, DONY, JONI, DONNY"
   },
   {
     "no": 112,
@@ -2771,7 +2900,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8040QJ"
+    "qr_token": "ARMADA-BM8040QJ",
+    "default_tare_kg": 1330,
+    "driver_name": "HENDRA, INDRA"
   },
   {
     "no": 117,
@@ -2796,7 +2927,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8879QM"
+    "qr_token": "ARMADA-BM8879QM",
+    "default_tare_kg": 1120,
+    "driver_name": "L SIHOTANG"
   },
   {
     "no": 118,
@@ -2821,7 +2954,8 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sail",
-    "qr_token": "ARMADA-BM8377TG"
+    "qr_token": "ARMADA-BM8377TG",
+    "default_tare_kg": 1320
   },
   {
     "no": 119,
@@ -2846,7 +2980,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM8175QP"
+    "qr_token": "ARMADA-BM8175QP",
+    "default_tare_kg": 1200,
+    "driver_name": "JOKO"
   },
   {
     "no": 120,
@@ -2871,7 +3007,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM8387SJ"
+    "qr_token": "ARMADA-BM8387SJ",
+    "default_tare_kg": 1330,
+    "driver_name": "RAMLI, NAPI"
   },
   {
     "no": 121,
@@ -2984,7 +3122,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8059QA"
+    "qr_token": "ARMADA-BM8059QA",
+    "default_tare_kg": 1220,
+    "driver_name": "BUDI, YULIANA"
   },
   {
     "no": 126,
@@ -3053,7 +3193,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8755TX"
+    "qr_token": "ARMADA-BM8755TX",
+    "default_tare_kg": 1500,
+    "driver_name": "BOBI, BOBY, BOBBY"
   },
   {
     "no": 129,
@@ -3122,7 +3264,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "23 Juli 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8836QE"
+    "qr_token": "ARMADA-BM8836QE",
+    "default_tare_kg": 1250,
+    "driver_name": "SIHOMBING, SIHITE, HOMBING, KURNIA"
   },
   {
     "no": 132,
@@ -3147,7 +3291,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM2971AE"
+    "qr_token": "ARMADA-BM2971AE",
+    "default_tare_kg": 430,
+    "driver_name": "SANGKOT, SANGKON, SAGKOT"
   },
   {
     "no": 133,
@@ -3238,7 +3384,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-A8640KR"
+    "qr_token": "ARMADA-A8640KR",
+    "default_tare_kg": 1180,
+    "driver_name": "INDRA"
   },
   {
     "no": 137,
@@ -3263,7 +3411,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8208QE"
+    "qr_token": "ARMADA-BM8208QE",
+    "default_tare_kg": 1260,
+    "driver_name": "ALWI"
   },
   {
     "no": 138,
@@ -3288,7 +3438,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8034QC"
+    "qr_token": "ARMADA-BM8034QC",
+    "default_tare_kg": 1210,
+    "driver_name": "M RAIS, RAIS, PUTRA"
   },
   {
     "no": 139,
@@ -3313,7 +3465,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8232QA"
+    "qr_token": "ARMADA-BM8232QA",
+    "default_tare_kg": 1240,
+    "driver_name": "TAMPU, SIHOMBING, HOMBING, SIOMBING"
   },
   {
     "no": 140,
@@ -3338,7 +3492,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8994AS"
+    "qr_token": "ARMADA-BM8994AS",
+    "default_tare_kg": 1630,
+    "driver_name": "MARJONIS, MARJONES, MARJOIS"
   },
   {
     "no": 141,
@@ -3363,7 +3519,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8951MJ"
+    "qr_token": "ARMADA-BM8951MJ",
+    "default_tare_kg": 880,
+    "driver_name": "ANTON, ANTO"
   },
   {
     "no": 142,
@@ -3388,7 +3546,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8253TM"
+    "qr_token": "ARMADA-BM8253TM",
+    "default_tare_kg": 1180,
+    "driver_name": "EDWAR, EDWARD, ANDRY, FAREL, ARNOLD"
   },
   {
     "no": 143,
@@ -3413,7 +3573,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8776QA"
+    "qr_token": "ARMADA-BM8776QA",
+    "default_tare_kg": 1610,
+    "driver_name": "JOSUA, JOSUIA"
   },
   {
     "no": 144,
@@ -3438,7 +3600,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8273MJ"
+    "qr_token": "ARMADA-BM8273MJ",
+    "default_tare_kg": 1580,
+    "driver_name": "ZAIDAN, JAIDAN, ANTON"
   },
   {
     "no": 145,
@@ -3507,7 +3671,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8507QD"
+    "qr_token": "ARMADA-BM8507QD",
+    "default_tare_kg": 1180,
+    "driver_name": "TUPANG"
   },
   {
     "no": 148,
@@ -3532,7 +3698,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8618PH"
+    "qr_token": "ARMADA-BM8618PH",
+    "default_tare_kg": 1220,
+    "driver_name": "YULIANA, YUDANA, YUYLIANA"
   },
   {
     "no": 149,
@@ -3557,7 +3725,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8392QE"
+    "qr_token": "ARMADA-BM8392QE",
+    "default_tare_kg": 1350,
+    "driver_name": "TOMPUL, SITOMPUL, TOPMPUL"
   },
   {
     "no": 150,
@@ -3582,7 +3752,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8395QG"
+    "qr_token": "ARMADA-BM8395QG",
+    "default_tare_kg": 1280,
+    "driver_name": "JONEL"
   },
   {
     "no": 151,
@@ -3607,7 +3779,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8904QA"
+    "qr_token": "ARMADA-BM8904QA",
+    "default_tare_kg": 1180,
+    "driver_name": "SARAGIH, SARAGI, SRAGI"
   },
   {
     "no": 152,
@@ -3632,7 +3806,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8081TT"
+    "qr_token": "ARMADA-BM8081TT",
+    "default_tare_kg": 1060,
+    "driver_name": "RIAN"
   },
   {
     "no": 153,
@@ -3657,7 +3833,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8552MS"
+    "qr_token": "ARMADA-BM8552MS",
+    "default_tare_kg": 1150,
+    "driver_name": "SEPTI"
   },
   {
     "no": 154,
@@ -3682,7 +3860,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8190QP"
+    "qr_token": "ARMADA-BM8190QP",
+    "default_tare_kg": 1410,
+    "driver_name": "GUSDI, GUSTI, YUSRI, SEPTI, HUSRI, GHUSDI"
   },
   {
     "no": 155,
@@ -3707,7 +3887,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8011QP"
+    "qr_token": "ARMADA-BM8011QP",
+    "default_tare_kg": 1400,
+    "driver_name": "OCU IPIT, IPIT, BANDARAYA, IPID, OCUIPT"
   },
   {
     "no": 156,
@@ -3732,7 +3914,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8427ZD"
+    "qr_token": "ARMADA-BM8427ZD",
+    "default_tare_kg": 1420,
+    "driver_name": "ARIS, HARIS"
   },
   {
     "no": 157,
@@ -3757,7 +3941,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "21 September 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8950QG"
+    "qr_token": "ARMADA-BM8950QG",
+    "default_tare_kg": 1130,
+    "driver_name": "YANTOBAT"
   },
   {
     "no": 158,
@@ -3782,7 +3968,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8569TN"
+    "qr_token": "ARMADA-BM8569TN",
+    "default_tare_kg": 1110,
+    "driver_name": "RICARDO, RIKARDO"
   },
   {
     "no": 159,
@@ -3807,7 +3995,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8081QQ"
+    "qr_token": "ARMADA-BM8081QQ",
+    "default_tare_kg": 1220,
+    "driver_name": "NEO"
   },
   {
     "no": 160,
@@ -3832,7 +4022,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM9507DK"
+    "qr_token": "ARMADA-BM9507DK",
+    "default_tare_kg": 1250,
+    "driver_name": "RIVAL, RIFAL, BAGOR DANI"
   },
   {
     "no": 161,
@@ -3846,7 +4038,7 @@
     "nomor_surat_permohonan": "019/LPS-UMBN-SR/I/2026",
     "tanggal_permohonan": "05 Januari 2026",
     "nama_lps_2": "BERDAMAI DENGAN SAMPAH SUPRAPTO JL UMBAN SARI NO 159",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "SUPRAPTO",
     "alamat_lps": "",
     "kelurahan_lps": "UMBAN SARI",
     "kecamatan_lps": "RUMBAI",
@@ -3857,7 +4049,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8256QE"
+    "qr_token": "ARMADA-BM8256QE",
+    "default_tare_kg": 1150,
+    "driver_name": "WADIK, WADI, ABIL, WADIR, KOWADI"
   },
   {
     "no": 162,
@@ -3871,7 +4065,7 @@
     "nomor_surat_permohonan": "019/LPS-UMBN-SR/I/2026",
     "tanggal_permohonan": "05 Januari 2026",
     "nama_lps_2": "BERDAMAI DENGAN SAMPAH SUPRAPTO JL UMBAN SARI NO 159",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "SUPRAPTO",
     "alamat_lps": "",
     "kelurahan_lps": "UMBAN SARI",
     "kecamatan_lps": "RUMBAI",
@@ -3896,7 +4090,7 @@
     "nomor_surat_permohonan": "019/LPS-UMBN-SR/I/2026",
     "tanggal_permohonan": "05 Januari 2026",
     "nama_lps_2": "BERDAMAI DENGAN SAMPAH SUPRAPTO JL UMBAN SARI NO 159",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "SUPRAPTO",
     "alamat_lps": "",
     "kelurahan_lps": "UMBAN SARI",
     "kecamatan_lps": "RUMBAI",
@@ -3921,7 +4115,7 @@
     "nomor_surat_permohonan": "019/LPS-UMBN-SR/I/2026",
     "tanggal_permohonan": "05 Januari 2026",
     "nama_lps_2": "BERDAMAI DENGAN SAMPAH SUPRAPTO JL UMBAN SARI NO 159",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "SUPRAPTO",
     "alamat_lps": "",
     "kelurahan_lps": "UMBAN SARI",
     "kecamatan_lps": "RUMBAI",
@@ -3932,7 +4126,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8901QN"
+    "qr_token": "ARMADA-BM8901QN",
+    "default_tare_kg": 1200,
+    "driver_name": "HABIL, BAYU, ABIL, DANIL, DANIEL, DAVID, YOGA"
   },
   {
     "no": 165,
@@ -3957,7 +4153,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8608TR"
+    "qr_token": "ARMADA-BM8608TR",
+    "default_tare_kg": 1640,
+    "driver_name": "MANURUNG"
   },
   {
     "no": 166,
@@ -3982,7 +4180,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9814FN"
+    "qr_token": "ARMADA-BM9814FN",
+    "default_tare_kg": 1240,
+    "driver_name": "MARJONIS, MARJONI"
   },
   {
     "no": 167,
@@ -4007,7 +4207,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8967TF"
+    "qr_token": "ARMADA-BM8967TF",
+    "default_tare_kg": 1510,
+    "driver_name": "MARPAUNG"
   },
   {
     "no": 168,
@@ -4032,7 +4234,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9677TO"
+    "qr_token": "ARMADA-BM9677TO",
+    "default_tare_kg": 1470,
+    "driver_name": "SUPRI"
   },
   {
     "no": 169,
@@ -4057,7 +4261,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8503TT"
+    "qr_token": "ARMADA-BM8503TT",
+    "default_tare_kg": 1270,
+    "driver_name": "JONATAN, JONATHAN, JONATHN, JONTHAN, JIONTHAN"
   },
   {
     "no": 170,
@@ -4082,7 +4288,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9848TX"
+    "qr_token": "ARMADA-BM9848TX",
+    "default_tare_kg": 1420,
+    "driver_name": "MANURUNG, MANURUUNG"
   },
   {
     "no": 171,
@@ -4107,7 +4315,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8985QG"
+    "qr_token": "ARMADA-BM8985QG",
+    "default_tare_kg": 1250,
+    "driver_name": "ARI"
   },
   {
     "no": 172,
@@ -4132,7 +4342,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8655QG"
+    "qr_token": "ARMADA-BM8655QG",
+    "default_tare_kg": 1510,
+    "driver_name": "EVAN, EFFAN, EFFEN, AFAN"
   },
   {
     "no": 173,
@@ -4157,7 +4369,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9756TM"
+    "qr_token": "ARMADA-BM9756TM",
+    "default_tare_kg": 1640
   },
   {
     "no": 174,
@@ -4182,7 +4395,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8553ZA"
+    "qr_token": "ARMADA-BM8553ZA",
+    "default_tare_kg": 1340,
+    "driver_name": "GUNAWAN"
   },
   {
     "no": 175,
@@ -4207,7 +4422,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9086TX"
+    "qr_token": "ARMADA-BM9086TX",
+    "default_tare_kg": 1260,
+    "driver_name": "NAINGGOLAN, NAINGGOLANG, NAIGGOLAN, NENGGOLAN, NAIMNGGOLAN, NSAINGGOLAN, NAIMGGOLANG"
   },
   {
     "no": 176,
@@ -4232,7 +4449,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8891QN"
+    "qr_token": "ARMADA-BM8891QN",
+    "default_tare_kg": 1770,
+    "driver_name": "SANDI, SANDY"
   },
   {
     "no": 177,
@@ -4257,7 +4476,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8820QN"
+    "qr_token": "ARMADA-BM8820QN",
+    "default_tare_kg": 1230,
+    "driver_name": "PURNOMO, AJI"
   },
   {
     "no": 178,
@@ -4282,7 +4503,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8330QG"
+    "qr_token": "ARMADA-BM8330QG",
+    "default_tare_kg": 1280
   },
   {
     "no": 179,
@@ -4307,7 +4529,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8949QD"
+    "qr_token": "ARMADA-BM8949QD",
+    "default_tare_kg": 1150,
+    "driver_name": "REGAR, AHMAD"
   },
   {
     "no": 180,
@@ -4332,7 +4556,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8497DJ"
+    "qr_token": "ARMADA-BM8497DJ",
+    "default_tare_kg": 1080,
+    "driver_name": "JULI, JULIHARTONO, HENDRA, JUYLIHARTONO, JULI H"
   },
   {
     "no": 181,
@@ -4357,7 +4583,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BG8424JF"
+    "qr_token": "ARMADA-BG8424JF",
+    "default_tare_kg": 1210
   },
   {
     "no": 182,
@@ -4407,7 +4634,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM9058AG"
+    "qr_token": "ARMADA-BM9058AG",
+    "default_tare_kg": 1590,
+    "driver_name": "NASRUL, ASRUL, MASRUL"
   },
   {
     "no": 184,
@@ -4432,7 +4661,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8137QM"
+    "qr_token": "ARMADA-BM8137QM",
+    "default_tare_kg": 1390,
+    "driver_name": "SIHOMBING, HOMBING, SIHOBING, FOERA"
   },
   {
     "no": 185,
@@ -4457,7 +4688,8 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8385QM"
+    "qr_token": "ARMADA-BM8385QM",
+    "default_tare_kg": 1100
   },
   {
     "no": 186,
@@ -4482,7 +4714,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8556BH"
+    "qr_token": "ARMADA-BM8556BH",
+    "default_tare_kg": 1390,
+    "driver_name": "REGAR, SIHOMBING, SIREGAR"
   },
   {
     "no": 187,
@@ -4507,7 +4741,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8279QM"
+    "qr_token": "ARMADA-BM8279QM",
+    "default_tare_kg": 1200,
+    "driver_name": "UPI, KUPI"
   },
   {
     "no": 188,
@@ -4554,7 +4790,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM8173QK"
+    "qr_token": "ARMADA-BM8173QK",
+    "default_tare_kg": 1210,
+    "driver_name": "BUNGA, SUBANI"
   },
   {
     "no": 190,
@@ -4579,7 +4817,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM8924QN"
+    "qr_token": "ARMADA-BM8924QN",
+    "default_tare_kg": 1210,
+    "driver_name": "BUNGA, SUBANI"
   },
   {
     "no": 191,
@@ -4604,7 +4844,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM5046AAG"
+    "qr_token": "ARMADA-BM5046AAG",
+    "default_tare_kg": 450,
+    "driver_name": "SAFRIZAH, ZAFRIZAH, SAFRRIZAH"
   },
   {
     "no": 192,
@@ -4698,7 +4940,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Rumbai Timur",
-    "qr_token": "ARMADA-BM8404QQ"
+    "qr_token": "ARMADA-BM8404QQ",
+    "default_tare_kg": 1240,
+    "driver_name": "DONI, DONY, DONNY, JONI, PUTRA"
   },
   {
     "no": 196,
@@ -4723,7 +4967,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8419ZA"
+    "qr_token": "ARMADA-BM8419ZA",
+    "default_tare_kg": 1130,
+    "driver_name": "EDO"
   },
   {
     "no": 197,
@@ -4773,7 +5019,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8300QM"
+    "qr_token": "ARMADA-BM8300QM",
+    "default_tare_kg": 1160,
+    "driver_name": "ARO, KARO"
   },
   {
     "no": 199,
@@ -4798,7 +5046,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BK8907YO"
+    "qr_token": "ARMADA-BK8907YO",
+    "default_tare_kg": 1110,
+    "driver_name": "ROY"
   },
   {
     "no": 200,
@@ -4823,7 +5073,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8032QM"
+    "qr_token": "ARMADA-BM8032QM",
+    "default_tare_kg": 1180,
+    "driver_name": "MANGATUR"
   },
   {
     "no": 201,
@@ -4848,7 +5100,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM9075TX"
+    "qr_token": "ARMADA-BM9075TX",
+    "default_tare_kg": 1270,
+    "driver_name": "NAVID, NAVIT, NABIL, NAPIT, NAPID, DAVIT, NAFID"
   },
   {
     "no": 202,
@@ -4873,7 +5127,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8404SK"
+    "qr_token": "ARMADA-BM8404SK",
+    "default_tare_kg": 1200,
+    "driver_name": "WAHYU, BAYU"
   },
   {
     "no": 203,
@@ -4898,7 +5154,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Sail",
-    "qr_token": "ARMADA-BM8335QM"
+    "qr_token": "ARMADA-BM8335QM",
+    "default_tare_kg": 1350,
+    "driver_name": "ADE, ARKAN"
   },
   {
     "no": 204,
@@ -4923,7 +5181,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Rumbai Timur",
-    "qr_token": "ARMADA-BM8076QQ"
+    "qr_token": "ARMADA-BM8076QQ",
+    "default_tare_kg": 1230,
+    "driver_name": "SUGIONO, SUIGIONO"
   },
   {
     "no": 205,
@@ -4948,7 +5208,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Rumbai Timur",
-    "qr_token": "ARMADA-BM8440QG"
+    "qr_token": "ARMADA-BM8440QG",
+    "default_tare_kg": 1200,
+    "driver_name": "PAKYUNG, PAYUNG, PAJYUNG"
   },
   {
     "no": 206,
@@ -4973,7 +5235,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM8221PG"
+    "qr_token": "ARMADA-BM8221PG",
+    "default_tare_kg": 1100,
+    "driver_name": "JONI, JONY, DONY"
   },
   {
     "no": 207,
@@ -4998,7 +5262,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9973TV"
+    "qr_token": "ARMADA-BM9973TV",
+    "default_tare_kg": 1080,
+    "driver_name": "MASRIJAL, MASRIZAL, MAZRIZAL, MAZRIJAL"
   },
   {
     "no": 208,
@@ -5123,7 +5389,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8139TZ"
+    "qr_token": "ARMADA-BM8139TZ",
+    "default_tare_kg": 1210,
+    "driver_name": "SORI"
   },
   {
     "no": 213,
@@ -5170,7 +5438,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9232TS"
+    "qr_token": "ARMADA-BM9232TS",
+    "default_tare_kg": 1710,
+    "driver_name": "FAJAR, PAJAR, M PAJAR"
   },
   {
     "no": 215,
@@ -5195,7 +5465,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8805TW"
+    "qr_token": "ARMADA-BM8805TW",
+    "default_tare_kg": 1280,
+    "driver_name": "WAK ANDI, ANDI, WANDI, WAANDI, WADI"
   },
   {
     "no": 216,
@@ -5220,7 +5492,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9104QB"
+    "qr_token": "ARMADA-BM9104QB",
+    "default_tare_kg": 2160,
+    "driver_name": "ANTO, ANTO S, ANTON"
   },
   {
     "no": 217,
@@ -5289,7 +5563,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8205TK"
+    "qr_token": "ARMADA-BM8205TK",
+    "default_tare_kg": 920,
+    "driver_name": "LEKSEMONO, LAKSEMONO, LASEMONO, IRITEM, L SEMONO, LEKSMONO, LEKSOMONO"
   },
   {
     "no": 220,
@@ -5314,7 +5590,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Pekanbaru Kota",
-    "qr_token": "ARMADA-BG8185BI-220"
+    "qr_token": "ARMADA-BG8185BI-220",
+    "default_tare_kg": 1278
   },
   {
     "no": 221,
@@ -5389,7 +5666,8 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM3444XX"
+    "qr_token": "ARMADA-BM3444XX",
+    "default_tare_kg": 480
   },
   {
     "no": 224,
@@ -5414,7 +5692,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8810QC"
+    "qr_token": "ARMADA-BM8810QC",
+    "default_tare_kg": 1520,
+    "driver_name": "PUTRA, PTRA"
   },
   {
     "no": 225,
@@ -5439,7 +5719,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Rumbai",
-    "qr_token": "ARMADA-BM8211TN"
+    "qr_token": "ARMADA-BM8211TN",
+    "default_tare_kg": 1310,
+    "driver_name": "ANTO, ANTON"
   },
   {
     "no": 226,
@@ -5464,7 +5746,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Bukit Raya",
-    "qr_token": "ARMADA-BM8870QF"
+    "qr_token": "ARMADA-BM8870QF",
+    "default_tare_kg": 1330,
+    "driver_name": "JOHAN"
   },
   {
     "no": 227,
@@ -5489,7 +5773,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "02 Juni 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM9057RE"
+    "qr_token": "ARMADA-BM9057RE",
+    "default_tare_kg": 1070,
+    "driver_name": "SORI, SORRI, QORI, SORRY, TORIK"
   },
   {
     "no": 228,
@@ -5539,7 +5825,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "09 Maret 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8235TM"
+    "qr_token": "ARMADA-BM8235TM",
+    "default_tare_kg": 1200,
+    "driver_name": "ANDRY, ANDRI, HENDRI"
   },
   {
     "no": 230,
@@ -5564,7 +5852,8 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "09 Februari 2026",
     "lampiran_camat": "Rumbai Timur",
-    "qr_token": "ARMADA-BM9129AQ"
+    "qr_token": "ARMADA-BM9129AQ",
+    "default_tare_kg": 1030
   },
   {
     "no": 231,
@@ -5589,7 +5878,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8083QM"
+    "qr_token": "ARMADA-BM8083QM",
+    "default_tare_kg": 1340,
+    "driver_name": "KURNIA"
   },
   {
     "no": 232,
@@ -5614,7 +5905,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8202TM"
+    "qr_token": "ARMADA-BM8202TM",
+    "default_tare_kg": 1490,
+    "driver_name": "MARBUN"
   },
   {
     "no": 233,
@@ -5639,7 +5932,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9248AJ"
+    "qr_token": "ARMADA-BM9248AJ",
+    "default_tare_kg": 2840,
+    "driver_name": "DONY, DONI"
   },
   {
     "no": 234,
@@ -5664,7 +5959,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9592TZ"
+    "qr_token": "ARMADA-BM9592TZ",
+    "default_tare_kg": 1300,
+    "driver_name": "RESTU, ARIS"
   },
   {
     "no": 235,
@@ -5689,7 +5986,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8780FC"
+    "qr_token": "ARMADA-BM8780FC",
+    "default_tare_kg": 1630,
+    "driver_name": "BOBI, BOBY, BOBBY"
   },
   {
     "no": 236,
@@ -5714,7 +6013,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8399QG"
+    "qr_token": "ARMADA-BM8399QG",
+    "default_tare_kg": 1390,
+    "driver_name": "ARIS"
   },
   {
     "no": 237,
@@ -5739,7 +6040,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8618QK"
+    "qr_token": "ARMADA-BM8618QK",
+    "default_tare_kg": 1260,
+    "driver_name": "DIKI"
   },
   {
     "no": 238,
@@ -5764,7 +6067,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8288QM"
+    "qr_token": "ARMADA-BM8288QM",
+    "default_tare_kg": 1120,
+    "driver_name": "FOERA, MUERA, MOERA, VOERA, KURNIA"
   },
   {
     "no": 239,
@@ -5789,7 +6094,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BA8275EA"
+    "qr_token": "ARMADA-BA8275EA",
+    "default_tare_kg": 1560,
+    "driver_name": "PANGARIBUAN, MARIBUAN, PANAGRIBUAN, PANGARUBUAN, PANGLIT, PANGARBUAN"
   },
   {
     "no": 240,
@@ -5814,7 +6121,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Februari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8987TG"
+    "qr_token": "ARMADA-BM8987TG",
+    "default_tare_kg": 1180,
+    "driver_name": "DAVID, DAVIT, NAVIT, ARIS, DAIVIT"
   },
   {
     "no": 241,
@@ -5839,7 +6148,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BA8161CA"
+    "qr_token": "ARMADA-BA8161CA",
+    "default_tare_kg": 1230,
+    "driver_name": "ALIM, HALIM"
   },
   {
     "no": 242,
@@ -5864,7 +6175,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8694ZB"
+    "qr_token": "ARMADA-BM8694ZB",
+    "default_tare_kg": 1190,
+    "driver_name": "ERWIN"
   },
   {
     "no": 243,
@@ -5889,7 +6202,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9861AJ"
+    "qr_token": "ARMADA-BM9861AJ",
+    "default_tare_kg": 3510,
+    "driver_name": "BUDI"
   },
   {
     "no": 244,
@@ -5914,7 +6229,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "11 Mei 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8070TJ"
+    "qr_token": "ARMADA-BM8070TJ",
+    "default_tare_kg": 1030,
+    "driver_name": "SURYADI, JUNAIDI, SUYADI"
   },
   {
     "no": 245,
@@ -5939,7 +6256,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM9278TI"
+    "qr_token": "ARMADA-BM9278TI",
+    "default_tare_kg": 1470,
+    "driver_name": "MUSLIM, IMUS, MUSLM"
   },
   {
     "no": 246,
@@ -5964,7 +6283,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "03 Agst 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8473DW"
+    "qr_token": "ARMADA-BM8473DW",
+    "default_tare_kg": 1280,
+    "driver_name": "ERDINAL, ARDINAL, HERDINAL, HUDAWI"
   },
   {
     "no": 247,
@@ -5989,7 +6310,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BB8211VB"
+    "qr_token": "ARMADA-BB8211VB",
+    "default_tare_kg": 1240
   },
   {
     "no": 248,
@@ -6155,7 +6477,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM4118ABJ"
+    "qr_token": "ARMADA-BM4118ABJ",
+    "default_tare_kg": 400,
+    "driver_name": "RIZAL, RIJAL, SAPRIZAL"
   },
   {
     "no": 255,
@@ -6205,7 +6529,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM3532ON"
+    "qr_token": "ARMADA-BM3532ON",
+    "default_tare_kg": 400,
+    "driver_name": "FAISAL, PAISAL, FAISDAL"
   },
   {
     "no": 257,
@@ -6230,7 +6556,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "",
     "lampiran_camat": "Pekanbaru Kota",
-    "qr_token": "ARMADA-BM6628ACE"
+    "qr_token": "ARMADA-BM6628ACE",
+    "default_tare_kg": 460,
+    "driver_name": "G RANDA, GUSTI, GUSTI RANDA, GUSTI R"
   },
   {
     "no": 258,
@@ -6255,7 +6583,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "12 Januari 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8493QQ"
+    "qr_token": "ARMADA-BM8493QQ",
+    "default_tare_kg": 1190,
+    "driver_name": "MOLA, JERRY, AMEK"
   },
   {
     "no": 259,
@@ -6424,7 +6754,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "27 April 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8274QQ"
+    "qr_token": "ARMADA-BM8274QQ",
+    "default_tare_kg": 1100,
+    "driver_name": "SIAGIAN"
   },
   {
     "no": 266,
@@ -6449,7 +6781,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "19 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM9978NU"
+    "qr_token": "ARMADA-BM9978NU",
+    "default_tare_kg": 4090,
+    "driver_name": "PUTRA"
   },
   {
     "no": 267,
@@ -6474,7 +6808,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "20 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8385QM"
+    "qr_token": "ARMADA-BM8385QM",
+    "default_tare_kg": 1100,
+    "driver_name": "SIAGIAN"
   },
   {
     "no": 268,
@@ -6499,7 +6835,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "21 Januari 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8006QQ"
+    "qr_token": "ARMADA-BM8006QQ",
+    "default_tare_kg": 1200,
+    "driver_name": "TOPER"
   },
   {
     "no": 269,
@@ -6524,7 +6862,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Januari 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8922QG"
+    "qr_token": "ARMADA-BM8922QG",
+    "default_tare_kg": 1200,
+    "driver_name": "PEDO, HENDRI"
   },
   {
     "no": 270,
@@ -6549,7 +6889,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "21 September 2026",
     "lampiran_camat": "Rumbai Barat",
-    "qr_token": "ARMADA-BM8285QM"
+    "qr_token": "ARMADA-BM8285QM",
+    "default_tare_kg": 1210,
+    "driver_name": "RIKI"
   },
   {
     "no": 271,
@@ -6574,7 +6916,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "18 Mei 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8606QQ"
+    "qr_token": "ARMADA-BM8606QQ",
+    "default_tare_kg": 1170,
+    "driver_name": "CRISTIAN, KRISTIAN, CHRISTIAN"
   },
   {
     "no": 272,
@@ -6588,7 +6932,7 @@
     "nomor_surat_permohonan": "019/LPS-UMBN-SR/I/2026",
     "tanggal_permohonan": "05 Januari 2026",
     "nama_lps_2": "BERDAMAI DENGAN SAMPAH SUPRAPTO JL UMBAN SARI NO 159",
-    "nama_ketua_lps": "",
+    "nama_ketua_lps": "SUPRAPTO",
     "alamat_lps": "",
     "kelurahan_lps": "UMBAN SARI",
     "kecamatan_lps": "RUMBAI",
@@ -6668,7 +7012,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "13 Juli 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM3984YY"
+    "qr_token": "ARMADA-BM3984YY",
+    "default_tare_kg": 510,
+    "driver_name": "TARIPAR, SANGKOT"
   },
   {
     "no": 276,
@@ -6693,7 +7039,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "20 Juli 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8427QQ"
+    "qr_token": "ARMADA-BM8427QQ",
+    "default_tare_kg": 1170,
+    "driver_name": "HOTMAN, LUKMAN"
   },
   {
     "no": 277,
@@ -6718,7 +7066,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "20 Juli 2026",
     "lampiran_camat": "Binawidya",
-    "qr_token": "ARMADA-BM9356DE"
+    "qr_token": "ARMADA-BM9356DE",
+    "default_tare_kg": 1160,
+    "driver_name": "ADI, ARDI, ALDI"
   },
   {
     "no": 278,
@@ -6743,7 +7093,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "23 Juli 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8182QQ"
+    "qr_token": "ARMADA-BM8182QQ",
+    "default_tare_kg": 1490,
+    "driver_name": "ZOASA, SOAZA"
   },
   {
     "no": 279,
@@ -6768,7 +7120,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "14 September 2026",
     "lampiran_camat": "Tuah Madani",
-    "qr_token": "ARMADA-BM8664QQ"
+    "qr_token": "ARMADA-BM8664QQ",
+    "default_tare_kg": 1230,
+    "driver_name": "NIKO, DIKO"
   },
   {
     "no": 280,
@@ -6793,7 +7147,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "11 Agustus 2026",
     "lampiran_camat": "Marpoyan Damai",
-    "qr_token": "ARMADA-BM8159QS"
+    "qr_token": "ARMADA-BM8159QS",
+    "default_tare_kg": 1280,
+    "driver_name": "HUDAWI, ABUDAWI, DANI, BUDAWI, HADAWI"
   },
   {
     "no": 281,
@@ -6818,7 +7174,9 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "21 September 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8746MI"
+    "qr_token": "ARMADA-BM8746MI",
+    "default_tare_kg": 1680,
+    "driver_name": "BAYU"
   },
   {
     "no": 282,
@@ -6868,7 +7226,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Oktober 2026",
     "lampiran_camat": "Senapelan",
-    "qr_token": "ARMADA-BM8777QQ"
+    "qr_token": "ARMADA-BM8777QQ",
+    "default_tare_kg": 1170,
+    "driver_name": "RAMOD, RAMOT, RAMOT SIREGAR, RAMAT SIREGAR, SIREGAR"
   },
   {
     "no": 284,
@@ -6893,7 +7253,9 @@
     "lokasi_tps": "PALAS",
     "tanggal_terbit_izin": "05 Oktober 2026",
     "lampiran_camat": "Sukajadi",
-    "qr_token": "ARMADA-BM8119QS"
+    "qr_token": "ARMADA-BM8119QS",
+    "default_tare_kg": 1160,
+    "driver_name": "DANI, RIVAL, BAGOR DANI, DANI BAGOR, BAGOR, YUSRIZAL"
   },
   {
     "no": 285,
@@ -6918,6 +7280,8 @@
     "lokasi_tps": "AIR HITAM",
     "tanggal_terbit_izin": "12 Oktober 2026",
     "lampiran_camat": "Payung Sekaki",
-    "qr_token": "ARMADA-BM8147QQ"
+    "qr_token": "ARMADA-BM8147QQ",
+    "default_tare_kg": 1350,
+    "driver_name": "SIBARANI, SIBRANI"
   }
 ]
