@@ -35,9 +35,36 @@ export async function syncCompletedWeighingToLps(payload: LpsWeighingPayload) {
       console.error('[LPS Sync] Ditolak:', response.status, body);
       return { attempted: true, ok: false, reason: `http_${response.status}` };
     }
-    return { attempted: true, ok: true, duplicate: Boolean(body?.duplicate) };
+    return { attempted: true, ok: true, duplicate: Boolean(body?.duplicate), updated: Boolean(body?.updated) };
   } catch (error) {
     console.error('[LPS Sync] Gagal mengirim transaksi:', error);
+    return { attempted: true, ok: false, reason: 'network_error' as const };
+  }
+}
+
+export async function deleteWeighingFromLps(ticketNumber: string) {
+  const url = process.env.LPS_INTEGRATION_URL?.trim();
+  const secret = process.env.LPS_INTEGRATION_SECRET?.trim();
+  if (!url || !secret) return { attempted: false, ok: false, reason: 'not_configured' as const };
+
+  try {
+    const deleteUrl = new URL(url);
+    deleteUrl.searchParams.set('ticketNumber', ticketNumber.trim());
+    const response = await fetch(deleteUrl.toString(), {
+      method: 'DELETE',
+      headers: {
+        authorization: `Bearer ${secret}`,
+      },
+      signal: AbortSignal.timeout(10_000),
+    });
+    const body = await response.json().catch(() => null);
+    if (!response.ok) {
+      console.error('[LPS Sync] Gagal delete:', response.status, body);
+      return { attempted: true, ok: false, reason: `http_${response.status}` };
+    }
+    return { attempted: true, ok: true, deleted: Boolean(body?.deleted) };
+  } catch (error) {
+    console.error('[LPS Sync] Gagal request delete ke LPS:', error);
     return { attempted: true, ok: false, reason: 'network_error' as const };
   }
 }

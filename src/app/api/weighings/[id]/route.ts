@@ -1,3 +1,4 @@
+import { syncCompletedWeighingToLps, deleteWeighingFromLps } from "@/lib/lps-sync";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -189,6 +190,23 @@ export async function PATCH(
       return newRow;
     });
 
+    // Sinkronisasi pembaruan ke dashboard LPS secara real-time
+    const lpsSync = await syncCompletedWeighingToLps({
+      ticketNumber: String(updated.ticket_number),
+      plateNumber: String(updated.plate_number),
+      lpsName: String(updated.lps_name || "LPS TPS AIR HITAM"),
+      transdepo: process.env.LPS_TRANSDEPO || "AIR_HITAM",
+      weighedAt: new Date(updated.weighed_at).toISOString(),
+      grossKg: Number(updated.gross_kg),
+      tareKg: Number(updated.tare_kg),
+      rafaksiKg: Number(updated.rafaksi_kg || 0),
+      nettoKg: Number(updated.netto_2_kg),
+      driverName: updated.driver_name || undefined,
+      vehicleType: updated.vehicle_type || undefined,
+      wasteType: updated.waste_type || undefined,
+      indicatorRaw: updated.indicator_raw || undefined,
+    });
+
     revalidatePath("/dashboard");
     revalidatePath("/transaksi");
     revalidatePath(`/transaksi/${weighingId}`);
@@ -198,6 +216,7 @@ export async function PATCH(
       ok: true,
       message: "Data transaksi berhasil diperbarui.",
       data: updated,
+      lpsSync,
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -263,6 +282,13 @@ export async function DELETE(
         JSON.stringify({ deleted_at: new Date().toISOString(), deleted_by: user.name }),
       ]);
     });
+
+    // Hapus juga transaksi dari sistem LPS jika nomor tiket terdaftar
+    if (existing.ticket_number) {
+      deleteWeighingFromLps(String(existing.ticket_number)).catch((e) => {
+        console.warn("[LPS Sync] Gagal delete di LPS:", e);
+      });
+    }
 
     revalidatePath("/dashboard");
     revalidatePath("/transaksi");
