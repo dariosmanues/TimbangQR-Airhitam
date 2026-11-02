@@ -77,22 +77,29 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
       <style>{`
         @page {
           size: 9.5in 11in;
-          margin: 6mm 10mm 6mm 10mm;
+          margin: 8mm 12mm 8mm 12mm;
         }
 
         @media print {
+          *, *:before, *:after {
+            letter-spacing: normal !important;
+            word-spacing: normal !important;
+            font-kerning: normal !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+
           html, body {
             width: 100% !important;
-            height: 100% !important;
-            max-height: 100% !important;
+            height: auto !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
             color: #000000 !important;
-            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            overflow: hidden !important;
+            font-family: Arial, "Segoe UI", Helvetica, sans-serif !important;
+            font-size: 11pt !important;
+            line-height: 1.4 !important;
+            overflow: visible !important;
           }
 
           .no-print, .sidebar, .topbar, header, nav, aside {
@@ -116,7 +123,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             width: 100% !important;
             margin: 0 auto !important;
             padding: 0 !important;
-            border: 1.5px solid #000000 !important;
+            border: 1px solid #000000 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
             page-break-inside: avoid !important;
@@ -125,30 +132,29 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             break-before: avoid !important;
             page-break-after: avoid !important;
             break-after: avoid !important;
-            overflow: hidden !important;
-            max-height: 10.4in !important;
           }
 
           .ticket-body {
-            padding: 12px 18px !important;
+            padding: 16px 22px !important;
           }
 
           .ticket-kop {
-            border-bottom: 2.5px double #000000 !important;
-            padding-bottom: 8px !important;
-            margin-bottom: 10px !important;
+            border-bottom: 2px solid #000000 !important;
+            padding-bottom: 10px !important;
+            margin-bottom: 12px !important;
+            line-height: 1.35 !important;
           }
 
           .ticket-header-row {
-            margin-bottom: 8px !important;
+            margin-bottom: 12px !important;
           }
 
           .ticket-highlight-box {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
-            gap: 8px !important;
-            padding: 8px 12px !important;
-            margin-bottom: 10px !important;
+            gap: 10px !important;
+            padding: 10px 14px !important;
+            margin-bottom: 12px !important;
             border: 1px solid #000000 !important;
             background: #f8fafc !important;
           }
@@ -156,65 +162,71 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           .ticket-info-section {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            gap: 16px !important;
-            margin-bottom: 10px !important;
+            gap: 20px !important;
+            margin-bottom: 14px !important;
           }
 
           .ticket-info-table td {
-            padding: 3px 6px !important;
-            font-size: 11px !important;
+            padding: 4px 6px !important;
+            font-size: 11.5px !important;
+            line-height: 1.4 !important;
             border-bottom: 1px dashed #cbd5e1 !important;
           }
 
           .ticket-tonase-section {
-            margin-bottom: 10px !important;
+            margin-bottom: 14px !important;
           }
 
           .ticket-table-bordered th, 
           .ticket-table-bordered td {
             border: 1px solid #000000 !important;
-            padding: 5px 4px !important;
+            padding: 6px 6px !important;
           }
 
           .ticket-table-bordered th {
-            font-size: 10.5px !important;
+            font-size: 11px !important;
             background: #f1f5f9 !important;
+            font-weight: 700 !important;
           }
 
           .ticket-table-bordered td {
-            font-size: 12px !important;
+            font-size: 13px !important;
           }
 
           .ticket-netto-box {
             border: 2px solid #000000 !important;
             background: #f1f5f9 !important;
-            font-size: 18px !important;
-            padding: 6px 4px !important;
+            font-size: 19px !important;
+            padding: 7px 6px !important;
+            font-weight: 700 !important;
           }
 
           .plate-box {
             border: 1.5px solid #000000 !important;
             color: #000000 !important;
             background: #ffffff !important;
-            font-size: 14px !important;
-            padding: 2px 6px !important;
+            font-size: 15px !important;
+            padding: 3px 8px !important;
+            font-weight: 700 !important;
+            font-family: 'Courier New', Courier, monospace !important;
           }
 
           .ticket-signature-section {
-            margin-top: 14px !important;
-            gap: 40px !important;
+            margin-top: 18px !important;
+            gap: 60px !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
           }
 
           .signature-space {
-            height: 42px !important;
+            height: 48px !important;
           }
 
           .ticket-footer {
-            margin-top: 12px !important;
-            padding-top: 6px !important;
-            font-size: 9px !important;
+            margin-top: 16px !important;
+            padding-top: 8px !important;
+            font-size: 10px !important;
+            line-height: 1.4 !important;
           }
         }
 
@@ -239,29 +251,28 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
 
         .ticket-table-bordered th {
           background: #f8fafc;
-          font-size: 11px;
+          font-size: 11.5px;
           font-weight: 700;
-          letter-spacing: 0.5px;
           text-transform: uppercase;
-          padding: 7px 6px;
+          padding: 8px 6px;
           border: 1px solid #cbd5e1;
           color: #334155;
         }
 
         .ticket-table-bordered td {
-          padding: 7px 6px;
+          padding: 8px 6px;
           border: 1px solid #cbd5e1;
-          font-size: 12.5px;
+          font-size: 13px;
         }
 
         .ticket-info-table {
           width: 100%;
           border-collapse: collapse;
-          font-size: 12px;
+          font-size: 12.5px;
         }
 
         .ticket-info-table td {
-          padding: 4px 6px;
+          padding: 5px 6px;
           vertical-align: top;
           border-bottom: 1px dashed #e2e8f0;
         }
@@ -289,7 +300,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             )}
           </div>
           <p style={{ margin: "4px 0 0", color: "var(--muted)", fontSize: 13 }}>
-            Format cetak telah disesuaikan agar pas (match) dengan kertas continuous form standar 9.5 x 11 inches dalam 1 halaman.
+            Format cetak anti-dempet dioptimalkan khusus printer continuous form / dot-matrix 9.5 x 11 inches.
           </p>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -304,7 +315,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
         </div>
       </div>
 
-      {/* Lembar Tiket Siap Cetak (Match 9.5 x 11 inches - Strict 1 Halaman) */}
+      {/* Lembar Tiket Siap Cetak (Match 9.5 x 11 inches - Format Bersih Anti-Dempet) */}
       <article className="ticket-card">
         <div className="ticket-body">
           {/* KOP Resmi Jembatan Timbang */}
@@ -317,34 +328,34 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               marginBottom: 12,
             }}
           >
-            <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#475569" }}>
+            <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", color: "#475569" }}>
               PEMERINTAH KOTA PEKANBARU
             </div>
-            <div style={{ fontSize: 14.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", margin: "2px 0", color: "#0f172a" }}>
+            <div style={{ fontSize: 15.5, fontWeight: 700, textTransform: "uppercase", margin: "2px 0", color: "#0f172a" }}>
               DINAS LINGKUNGAN HIDUP DAN KEBERSIHAN (DLHK)
             </div>
-            <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", color: "#047857" }}>
+            <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#047857" }}>
               UPT PENGELOLAAN SAMPAH — JEMBATAN TIMBANG TRANSDEPO AIR HITAM
             </div>
-            <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 2 }}>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
               Jl. Air Hitam, Kec. Payung Sekaki, Kota Pekanbaru, Riau — Kode Pos: 28292
             </div>
           </div>
 
           {/* Baris Judul Tiket & Nomor Tiket */}
-          <div className="ticket-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 10 }}>
+          <div className="ticket-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 12 }}>
             <div>
-              <div style={{ fontSize: 10.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>
                 SURAT BUKTI TIMBANG (WEIGHING TICKET)
               </div>
-              <div style={{ fontSize: 19, fontWeight: 900, color: "#0f172a", fontFamily: "monospace", letterSpacing: 0.5 }}>
+              <div style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", fontFamily: "'Courier New', Courier, monospace" }}>
                 {String(row.ticket_number)}
               </div>
             </div>
 
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 10.5, color: "#64748b" }}>Waktu Timbang (WIB)</div>
-              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a" }}>
+              <div style={{ fontSize: 11, color: "#64748b" }}>Waktu Timbang (WIB)</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>
                 {formatDateTime(String(row.weighed_at))}
               </div>
             </div>
@@ -365,18 +376,18 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             }}
           >
             <div>
-              <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 600 }}>Nomor Polisi (Plat)</div>
+              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Nomor Polisi (Plat)</div>
               <div
                 className="plate-box"
                 style={{
                   display: "inline-block",
-                  fontSize: 15,
-                  fontWeight: 900,
-                  padding: "2px 8px",
+                  fontSize: 16,
+                  fontWeight: 700,
+                  fontFamily: "'Courier New', Courier, monospace",
+                  padding: "3px 8px",
                   backgroundColor: "#0f172a",
                   color: "#ffffff",
                   borderRadius: 4,
-                  letterSpacing: 1.5,
                   marginTop: 3,
                 }}
               >
@@ -385,39 +396,39 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             </div>
 
             <div>
-              <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 600 }}>Kode Armada & Izin DLHK</div>
-              <div style={{ fontSize: 12.5, fontWeight: 700, marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Kode Armada & Izin DLHK</div>
+              <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
                 {row.vehicle_code || "-"}
               </div>
               {row.nomor_izin && (
-                <div style={{ fontSize: 10.5, color: "#64748b", fontFamily: "monospace" }}>
+                <div style={{ fontSize: 11, color: "#64748b", fontFamily: "'Courier New', Courier, monospace" }}>
                   {row.nomor_izin}
                 </div>
               )}
             </div>
 
             <div>
-              <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 600 }}>Jenis Kendaraan</div>
-              <div style={{ fontSize: 12.5, fontWeight: 700, marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Jenis Kendaraan</div>
+              <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
                 {String(row.vehicle_type || "PICKUP")}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: 10.5, color: "#64748b", fontWeight: 600 }}>Lokasi TPS Tujuan</div>
-              <div style={{ fontSize: 12.5, fontWeight: 800, color: "#047857", marginTop: 4 }}>
+              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Lokasi TPS Tujuan</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#047857", marginTop: 4 }}>
                 TRANSDEPO AIR HITAM
               </div>
             </div>
           </div>
 
           {/* Tabel Informasi Rincian Operasional & Wilayah */}
-          <div className="ticket-info-section" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 12 }}>
+          <div className="ticket-info-section" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 12 }}>
             {/* Kolom Kiri: LPS & Pengemudi */}
             <table className="ticket-info-table">
               <tbody>
                 <tr>
-                  <td style={{ width: 120, color: "#64748b", fontWeight: 600 }}>Pengirim / LPS</td>
+                  <td style={{ width: 125, color: "#64748b", fontWeight: 600 }}>Pengirim / LPS</td>
                   <td><strong>{String(row.lps_name || "-")}</strong></td>
                 </tr>
                 <tr>
@@ -439,7 +450,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             <table className="ticket-info-table">
               <tbody>
                 <tr>
-                  <td style={{ width: 120, color: "#64748b", fontWeight: 600 }}>Kelurahan / Kec.</td>
+                  <td style={{ width: 125, color: "#64748b", fontWeight: 600 }}>Kelurahan / Kec.</td>
                   <td>
                     {row.kelurahan_lps ? `${row.kelurahan_lps} / ${row.kecamatan_lps || "-"}` : "-"}
                   </td>
@@ -447,7 +458,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                 <tr>
                   <td style={{ color: "#64748b", fontWeight: 600 }}>Wilayah Kerja</td>
                   <td>
-                    <span style={{ fontSize: 11, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                    <span style={{ fontSize: 11.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {row.wilayah_kerja || "-"}
                     </span>
                   </td>
@@ -458,13 +469,13 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                     <span style={{ fontWeight: 600 }}>
                       {row.source === "OCR_LED" ? "Kamera OCR LED Otomatis" : (row.source || "Aplikasi")}
                     </span>
-                    {row.device_code && <span style={{ fontSize: 10.5, color: "#64748b" }}> ({row.device_code})</span>}
+                    {row.device_code && <span style={{ fontSize: 11, color: "#64748b" }}> ({row.device_code})</span>}
                   </td>
                 </tr>
                 {row.source_note && (
                   <tr>
                     <td style={{ color: "#64748b", fontWeight: 600 }}>Catatan</td>
-                    <td style={{ fontSize: 11 }}>{row.source_note}</td>
+                    <td style={{ fontSize: 11.5 }}>{row.source_note}</td>
                   </tr>
                 )}
               </tbody>
@@ -487,18 +498,27 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ fontWeight: 700 }}>{formatNumber(Number(row.gross_kg))} kg</td>
-                  <td style={{ fontWeight: 700 }}>{formatNumber(Number(row.tare_kg))} kg</td>
-                  <td style={{ fontWeight: 700 }}>{formatNumber(Number(row.netto_1_kg))} kg</td>
-                  <td>{formatNumber(Number(row.rafaksi_kg))} kg</td>
+                  <td style={{ fontWeight: 700, fontFamily: "'Courier New', Courier, monospace", fontSize: 13.5 }}>
+                    {formatNumber(Number(row.gross_kg))} kg
+                  </td>
+                  <td style={{ fontWeight: 700, fontFamily: "'Courier New', Courier, monospace", fontSize: 13.5 }}>
+                    {formatNumber(Number(row.tare_kg))} kg
+                  </td>
+                  <td style={{ fontWeight: 700, fontFamily: "'Courier New', Courier, monospace", fontSize: 13.5 }}>
+                    {formatNumber(Number(row.netto_1_kg))} kg
+                  </td>
+                  <td style={{ fontFamily: "'Courier New', Courier, monospace", fontSize: 13.5 }}>
+                    {formatNumber(Number(row.rafaksi_kg))} kg
+                  </td>
                   <td
                     className="ticket-netto-box"
                     style={{
                       fontSize: 20,
-                      fontWeight: 900,
+                      fontWeight: 700,
+                      fontFamily: "'Courier New', Courier, monospace",
                       color: "#047857",
                       backgroundColor: "#f0fdf4",
-                      padding: "8px 4px",
+                      padding: "8px 6px",
                     }}
                   >
                     {formatNumber(Number(row.netto_2_kg))} kg
@@ -506,7 +526,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                 </tr>
               </tbody>
             </table>
-            <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 4, textAlign: "right" }}>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 4, textAlign: "right" }}>
               * Perhitungan: Netto 1 = (Gross - Tare) | Netto 2 = (Netto 1 - Rafaksi) | Ritasi: {row.ritasi || 1}
             </div>
           </div>
@@ -528,22 +548,22 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               <div style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
                 Pengemudi / Sopir Armada
               </div>
-              <div className="signature-space" style={{ height: 44 }} />
+              <div className="signature-space" style={{ height: 46 }} />
               <div style={{ borderTop: "1.5px solid #000000", paddingTop: 4, fontWeight: 700, fontSize: 12.5 }}>
                 ( {effectiveDriver !== "-" ? effectiveDriver : "..................................."} )
               </div>
-              <div style={{ fontSize: 10, color: "#64748b" }}>Tanda tangan & Nama Jelas</div>
+              <div style={{ fontSize: 10.5, color: "#64748b" }}>Tanda tangan & Nama Jelas</div>
             </div>
 
             <div>
               <div style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
                 Petugas Jembatan Timbang
               </div>
-              <div className="signature-space" style={{ height: 44 }} />
+              <div className="signature-space" style={{ height: 46 }} />
               <div style={{ borderTop: "1.5px solid #000000", paddingTop: 4, fontWeight: 700, fontSize: 12.5 }}>
                 ( {row.creator_name || "Petugas Timbang Air Hitam"} )
               </div>
-              <div style={{ fontSize: 10, color: "#64748b" }}>UPT Pengelolaan Sampah DLHK</div>
+              <div style={{ fontSize: 10.5, color: "#64748b" }}>UPT Pengelolaan Sampah DLHK</div>
             </div>
           </div>
 
@@ -557,7 +577,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              fontSize: 9.5,
+              fontSize: 10,
               color: "#64748b",
               flexWrap: "wrap",
               gap: 6,
