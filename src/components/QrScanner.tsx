@@ -482,27 +482,29 @@ export default function QrScanner({ onToken }: { onToken: (token: string) => voi
 
         <div style={{ height: 16 }} />
 
-        <div className="field">
-          <label>
-            <Keyboard size={14} style={{ verticalAlign: "middle" }} /> Input Nopol / Kode / Token Manual
+        <div className="field" style={{ opacity: 0.65 }}>
+          <label style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span>
+              <Keyboard size={14} style={{ verticalAlign: "middle" }} /> Input Nopol / Kode / Token Manual
+            </span>
+            <span className="badge" style={{ fontSize: 10, padding: "2px 6px" }}>
+              Dinonaktifkan
+            </span>
           </label>
           <div style={{ display: "flex", gap: 9 }}>
             <input
               className="input"
-              value={manual}
-              onChange={(e) => setManual(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && manual.trim()) {
-                  e.preventDefault();
-                  onToken(tokenFromValue(manual));
-                }
-              }}
-              placeholder="Contoh: BM 8106 QP atau ARM-HJ-0001 atau token..."
+              value=""
+              disabled
+              readOnly
+              placeholder="Pencarian plat manual dinonaktifkan (Wajib Scan QR)"
+              style={{ cursor: "not-allowed", backgroundColor: "rgba(0,0,0,0.04)" }}
             />
             <button
               className="btn btn-secondary"
               type="button"
-              onClick={() => manual.trim() && onToken(tokenFromValue(manual))}
+              disabled
+              style={{ cursor: "not-allowed", opacity: 0.5 }}
             >
               Buka
             </button>
