@@ -265,9 +265,6 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   }
 
   *, *:before, *:after {
-    letter-spacing: normal !important;
-    word-spacing: normal !important;
-    font-kerning: normal !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -277,9 +274,11 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     height: auto !important;
     background: #ffffff !important;
     color: #000000 !important;
-    font-family: Arial, "Segoe UI", Tahoma, sans-serif !important;
+    font-family: 'Courier New', Courier, 'Lucida Console', monospace !important;
     font-size: 11pt !important;
-    line-height: 1.4 !important;
+    letter-spacing: 0.8px !important;
+    word-spacing: 3.5px !important;
+    line-height: 1.55 !important;
     margin: 0 !important;
     padding: 0 !important;
     overflow: visible !important;

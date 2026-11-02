@@ -82,11 +82,9 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
 
         @media print {
           *, *:before, *:after {
-            letter-spacing: normal !important;
-            word-spacing: normal !important;
-            font-kerning: normal !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            box-sizing: border-box !important;
           }
 
           html, body {
@@ -96,10 +94,13 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             padding: 0 !important;
             background: #ffffff !important;
             color: #000000 !important;
-            font-family: Arial, "Segoe UI", Helvetica, sans-serif !important;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace !important;
             font-size: 11pt !important;
-            line-height: 1.4 !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 3.5px !important;
+            line-height: 1.55 !important;
             overflow: visible !important;
+            -webkit-font-smoothing: antialiased !important;
           }
 
           .no-print, .sidebar, .topbar, header, nav, aside {
@@ -123,9 +124,12 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             width: 100% !important;
             margin: 0 auto !important;
             padding: 0 !important;
-            border: 1px solid #000000 !important;
+            border: 1.5px solid #000000 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
             page-break-before: avoid !important;
@@ -135,98 +139,270 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           }
 
           .ticket-body {
-            padding: 16px 22px !important;
+            padding: 14px 18px !important;
+            font-family: 'Courier New', Courier, 'Lucida Console', monospace !important;
           }
 
+          /* KOP RESMI */
           .ticket-kop {
             border-bottom: 2px solid #000000 !important;
-            padding-bottom: 10px !important;
-            margin-bottom: 12px !important;
-            line-height: 1.35 !important;
+            padding-bottom: 8px !important;
+            margin-bottom: 10px !important;
+            text-align: center !important;
+            line-height: 1.4 !important;
           }
 
+          .ticket-kop-instansi {
+            font-size: 11pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 2px !important;
+            word-spacing: 5px !important;
+            color: #000000 !important;
+            text-transform: uppercase !important;
+          }
+
+          .ticket-kop-dinas {
+            font-size: 13.5pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 2px !important;
+            word-spacing: 6px !important;
+            color: #000000 !important;
+            text-transform: uppercase !important;
+            margin: 2px 0 !important;
+          }
+
+          .ticket-kop-upt {
+            font-size: 11.5pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.5px !important;
+            word-spacing: 4px !important;
+            color: #000000 !important;
+            text-transform: uppercase !important;
+          }
+
+          .ticket-kop-alamat {
+            font-size: 9.5pt !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 3px !important;
+            color: #000000 !important;
+            margin-top: 2px !important;
+          }
+
+          /* HEADER ROW: JUDUL TIKET & JAM */
           .ticket-header-row {
-            margin-bottom: 12px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            margin-bottom: 10px !important;
+            line-height: 1.4 !important;
           }
 
+          .ticket-title-label {
+            font-size: 10.5pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.5px !important;
+            word-spacing: 4px !important;
+            text-transform: uppercase !important;
+            color: #000000 !important;
+          }
+
+          .ticket-title-number {
+            font-size: 17pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 2.5px !important;
+            word-spacing: 4px !important;
+            font-family: 'Courier New', Courier, monospace !important;
+            color: #000000 !important;
+          }
+
+          .ticket-time-label {
+            font-size: 9.5pt !important;
+            letter-spacing: 1px !important;
+            color: #000000 !important;
+          }
+
+          .ticket-time-value {
+            font-size: 11.5pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.2px !important;
+            color: #000000 !important;
+          }
+
+          /* HIGHLIGHT BOX: NOMOR POLISI, KODE ARMADA, JENIS, LOKASI */
           .ticket-highlight-box {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
             gap: 10px !important;
-            padding: 10px 14px !important;
-            margin-bottom: 12px !important;
-            border: 1px solid #000000 !important;
-            background: #f8fafc !important;
+            padding: 8px 12px !important;
+            margin-bottom: 10px !important;
+            border: 1.5px solid #000000 !important;
+            background: #ffffff !important;
+            color: #000000 !important;
           }
 
+          .ticket-highlight-label {
+            font-size: 9.5pt !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 2px !important;
+            color: #000000 !important;
+            margin-bottom: 3px !important;
+          }
+
+          .ticket-highlight-value {
+            font-size: 11.5pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.2px !important;
+            word-spacing: 3px !important;
+            color: #000000 !important;
+          }
+
+          .plate-box {
+            display: inline-block !important;
+            border: 2px solid #000000 !important;
+            color: #000000 !important;
+            background: #ffffff !important;
+            font-size: 14pt !important;
+            padding: 2px 7px !important;
+            font-weight: 700 !important;
+            letter-spacing: 3px !important;
+            word-spacing: 6px !important;
+            font-family: 'Courier New', Courier, monospace !important;
+          }
+
+          /* INFO SECTION: OPERASIONAL & WILAYAH */
           .ticket-info-section {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            gap: 20px !important;
-            margin-bottom: 14px !important;
+            gap: 16px !important;
+            margin-bottom: 10px !important;
+          }
+
+          .ticket-info-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
           }
 
           .ticket-info-table td {
             padding: 4px 6px !important;
-            font-size: 11.5px !important;
-            line-height: 1.4 !important;
-            border-bottom: 1px dashed #cbd5e1 !important;
+            font-size: 10.5pt !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 3px !important;
+            line-height: 1.5 !important;
+            border-bottom: 1px dashed #64748b !important;
+            font-family: 'Courier New', Courier, monospace !important;
+            color: #000000 !important;
           }
 
+          /* TONASE TABLE 5 KOLOM */
           .ticket-tonase-section {
-            margin-bottom: 14px !important;
+            margin-bottom: 10px !important;
+          }
+
+          .ticket-table-bordered {
+            width: 100% !important;
+            border-collapse: collapse !important;
           }
 
           .ticket-table-bordered th, 
           .ticket-table-bordered td {
-            border: 1px solid #000000 !important;
-            padding: 6px 6px !important;
+            border: 1.5px solid #000000 !important;
+            padding: 6px 4px !important;
+            text-align: center !important;
+            font-family: 'Courier New', Courier, monospace !important;
+            color: #000000 !important;
           }
 
           .ticket-table-bordered th {
-            font-size: 11px !important;
-            background: #f1f5f9 !important;
+            font-size: 10pt !important;
+            background: #ffffff !important;
+            color: #000000 !important;
             font-weight: 700 !important;
+            letter-spacing: 1px !important;
+            word-spacing: 3px !important;
+            line-height: 1.35 !important;
           }
 
           .ticket-table-bordered td {
-            font-size: 13px !important;
+            font-size: 12pt !important;
+            font-weight: 600 !important;
+            letter-spacing: 1.2px !important;
+            word-spacing: 3px !important;
+            line-height: 1.4 !important;
           }
 
           .ticket-netto-box {
             border: 2px solid #000000 !important;
-            background: #f1f5f9 !important;
-            font-size: 19px !important;
-            padding: 7px 6px !important;
-            font-weight: 700 !important;
-          }
-
-          .plate-box {
-            border: 1.5px solid #000000 !important;
-            color: #000000 !important;
             background: #ffffff !important;
-            font-size: 15px !important;
-            padding: 3px 8px !important;
+            color: #000000 !important;
+            font-size: 15pt !important;
+            padding: 7px 5px !important;
             font-weight: 700 !important;
-            font-family: 'Courier New', Courier, monospace !important;
+            letter-spacing: 1.5px !important;
           }
 
+          .ticket-formula-note {
+            font-size: 9pt !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 2px !important;
+            line-height: 1.35 !important;
+            margin-top: 3px !important;
+            text-align: right !important;
+            color: #000000 !important;
+          }
+
+          /* TANDA TANGAN */
           .ticket-signature-section {
-            margin-top: 18px !important;
-            gap: 60px !important;
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 50px !important;
+            margin-top: 12px !important;
+            text-align: center !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
           }
 
-          .signature-space {
-            height: 48px !important;
+          .ticket-sign-title {
+            font-size: 10.5pt !important;
+            font-weight: 700 !important;
+            letter-spacing: 1.2px !important;
+            word-spacing: 3.5px !important;
+            color: #000000 !important;
           }
 
+          .signature-space {
+            height: 42px !important;
+          }
+
+          .ticket-sign-name {
+            border-top: 1.5px solid #000000 !important;
+            padding-top: 3px !important;
+            font-weight: 700 !important;
+            font-size: 11pt !important;
+            letter-spacing: 1.2px !important;
+            word-spacing: 3.5px !important;
+            color: #000000 !important;
+          }
+
+          .ticket-sign-role {
+            font-size: 9.5pt !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 2.5px !important;
+            color: #000000 !important;
+          }
+
+          /* FOOTER */
           .ticket-footer {
-            margin-top: 16px !important;
-            padding-top: 8px !important;
-            font-size: 10px !important;
-            line-height: 1.4 !important;
+            margin-top: 10px !important;
+            padding-top: 5px !important;
+            border-top: 1px dashed #000000 !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            font-size: 9pt !important;
+            letter-spacing: 0.8px !important;
+            word-spacing: 2.5px !important;
+            line-height: 1.35 !important;
+            color: #000000 !important;
           }
         }
 
@@ -237,6 +413,10 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           border: 1px solid var(--border);
           border-radius: var(--radius);
           box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+          font-family: 'Courier New', Courier, 'Lucida Console', monospace;
+          letter-spacing: 0.6px;
+          word-spacing: 2.5px;
+          line-height: 1.55;
         }
 
         .ticket-body {
@@ -257,12 +437,15 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           padding: 8px 6px;
           border: 1px solid #cbd5e1;
           color: #334155;
+          letter-spacing: 0.8px;
+          word-spacing: 2px;
         }
 
         .ticket-table-bordered td {
           padding: 8px 6px;
           border: 1px solid #cbd5e1;
           font-size: 13px;
+          letter-spacing: 0.8px;
         }
 
         .ticket-info-table {
@@ -275,6 +458,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           padding: 5px 6px;
           vertical-align: top;
           border-bottom: 1px dashed #e2e8f0;
+          letter-spacing: 0.5px;
         }
 
         .ticket-info-table tr:last-child td {
@@ -328,16 +512,16 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               marginBottom: 12,
             }}
           >
-            <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", color: "#475569" }}>
+            <div className="ticket-kop-instansi" style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", color: "#475569", letterSpacing: 1.5 }}>
               PEMERINTAH KOTA PEKANBARU
             </div>
-            <div style={{ fontSize: 15.5, fontWeight: 700, textTransform: "uppercase", margin: "2px 0", color: "#0f172a" }}>
+            <div className="ticket-kop-dinas" style={{ fontSize: 15.5, fontWeight: 700, textTransform: "uppercase", margin: "2px 0", color: "#0f172a", letterSpacing: 2 }}>
               DINAS LINGKUNGAN HIDUP DAN KEBERSIHAN (DLHK)
             </div>
-            <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#047857" }}>
+            <div className="ticket-kop-upt" style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", color: "#047857", letterSpacing: 1.5 }}>
               UPT PENGELOLAAN SAMPAH — JEMBATAN TIMBANG TRANSDEPO AIR HITAM
             </div>
-            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
+            <div className="ticket-kop-alamat" style={{ fontSize: 11, color: "#64748b", marginTop: 2, letterSpacing: 0.8 }}>
               Jl. Air Hitam, Kec. Payung Sekaki, Kota Pekanbaru, Riau — Kode Pos: 28292
             </div>
           </div>
@@ -345,17 +529,17 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           {/* Baris Judul Tiket & Nomor Tiket */}
           <div className="ticket-header-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10, marginBottom: 12 }}>
             <div>
-              <div style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>
+              <div className="ticket-title-label" style={{ fontSize: 11.5, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 1.5 }}>
                 SURAT BUKTI TIMBANG (WEIGHING TICKET)
               </div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", fontFamily: "'Courier New', Courier, monospace" }}>
+              <div className="ticket-title-number" style={{ fontSize: 20, fontWeight: 700, color: "#0f172a", fontFamily: "'Courier New', Courier, monospace", letterSpacing: 2.5 }}>
                 {String(row.ticket_number)}
               </div>
             </div>
 
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: 11, color: "#64748b" }}>Waktu Timbang (WIB)</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>
+              <div className="ticket-time-label" style={{ fontSize: 11, color: "#64748b", letterSpacing: 0.8 }}>Waktu Timbang (WIB)</div>
+              <div className="ticket-time-value" style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", letterSpacing: 1.2 }}>
                 {formatDateTime(String(row.weighed_at))}
               </div>
             </div>
@@ -376,7 +560,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             }}
           >
             <div>
-              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Nomor Polisi (Plat)</div>
+              <div className="ticket-highlight-label" style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: 0.8 }}>Nomor Polisi (Plat)</div>
               <div
                 className="plate-box"
                 style={{
@@ -389,6 +573,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                   color: "#ffffff",
                   borderRadius: 4,
                   marginTop: 3,
+                  letterSpacing: 3,
                 }}
               >
                 {effectivePlate}
@@ -396,27 +581,27 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             </div>
 
             <div>
-              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Kode Armada & Izin DLHK</div>
-              <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
+              <div className="ticket-highlight-label" style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: 0.8 }}>Kode Armada & Izin DLHK</div>
+              <div className="ticket-highlight-value" style={{ fontSize: 13, fontWeight: 700, marginTop: 4, letterSpacing: 1.2 }}>
                 {row.vehicle_code || "-"}
               </div>
               {row.nomor_izin && (
-                <div style={{ fontSize: 11, color: "#64748b", fontFamily: "'Courier New', Courier, monospace" }}>
+                <div style={{ fontSize: 11, color: "#64748b", fontFamily: "'Courier New', Courier, monospace", letterSpacing: 1 }}>
                   {row.nomor_izin}
                 </div>
               )}
             </div>
 
             <div>
-              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Jenis Kendaraan</div>
-              <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
+              <div className="ticket-highlight-label" style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: 0.8 }}>Jenis Kendaraan</div>
+              <div className="ticket-highlight-value" style={{ fontSize: 13, fontWeight: 700, marginTop: 4, letterSpacing: 1.2 }}>
                 {String(row.vehicle_type || "PICKUP")}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600 }}>Lokasi TPS Tujuan</div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#047857", marginTop: 4 }}>
+              <div className="ticket-highlight-label" style={{ fontSize: 11, color: "#64748b", fontWeight: 600, letterSpacing: 0.8 }}>Lokasi TPS Tujuan</div>
+              <div className="ticket-highlight-value" style={{ fontSize: 13, fontWeight: 700, color: "#047857", marginTop: 4, letterSpacing: 1.2 }}>
                 TRANSDEPO AIR HITAM
               </div>
             </div>
@@ -526,7 +711,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                 </tr>
               </tbody>
             </table>
-            <div style={{ fontSize: 11, color: "#64748b", marginTop: 4, textAlign: "right" }}>
+            <div className="ticket-formula-note" style={{ fontSize: 11, color: "#64748b", marginTop: 4, textAlign: "right" }}>
               * Perhitungan: Netto 1 = (Gross - Tare) | Netto 2 = (Netto 1 - Rafaksi) | Ritasi: {row.ritasi || 1}
             </div>
           </div>
@@ -545,25 +730,25 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             }}
           >
             <div>
-              <div style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
+              <div className="ticket-sign-title" style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
                 Pengemudi / Sopir Armada
               </div>
               <div className="signature-space" style={{ height: 46 }} />
-              <div style={{ borderTop: "1.5px solid #000000", paddingTop: 4, fontWeight: 700, fontSize: 12.5 }}>
+              <div className="ticket-sign-name" style={{ borderTop: "1.5px solid #000000", paddingTop: 4, fontWeight: 700, fontSize: 12.5 }}>
                 ( {effectiveDriver !== "-" ? effectiveDriver : "..................................."} )
               </div>
-              <div style={{ fontSize: 10.5, color: "#64748b" }}>Tanda tangan & Nama Jelas</div>
+              <div className="ticket-sign-role" style={{ fontSize: 10.5, color: "#64748b" }}>Tanda tangan & Nama Jelas</div>
             </div>
 
             <div>
-              <div style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
+              <div className="ticket-sign-title" style={{ fontSize: 11.5, fontWeight: 700, color: "#475569" }}>
                 Petugas Jembatan Timbang
               </div>
               <div className="signature-space" style={{ height: 46 }} />
-              <div style={{ borderTop: "1.5px solid #000000", paddingTop: 4, fontWeight: 700, fontSize: 12.5 }}>
+              <div className="ticket-sign-name" style={{ borderTop: "1.5px solid #000000", paddingTop: 4, fontWeight: 700, fontSize: 12.5 }}>
                 ( {row.creator_name || "Petugas Timbang Air Hitam"} )
               </div>
-              <div style={{ fontSize: 10.5, color: "#64748b" }}>UPT Pengelolaan Sampah DLHK</div>
+              <div className="ticket-sign-role" style={{ fontSize: 10.5, color: "#64748b" }}>UPT Pengelolaan Sampah DLHK</div>
             </div>
           </div>
 
