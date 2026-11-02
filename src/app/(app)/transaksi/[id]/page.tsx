@@ -76,15 +76,14 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
     <>
       <style>{`
         @page {
-          size: 9.5in 11in;
-          margin: 6mm 10mm 6mm 10mm;
+          size: A4 portrait;
+          margin: 6mm 8mm 6mm 8mm;
         }
 
         @media print {
           html, body {
             width: 100% !important;
             height: 100% !important;
-            max-height: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
@@ -112,11 +111,14 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           }
 
           .ticket-card {
-            max-width: 100% !important;
+            box-sizing: border-box !important;
             width: 100% !important;
+            max-width: 100% !important;
+            height: 262mm !important;
+            max-height: 265mm !important;
             margin: 0 auto !important;
             padding: 0 !important;
-            border: 1.5px solid #000000 !important;
+            border: 2px solid #000000 !important;
             border-radius: 0 !important;
             box-shadow: none !important;
             page-break-inside: avoid !important;
@@ -125,96 +127,127 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             break-before: avoid !important;
             page-break-after: avoid !important;
             break-after: avoid !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
             overflow: hidden !important;
-            max-height: 10.4in !important;
           }
 
           .ticket-body {
-            padding: 12px 18px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            height: 100% !important;
+            padding: 16px 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
           }
 
           .ticket-kop {
             border-bottom: 2.5px double #000000 !important;
             padding-bottom: 8px !important;
             margin-bottom: 10px !important;
+            text-align: center !important;
+          }
+
+          .ticket-kop .kop-title-1 {
+            font-size: 13px !important;
+            letter-spacing: 1.5px !important;
+          }
+
+          .ticket-kop .kop-title-2 {
+            font-size: 16px !important;
+            margin: 2px 0 !important;
+          }
+
+          .ticket-kop .kop-title-3 {
+            font-size: 13.5px !important;
+          }
+
+          .ticket-kop .kop-title-4 {
+            font-size: 11px !important;
           }
 
           .ticket-header-row {
-            margin-bottom: 8px !important;
+            margin-bottom: 10px !important;
           }
 
           .ticket-highlight-box {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
-            gap: 8px !important;
-            padding: 8px 12px !important;
-            margin-bottom: 10px !important;
-            border: 1px solid #000000 !important;
+            gap: 10px !important;
+            padding: 10px 14px !important;
+            margin-bottom: 12px !important;
+            border: 1.5px solid #000000 !important;
             background: #f8fafc !important;
           }
 
           .ticket-info-section {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
-            gap: 16px !important;
-            margin-bottom: 10px !important;
+            gap: 20px !important;
+            margin-bottom: 12px !important;
           }
 
           .ticket-info-table td {
-            padding: 3px 6px !important;
-            font-size: 11px !important;
+            padding: 5px 8px !important;
+            font-size: 12px !important;
             border-bottom: 1px dashed #cbd5e1 !important;
           }
 
           .ticket-tonase-section {
-            margin-bottom: 10px !important;
+            margin-bottom: 12px !important;
           }
 
           .ticket-table-bordered th, 
           .ticket-table-bordered td {
-            border: 1px solid #000000 !important;
-            padding: 5px 4px !important;
+            border: 1.5px solid #000000 !important;
+            padding: 8px 6px !important;
           }
 
           .ticket-table-bordered th {
-            font-size: 10.5px !important;
+            font-size: 11.5px !important;
             background: #f1f5f9 !important;
+            font-weight: 700 !important;
           }
 
           .ticket-table-bordered td {
-            font-size: 12px !important;
+            font-size: 13.5px !important;
           }
 
           .ticket-netto-box {
             border: 2px solid #000000 !important;
             background: #f1f5f9 !important;
-            font-size: 18px !important;
-            padding: 6px 4px !important;
+            font-size: 22px !important;
+            font-weight: 900 !important;
+            padding: 8px 6px !important;
           }
 
           .plate-box {
             border: 1.5px solid #000000 !important;
             color: #000000 !important;
             background: #ffffff !important;
-            font-size: 14px !important;
-            padding: 2px 6px !important;
+            font-size: 16px !important;
+            padding: 3px 8px !important;
+            letter-spacing: 1.5px !important;
           }
 
           .ticket-signature-section {
             margin-top: 14px !important;
-            gap: 40px !important;
+            gap: 50px !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
           }
 
           .signature-space {
-            height: 42px !important;
+            height: 60px !important;
           }
 
           .ticket-footer {
-            margin-top: 12px !important;
-            padding-top: 6px !important;
-            font-size: 9px !important;
+            margin-top: 10px !important;
+            padding-top: 8px !important;
+            border-top: 1px dashed #94a3b8 !important;
+            font-size: 10px !important;
           }
         }
 
@@ -280,7 +313,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
             <h1 style={{ margin: 0, fontSize: 24 }}>Tiket Timbang #{row.ticket_number}</h1>
             <span className="badge" style={{ fontSize: 11, fontWeight: 600, backgroundColor: "#eff6ff", color: "#1e40af", borderColor: "#bfdbfe" }}>
-              🖨️ Kertas Printer: 9.5 x 11 Inci (Continuous Form) — Pas 1 Halaman
+              🖨️ Format Cetak: Portrait (A4) — Pas 1 Halaman Penuh
             </span>
             {canManage && (
               <span className="badge green" style={{ fontSize: 11 }}>
@@ -289,7 +322,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             )}
           </div>
           <p style={{ margin: "4px 0 0", color: "var(--muted)", fontSize: 13 }}>
-            Format cetak telah disesuaikan agar pas (match) dengan kertas continuous form standar 9.5 x 11 inches dalam 1 halaman.
+            Format cetak telah disesuaikan dengan orientasi Portrait (A4) pas 1 halaman penuh tanpa terpotong.
           </p>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -300,7 +333,7 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               vehicleOptions={vehicles}
             />
           )}
-          <PrintButton label='Cetak Tiket (9.5 x 11")' />
+          <PrintButton label="Cetak Tiket (A4 Portrait)" />
         </div>
       </div>
 
@@ -317,16 +350,16 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
               marginBottom: 12,
             }}
           >
-            <div style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#475569" }}>
+            <div className="kop-title-1" style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase", color: "#475569" }}>
               PEMERINTAH KOTA PEKANBARU
             </div>
-            <div style={{ fontSize: 14.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", margin: "2px 0", color: "#0f172a" }}>
+            <div className="kop-title-2" style={{ fontSize: 14.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase", margin: "2px 0", color: "#0f172a" }}>
               DINAS LINGKUNGAN HIDUP DAN KEBERSIHAN (DLHK)
             </div>
-            <div style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", color: "#047857" }}>
+            <div className="kop-title-3" style={{ fontSize: 12.5, fontWeight: 700, textTransform: "uppercase", color: "#047857" }}>
               UPT PENGELOLAAN SAMPAH — JEMBATAN TIMBANG TRANSDEPO AIR HITAM
             </div>
-            <div style={{ fontSize: 10.5, color: "#64748b", marginTop: 2 }}>
+            <div className="kop-title-4" style={{ fontSize: 10.5, color: "#64748b", marginTop: 2 }}>
               Jl. Air Hitam, Kec. Payung Sekaki, Kota Pekanbaru, Riau — Kode Pos: 28292
             </div>
           </div>
