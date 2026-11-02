@@ -260,8 +260,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 }
 @media print {
   @page {
-    size: A4 portrait;
-    margin: 6mm 8mm 6mm 8mm;
+    size: 9.5in 11in;
+    margin: 6mm 10mm 6mm 10mm;
   }
 
   *, *:before, *:after {

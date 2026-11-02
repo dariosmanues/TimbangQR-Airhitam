@@ -3,7 +3,7 @@
 import { Printer } from "lucide-react";
 
 export default function PrintButton({
-  label = "Cetak Tiket (A4 Portrait)",
+  label = 'Cetak Tiket (9.5 x 11")',
   className = "btn btn-primary no-print",
 }: {
   label?: string;
@@ -13,7 +13,7 @@ export default function PrintButton({
     <button
       className={className}
       onClick={() => window.print()}
-      title="Cetak Tiket Timbangan (Format Kertas A4 Portrait)"
+      title="Cetak Tiket Timbangan (Format Kertas 9.5 x 11 Inci Continuous Form)"
       style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
     >
       <Printer size={17} /> {label}
