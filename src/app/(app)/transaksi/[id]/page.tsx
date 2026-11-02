@@ -283,14 +283,35 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           }
 
           .ticket-info-table td {
-            padding: 4px 6px !important;
+            padding: 8px 4px !important;
             font-size: 10.5pt !important;
-            letter-spacing: 0.8px !important;
-            word-spacing: 3px !important;
-            line-height: 1.5 !important;
-            border-bottom: 1px dashed #64748b !important;
+            letter-spacing: 1px !important;
+            word-spacing: 3.5px !important;
+            line-height: 1.8 !important;
+            border-bottom: none !important;
             font-family: 'Courier New', Courier, monospace !important;
             color: #000000 !important;
+            vertical-align: top !important;
+          }
+
+          .ticket-info-label {
+            width: 145px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.9px !important;
+            line-height: 1.8 !important;
+          }
+
+          .ticket-info-sep {
+            width: 14px !important;
+            text-align: center !important;
+            font-weight: 600 !important;
+            line-height: 1.8 !important;
+          }
+
+          .ticket-info-val {
+            letter-spacing: 1.1px !important;
+            word-spacing: 3.5px !important;
+            line-height: 1.8 !important;
           }
 
           /* TONASE TABLE 5 KOLOM */
@@ -455,14 +476,25 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
         }
 
         .ticket-info-table td {
-          padding: 5px 6px;
+          padding: 8px 4px;
           vertical-align: top;
-          border-bottom: 1px dashed #e2e8f0;
-          letter-spacing: 0.5px;
+          border-bottom: none;
+          letter-spacing: 0.6px;
+          line-height: 1.8;
         }
 
-        .ticket-info-table tr:last-child td {
-          border-bottom: none;
+        .ticket-info-label {
+          width: 145px;
+          font-weight: 600;
+        }
+
+        .ticket-info-sep {
+          width: 14px;
+          text-align: center;
+        }
+
+        .ticket-info-val {
+          letter-spacing: 0.7px;
         }
       `}</style>
 
@@ -608,25 +640,29 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
           </div>
 
           {/* Tabel Informasi Rincian Operasional & Wilayah */}
-          <div className="ticket-info-section" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 12 }}>
+          <div className="ticket-info-section" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 14 }}>
             {/* Kolom Kiri: LPS & Pengemudi */}
             <table className="ticket-info-table">
               <tbody>
                 <tr>
-                  <td style={{ width: 125, color: "#64748b", fontWeight: 600 }}>Pengirim / LPS</td>
-                  <td><strong>{String(row.lps_name || "-")}</strong></td>
+                  <td className="ticket-info-label" style={{ width: 145, color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Pengirim / LPS</td>
+                  <td className="ticket-info-sep" style={{ width: 14, textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}><strong>{String(row.lps_name || "-")}</strong></td>
                 </tr>
                 <tr>
-                  <td style={{ color: "#64748b", fontWeight: 600 }}>Ketua / Pengelola</td>
-                  <td>{row.nama_ketua_lps || "-"}</td>
+                  <td className="ticket-info-label" style={{ color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Ketua / Pengelola</td>
+                  <td className="ticket-info-sep" style={{ textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}>{row.nama_ketua_lps || "-"}</td>
                 </tr>
                 <tr>
-                  <td style={{ color: "#64748b", fontWeight: 600 }}>Nama Pengemudi</td>
-                  <td><strong>{effectiveDriver}</strong></td>
+                  <td className="ticket-info-label" style={{ color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Nama Pengemudi</td>
+                  <td className="ticket-info-sep" style={{ textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}><strong>{effectiveDriver}</strong></td>
                 </tr>
                 <tr>
-                  <td style={{ color: "#64748b", fontWeight: 600 }}>Jenis Sampah</td>
-                  <td>{String(row.waste_type || "SAMPAH RUMAH TANGGA")}</td>
+                  <td className="ticket-info-label" style={{ color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Jenis Sampah</td>
+                  <td className="ticket-info-sep" style={{ textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}>{String(row.waste_type || "SAMPAH RUMAH TANGGA")}</td>
                 </tr>
               </tbody>
             </table>
@@ -635,22 +671,25 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
             <table className="ticket-info-table">
               <tbody>
                 <tr>
-                  <td style={{ width: 125, color: "#64748b", fontWeight: 600 }}>Kelurahan / Kec.</td>
-                  <td>
+                  <td className="ticket-info-label" style={{ width: 145, color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Kelurahan / Kec.</td>
+                  <td className="ticket-info-sep" style={{ width: 14, textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}>
                     {row.kelurahan_lps ? `${row.kelurahan_lps} / ${row.kecamatan_lps || "-"}` : "-"}
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ color: "#64748b", fontWeight: 600 }}>Wilayah Kerja</td>
-                  <td>
+                  <td className="ticket-info-label" style={{ color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Wilayah Kerja</td>
+                  <td className="ticket-info-sep" style={{ textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}>
                     <span style={{ fontSize: 11.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                       {row.wilayah_kerja || "-"}
                     </span>
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ color: "#64748b", fontWeight: 600 }}>Metode / Sumber</td>
-                  <td>
+                  <td className="ticket-info-label" style={{ color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Metode / Sumber</td>
+                  <td className="ticket-info-sep" style={{ textAlign: "center", lineHeight: 1.8 }}>:</td>
+                  <td className="ticket-info-val" style={{ lineHeight: 1.8 }}>
                     <span style={{ fontWeight: 600 }}>
                       {row.source === "OCR_LED" ? "Kamera OCR LED Otomatis" : (row.source || "Aplikasi")}
                     </span>
@@ -659,8 +698,9 @@ export default async function TicketPage({ params }: { params: Promise<{ id: str
                 </tr>
                 {row.source_note && (
                   <tr>
-                    <td style={{ color: "#64748b", fontWeight: 600 }}>Catatan</td>
-                    <td style={{ fontSize: 11.5 }}>{row.source_note}</td>
+                    <td className="ticket-info-label" style={{ color: "#475569", fontWeight: 600, lineHeight: 1.8 }}>Catatan</td>
+                    <td className="ticket-info-sep" style={{ textAlign: "center", lineHeight: 1.8 }}>:</td>
+                    <td className="ticket-info-val" style={{ fontSize: 11.5, lineHeight: 1.8 }}>{row.source_note}</td>
                   </tr>
                 )}
               </tbody>
