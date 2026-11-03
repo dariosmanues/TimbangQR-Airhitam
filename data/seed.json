@@ -3216,12 +3216,12 @@
     },
     {
       "code": "ARM-AH-0114",
-      "plateNumber": "BM 8659 CA",
-      "plateNormalized": "BM8659CA",
+      "plateNumber": "BA 8659 CA",
+      "plateNormalized": "BA8659CA",
       "vehicleType": "PICKUP",
       "wasteType": "SAMPAH RUMAH TANGGA",
       "defaultTareKg": null,
-      "qrToken": "ARMADA-BM8659CA",
+      "qrToken": "ARMADA-BA8659CA",
       "active": true,
       "nomorIzin": "228/DLHK/I-OPS/I/2026",
       "nomorSkLps": "10",
@@ -5034,7 +5034,7 @@
       "isPrimary": true
     },
     {
-      "plateNormalized": "BM8659CA",
+      "plateNormalized": "BA8659CA",
       "lpsName": "LPS TANGKERANG BARAT SERASIH",
       "driverName": null,
       "tareKg": null,
