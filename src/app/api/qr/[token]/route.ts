@@ -126,6 +126,21 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     ") ORDER BY active DESC, id LIMIT 1",
   ].join(" "), [rawToken, plateCompact]);
 
+  // Fallback pencocokan jika ada pergantian seri plat (misal BM <-> BA pada kartu fisik lama)
+  if (!vehicle && plateCompact.length >= 6) {
+    const swapped = plateCompact.startsWith("BM")
+      ? plateCompact.replace(/^BM/, "BA")
+      : plateCompact.startsWith("BA")
+      ? plateCompact.replace(/^BA/, "BM")
+      : null;
+    if (swapped) {
+      vehicle = await dbOne<VehicleRow>(
+        "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active FROM vehicles WHERE plate_normalized = $1 OR qr_token = $1 ORDER BY active DESC, id LIMIT 1",
+        [swapped]
+      );
+    }
+  }
+
   // Jika kendaraan nonaktif, otomatis aktifkan kembali (JANGAN DITOLAK)
   if (vehicle && !vehicle.active) {
     try {

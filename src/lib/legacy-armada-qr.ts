@@ -83,7 +83,48 @@ export async function resolveLegacyArmadaQr(
   await assertLegacyQrNotRevoked(normalizedPlate, "ARMADA-" + normalizedPlate);
   const match = chooseMasterRow(normalizedPlate, selectedMasterNo);
   if (!match) {
-    throw new LpsQrError(`Nomor polisi (${normalizedPlate}) tidak terdaftar di database Master Armada.`, 404);
+    // Fallback: cek langsung ke database vehicles jika armada terdaftar di PostgreSQL (sinkronisasi dari LPS)
+    return withTransaction(async (client) => {
+      const dbVehicle = (await client.query<LocalVehicle>(
+        "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type, default_tare_kg, qr_token, active, nomor_izin, nama_lps, lokasi_tps FROM vehicles WHERE plate_normalized = $1 OR UPPER(REGEXP_REPLACE(plate_number, '[^A-Za-z0-9]', '', 'g')) = $1 ORDER BY active DESC, id LIMIT 1",
+        [normalizedPlate]
+      )).rows[0];
+
+      if (!dbVehicle) {
+        throw new LpsQrError(`Nomor polisi (${normalizedPlate}) tidak terdaftar di database Master Armada.`, 404);
+      }
+
+      if (!dbVehicle.active) {
+        await client.query("UPDATE vehicles SET active = TRUE WHERE id = $1", [dbVehicle.id]);
+        dbVehicle.active = true;
+      }
+
+      let assignments = (await client.query<AssignmentRow>(
+        "SELECT va.id, va.lps_id, l.name AS lps_name, va.driver_name, va.tare_kg, va.is_primary FROM vehicle_assignments va JOIN lps l ON l.id = va.lps_id WHERE va.vehicle_id = $1 AND va.active = TRUE ORDER BY va.is_primary DESC, l.name",
+        [dbVehicle.id]
+      )).rows;
+
+      if (assignments.length === 0) {
+        await client.query("UPDATE vehicle_assignments SET active = TRUE WHERE vehicle_id = $1", [dbVehicle.id]);
+        assignments = (await client.query<AssignmentRow>(
+          "SELECT va.id, va.lps_id, l.name AS lps_name, va.driver_name, va.tare_kg, va.is_primary FROM vehicle_assignments va JOIN lps l ON l.id = va.lps_id WHERE va.vehicle_id = $1 AND va.active = TRUE ORDER BY va.is_primary DESC, l.name",
+          [dbVehicle.id]
+        )).rows;
+      }
+
+      const lpsOptions = (await client.query<{ id: number; name: string }>(
+        "SELECT id, name FROM lps WHERE active = TRUE ORDER BY name"
+      )).rows;
+
+      return {
+        vehicle: dbVehicle,
+        assignments,
+        lpsOptions,
+        source: "ARMADA",
+        masterCreated: false,
+        selectedMasterNo: 1,
+      };
+    });
   }
   if (Array.isArray(match)) {
     return { requiresSelection: true, choices: match, source: "ARMADA" };

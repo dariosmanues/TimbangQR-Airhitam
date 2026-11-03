@@ -248,8 +248,7 @@ export async function POST(request: Request) {
 
           let qrToken =
             item.qrCode ||
-            vehicleRow?.qr_token ||
-            `HJ-LPS-${plateNormalized}-${Date.now()}`;
+            `ARMADA-${plateNormalized}`;
 
           // Pastikan qr_token unik dan tidak bentrok dengan baris kendaraan lain
           const qrConflict = await client.query<{ id: number }>(
