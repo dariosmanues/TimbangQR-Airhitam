@@ -44,21 +44,11 @@ export function getMasterRowsForPlate(plate: string): MasterRow[] {
   return fleet.filter(row => normalizePlate(row.plate_normalized) === normalized);
 }
 
-export function chooseMasterRow(plate: string, selectedMasterNo?: number): MasterRow | ArmadaChoice[] {
+export function chooseMasterRow(plate: string, selectedMasterNo?: number): MasterRow | ArmadaChoice[] | null {
   const rows = getMasterRowsForPlate(plate);
   if (rows.length === 0) {
-    // Fallback: Jika plat tidak tercatat di master JSON Air Hitam,
-    // jangan ditolak! Buatkan MasterRow standar agar penimbangan tetap bisa berjalan.
-    const cleanPlate = normalizePlate(plate);
-    return {
-      no: 9999,
-      plate_normalized: cleanPlate,
-      nomor_polisi: plate,
-      jenis_armada: "PICKUP",
-      nama_lps: "LPS WILAYAH AIR HITAM",
-      lokasi_tps: "AIR HITAM",
-      nomor_izin: null,
-    };
+    // Hanya armada yang tercatat di Master Armada yang diizinkan
+    return null;
   }
   if (selectedMasterNo !== undefined) {
     const selected = rows.find(row => row.no === selectedMasterNo);
@@ -92,6 +82,9 @@ export async function resolveLegacyArmadaQr(
 ): Promise<LegacyArmadaResult> {
   await assertLegacyQrNotRevoked(normalizedPlate, "ARMADA-" + normalizedPlate);
   const match = chooseMasterRow(normalizedPlate, selectedMasterNo);
+  if (!match) {
+    throw new LpsQrError(`Nomor polisi (${normalizedPlate}) tidak terdaftar di database Master Armada.`, 404);
+  }
   if (Array.isArray(match)) {
     return { requiresSelection: true, choices: match, source: "ARMADA" };
   }

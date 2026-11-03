@@ -150,7 +150,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
 
   if (!vehicle) {
     return NextResponse.json(
-      { error: `QR armada (${rawToken}) tidak ditemukan atau belum terdaftar di sistem timbangan.` },
+      { error: `Nomor polisi / armada (${rawToken}) tidak ditemukan di database Master Armada. Hanya armada yang terdaftar di Master Armada yang dapat ditimbang.` },
       { status: 404 }
     );
   }
