@@ -105,8 +105,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         headers: { "Cache-Control": "private, no-store" },
       });
     } catch (error) {
+      if (error instanceof LpsQrError && error.status === 400) {
+        // QR LPS bersifat temporer / sekali pakai per perjalanan. Jika sudah hangus, tolak transaksi.
+        return NextResponse.json(
+          { error: error.message, burned: true },
+          { status: 400 }
+        );
+      }
       lpsFetchError = error instanceof Error ? error.message : "Validasi QR LPS gagal.";
-      console.warn("[LPS QR] Validasi API LPS gagal / QR hangus. Mencoba fallback ke master armada lokal:", lpsFetchError);
+      console.warn("[LPS QR] Validasi API LPS gagal / offline. Mencoba fallback master kendaraan:", lpsFetchError);
     }
   }
 
