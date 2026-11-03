@@ -8,7 +8,7 @@ export { LpsQrError, parseLpsQrToken } from "./lps-qr-identity";
 
 export async function fetchVerifiedLpsArmada(identity: LpsIdentity): Promise<LpsArmada> {
   const baseUrl = process.env.LPS_ARMADA_API_URL?.trim()
-    || "https://lps-flame.vercel.app/api/integrations/timbangqr/armada";
+    || "https://lps-app-five.vercel.app/api/integrations/timbangqr/armada";
   const url = new URL(baseUrl);
   if (url.protocol !== "https:" && !(process.env.NODE_ENV !== "production" && url.hostname === "localhost")) {
     throw new LpsQrError("Konfigurasi API LPS harus menggunakan HTTPS.", 503);

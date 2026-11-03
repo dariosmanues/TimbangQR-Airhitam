@@ -93,6 +93,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
 
   // 3. QR LPS wajib divalidasi secara server-to-server ke aplikasi LPS
   const lpsIdentity = parseLpsQrToken(rawToken);
+  let lpsFetchError: string | null = null;
   if (lpsIdentity) {
     try {
       const remoteArmada = await fetchVerifiedLpsArmada(lpsIdentity);
@@ -104,19 +105,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         headers: { "Cache-Control": "private, no-store" },
       });
     } catch (error) {
-      if (error instanceof LpsQrError) {
-        return NextResponse.json({ error: error.message, burned: error.status === 400 }, { status: error.status });
-      }
-      console.error("[LPS QR] Tidak dapat menghubungkan master:", error);
-      return NextResponse.json(
-        { error: "Gagal menghubungkan QR LPS dengan master TimbangQR. Hubungi administrator." },
-        { status: 500 },
-      );
+      lpsFetchError = error instanceof Error ? error.message : "Validasi QR LPS gagal.";
+      console.warn("[LPS QR] Validasi API LPS gagal / QR hangus. Mencoba fallback ke master armada lokal:", lpsFetchError);
     }
   }
 
-  // 4. Jalur fallback untuk QR internal TimbangQR, nomor polisi, izin, dan kode armada
-  const plateCompact = rawToken.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  // 4. Jalur fallback untuk QR internal TimbangQR, nomor polisi, izin, kode armada, atau LPS token yang hangus/offline
+  const plateCompact = (lpsIdentity?.normalizedPlate || rawToken).toUpperCase().replace(/[^A-Z0-9]/g, "");
   let vehicle = await dbOne<VehicleRow>([
     "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type,",
     "default_tare_kg, qr_token, active FROM vehicles WHERE (",
@@ -164,6 +159,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
   }
 
   if (!vehicle) {
+    if (lpsFetchError) {
+      return NextResponse.json({ error: lpsFetchError }, { status: 400 });
+    }
     return NextResponse.json(
       { error: `Nomor polisi / armada (${rawToken}) tidak ditemukan di database Master Armada. Hanya armada yang terdaftar di Master Armada yang dapat ditimbang.` },
       { status: 404 }
