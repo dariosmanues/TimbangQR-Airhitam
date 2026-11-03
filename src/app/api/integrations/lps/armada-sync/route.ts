@@ -75,6 +75,18 @@ function formatDateString(val: string | Date | null | undefined): string | null 
   }
 }
 
+function getServerTransdepo(): "AIR_HITAM" | "HARAPAN_JAYA" {
+  const env = (process.env.LPS_TRANSDEPO || "").toUpperCase().replace(/[^A-Z]/g, "");
+  if (env.includes("AIRHITAM") || env.includes("PALAS")) return "AIR_HITAM";
+  if (env.includes("HARAPAN")) return "HARAPAN_JAYA";
+
+  const appUrl = (process.env.APP_URL || process.env.VERCEL_URL || "").toLowerCase();
+  if (appUrl.includes("airhitam")) return "AIR_HITAM";
+  if (appUrl.includes("ocr-led") || appUrl.includes("harapan")) return "HARAPAN_JAYA";
+
+  return "AIR_HITAM";
+}
+
 export async function POST(request: Request) {
   if (!isAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -154,9 +166,14 @@ export async function POST(request: Request) {
         }
       }
 
-      // 4. Hitung awalan kode ARM-HJ sekali saja
+      // 4. Hitung awalan kode ARM-AH / ARM-HJ sesuai transdepo server
+      const serverTransdepo = getServerTransdepo();
+      const codePrefix = serverTransdepo === "AIR_HITAM" ? "ARM-AH-" : "ARM-HJ-";
+      const lokasiTpsDefault = serverTransdepo === "AIR_HITAM" ? "AIR HITAM" : "HARAPAN JAYA";
+
       const countResult = await client.query<{ count: number }>(
-        "SELECT COUNT(*)::int AS count FROM vehicles WHERE code LIKE 'ARM-HJ-%'"
+        "SELECT COUNT(*)::int AS count FROM vehicles WHERE code LIKE $1",
+        [`${codePrefix}%`]
       );
       let nextCodeNum = (countResult.rows[0]?.count || 0) + 1;
 
@@ -169,10 +186,22 @@ export async function POST(request: Request) {
         const plateNormalized = normalizePlate(item.platNomor);
         const plateNumber = displayPlate(item.platNomor);
 
-        const lokasiClean = (item.lokasiTransdepo || "").toUpperCase().replace(/\s+/g, "");
-        const wilayahClean = (item.wilayahKerja || "").toUpperCase().replace(/\s+/g, "");
-        const isHarapanJaya =
-          lokasiClean.includes("HARAPANJAYA") || wilayahClean.includes("HARAPANJAYA");
+        const lokasiClean = (item.lokasiTransdepo || "").toUpperCase().replace(/[^A-Z]/g, "");
+        const wilayahClean = (item.wilayahKerja || "").toUpperCase().replace(/[^A-Z]/g, "");
+
+        const isArmadaForHarapanJaya = lokasiClean.includes("HARAPANJAYA") || wilayahClean.includes("HARAPANJAYA");
+        const isArmadaForAirHitam = lokasiClean.includes("AIRHITAM") || lokasiClean.includes("PALAS") || wilayahClean.includes("AIRHITAM");
+
+        let isRelevant = false;
+        if (serverTransdepo === "AIR_HITAM") {
+          isRelevant = isArmadaForAirHitam || !isArmadaForHarapanJaya;
+        } else {
+          isRelevant = isArmadaForHarapanJaya;
+        }
+
+        if (item.isActive === false) {
+          isRelevant = false;
+        }
 
         let kelurahanNama: string | null = null;
         let kecamatanNama: string | null = item.kecamatan || null;
@@ -213,7 +242,7 @@ export async function POST(request: Request) {
           vehicleRow = vehicleByPlate.get(plateNormalized) || null;
         }
 
-        if (isHarapanJaya) {
+        if (isRelevant) {
           let vehicleId: number;
           let action: "updated" | "created";
 
@@ -252,10 +281,10 @@ export async function POST(request: Request) {
                 tanggal_sk_lps = COALESCE($12, tanggal_sk_lps),
                 tanggal_terbit_izin = COALESCE($13, tanggal_terbit_izin),
                 qr_token = COALESCE($14, qr_token),
-                lokasi_tps = 'AIR HITAM',
+                lokasi_tps = COALESCE($15, lokasi_tps, '${lokasiTpsDefault}'),
                 active = TRUE,
                 updated_at = NOW()
-              WHERE id = $15`,
+              WHERE id = $16`,
               [
                 plateNumber,
                 plateNormalized,
@@ -271,12 +300,13 @@ export async function POST(request: Request) {
                 tglSk,
                 tglIzin,
                 qrToken,
+                item.lokasiTransdepo || lokasiTpsDefault,
                 vehicleId,
               ]
             );
           } else {
             action = "created";
-            const code = `ARM-AH-${String(nextCodeNum++).padStart(4, "0")}`;
+            const code = `${codePrefix}${String(nextCodeNum++).padStart(4, "0")}`;
 
             const insertResult = await client.query<{ id: number }>(
               `INSERT INTO vehicles (
@@ -290,7 +320,7 @@ export async function POST(request: Request) {
                 NULL, $5, TRUE, $6,
                 $7, $8, $9,
                 $10, $11, $12, $13,
-                $13, $14, 'AIR HITAM', $15
+                $13, $14, $15, $16
               ) RETURNING id`,
               [
                 code,
@@ -307,6 +337,7 @@ export async function POST(request: Request) {
                 kelurahanNama,
                 kecamatanNama,
                 item.wilayahKerja || null,
+                item.lokasiTransdepo || lokasiTpsDefault,
                 tglIzin,
               ]
             );
@@ -373,7 +404,7 @@ export async function POST(request: Request) {
             vehicleId,
             action,
             active: true,
-            status: "HARAPAN_JAYA_ACTIVE",
+            status: serverTransdepo === "AIR_HITAM" ? "AIR_HITAM_ACTIVE" : "HARAPAN_JAYA_ACTIVE",
           });
         } else {
           // Bila di-update bukan Harapan Jaya (misal dipindahkan ke AIR HITAM)
@@ -397,14 +428,14 @@ export async function POST(request: Request) {
               vehicleId: vehicleRow.id,
               action: "deactivated",
               active: false,
-              status: "NON_HARAPAN_JAYA_DEACTIVATED",
+              status: "TRANSDEPO_MISMATCH_DEACTIVATED",
             });
           } else {
             innerResults.push({
               plate: plateNumber,
               action: "ignored",
               active: false,
-              status: "SKIPPED_NOT_HARAPAN_JAYA",
+              status: "SKIPPED_DIFFERENT_TRANSDEPO",
             });
           }
         }
