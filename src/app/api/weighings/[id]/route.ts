@@ -61,7 +61,7 @@ export async function PATCH(
 
   if (!canManageTransactions(user)) {
     return NextResponse.json(
-      { error: "Akses ditolak: Hanya Administrator atau Admin Transaksi yang dapat mengubah transaksi." },
+      { error: "Akses ditolak: Hanya Master ADMIN yang dapat mengubah data transaksi." },
       { status: 403 }
     );
   }
@@ -237,7 +237,7 @@ export async function DELETE(
 
   if (!canManageTransactions(user)) {
     return NextResponse.json(
-      { error: "Akses ditolak: Hanya Administrator atau Admin Transaksi yang dapat menghapus transaksi." },
+      { error: "Akses ditolak: Hanya Master ADMIN yang dapat menghapus data transaksi." },
       { status: 403 }
     );
   }

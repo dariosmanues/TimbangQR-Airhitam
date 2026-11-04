@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession, isSuperAdmin } from "@/lib/auth";
 import { dbOne, dbQuery } from "@/lib/db";
 import { tokenFromValue } from "@/lib/qr-token";
 import { parseLegacyArmadaQr, resolveLegacyArmadaQr } from "@/lib/legacy-armada-qr";
@@ -115,6 +115,17 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
       lpsFetchError = error instanceof Error ? error.message : "Validasi QR LPS gagal.";
       console.warn("[LPS QR] Validasi API LPS gagal / offline. Mencoba fallback master kendaraan:", lpsFetchError);
     }
+  }
+
+  // 4. Cek otorisasi: Input nomor polisi / kode manual HANYA boleh diakses oleh Master ADMIN.
+  // Administrator biasa ditolak karena ketik plat manual telah dinonaktifkan.
+  if (!isSuperAdmin(user)) {
+    return NextResponse.json(
+      {
+        error: "Akses ditolak: Input nomor plat manual telah dinonaktifkan untuk Administrator. Seluruh transaksi wajib menggunakan Scan Barcode / QR Code resmi armada.",
+      },
+      { status: 403 }
+    );
   }
 
   // 4. Jalur fallback untuk QR internal TimbangQR, nomor polisi, izin, kode armada, atau LPS token yang hangus/offline

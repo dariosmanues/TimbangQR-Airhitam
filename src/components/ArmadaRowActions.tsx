@@ -11,9 +11,10 @@ import ArmadaDeleteModal from "@/components/ArmadaDeleteModal";
 interface ArmadaRowActionsProps {
   vehicle: VehicleCardData;
   lpsOptions?: Array<{ id: number; name: string }>;
+  canManage?: boolean;
 }
 
-export default function ArmadaRowActions({ vehicle, lpsOptions = [] }: ArmadaRowActionsProps) {
+export default function ArmadaRowActions({ vehicle, lpsOptions = [], canManage = false }: ArmadaRowActionsProps) {
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -44,32 +45,35 @@ export default function ArmadaRowActions({ vehicle, lpsOptions = [] }: ArmadaRow
           whiteSpace: "nowrap",
         }}
       >
-        {/* Tombol Edit Armada (Update) */}
-        <button
-          type="button"
-          className="btn btn-secondary btn-sm"
-          onClick={() => setEditModalOpen(true)}
-          title="Edit data & perizinan armada"
-          style={{ padding: "5px 9px", gap: 4 }}
-        >
-          <Pencil size={13} /> Edit
-        </button>
+        {/* Khusus Master ADMIN: Tombol Edit & Hapus Armada */}
+        {canManage && (
+          <>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => setEditModalOpen(true)}
+              title="Edit data & perizinan armada"
+              style={{ padding: "5px 9px", gap: 4 }}
+            >
+              <Pencil size={13} /> Edit
+            </button>
 
-        {/* Tombol Hapus Armada (Delete) */}
-        <button
-          type="button"
-          className="btn btn-sm"
-          onClick={() => setDeleteModalOpen(true)}
-          title="Hapus atau nonaktifkan armada"
-          style={{
-            padding: "5px 8px",
-            color: "var(--danger)",
-            backgroundColor: "#fff0f0",
-            border: "1px solid #fed7d7",
-          }}
-        >
-          <Trash2 size={13} />
-        </button>
+            <button
+              type="button"
+              className="btn btn-sm"
+              onClick={() => setDeleteModalOpen(true)}
+              title="Hapus atau nonaktifkan armada"
+              style={{
+                padding: "5px 8px",
+                color: "var(--danger)",
+                backgroundColor: "#fff0f0",
+                border: "1px solid #fed7d7",
+              }}
+            >
+              <Trash2 size={13} />
+            </button>
+          </>
+        )}
 
         {/* Tombol Buka Modal Preview & Unduh QR */}
         <button

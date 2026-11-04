@@ -33,7 +33,13 @@ type VehiclePayload = {
   masterCreated?: boolean;
 };
 
-export default function WeighingWorkspace({ initialToken = "" }: { initialToken?: string }) {
+export default function WeighingWorkspace({
+  initialToken = "",
+  canManualInput = false,
+}: {
+  initialToken?: string;
+  canManualInput?: boolean;
+}) {
   const [token, setToken] = useState(initialToken);
   const [payload, setPayload] = useState<VehiclePayload | null>(null);
   const [loadingVehicle, setLoadingVehicle] = useState(false);
@@ -212,7 +218,7 @@ export default function WeighingWorkspace({ initialToken = "" }: { initialToken?
 
   return (
     <div className="scan-layout">
-      <QrScanner onToken={loadVehicle} />
+      <QrScanner onToken={loadVehicle} canManualInput={canManualInput} />
 
       <LedWeightScanner
         onReading={handleOcrReading}

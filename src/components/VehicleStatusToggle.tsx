@@ -10,6 +10,7 @@ interface VehicleStatusToggleProps {
   plateNumber: string;
   code?: string;
   showLabelPrompt?: boolean;
+  disabled?: boolean;
 }
 
 export default function VehicleStatusToggle({
@@ -18,6 +19,7 @@ export default function VehicleStatusToggle({
   plateNumber,
   code,
   showLabelPrompt = true,
+  disabled = false,
 }: VehicleStatusToggleProps) {
   const [active, setActive] = useState(initialActive);
   const [loading, setLoading] = useState(false);
@@ -105,6 +107,26 @@ export default function VehicleStatusToggle({
         position: "relative",
       }}
     >
+      {disabled ? (
+        <span
+          className={`badge ${active ? "green" : "red"}`}
+          title={`Status: ${active ? "Aktif" : "Nonaktif"} (Hanya Master ADMIN yang dapat mengubah status)`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "5px 12px",
+            borderRadius: "999px",
+            fontSize: 11,
+            fontWeight: 800,
+            background: active ? "rgba(8,120,79,0.12)" : "rgba(195,61,61,0.1)",
+            color: active ? "#08784f" : "#c33d3d",
+            cursor: "default",
+          }}
+        >
+          <Power size={11} /> {active ? "Aktif" : "Nonaktif"}
+        </span>
+      ) : (
       <button
         type="button"
         onClick={handleToggle}
@@ -202,6 +224,7 @@ export default function VehicleStatusToggle({
           )}
         </span>
       </button>
+      )}
 
       {/* Persistent success badge if activated on this view */}
       {justActivated && active && (

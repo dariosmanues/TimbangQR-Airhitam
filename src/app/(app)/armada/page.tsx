@@ -4,6 +4,7 @@ import VehicleCreateForm from "@/components/VehicleCreateForm";
 import VehicleStatusToggle from "@/components/VehicleStatusToggle";
 import ArmadaRowActions from "@/components/ArmadaRowActions";
 import ArmadaQuickQrModal from "@/components/ArmadaQuickQrModal";
+import { getSession, isSuperAdmin } from "@/lib/auth";
 import { getLpsList, listVehicles, getVehicleCounts } from "@/lib/queries";
 import { formatNumber } from "@/lib/utils";
 
@@ -15,6 +16,9 @@ export default async function ArmadaPage({
 }: {
   searchParams: Promise<{ q?: string; status?: "active" | "all" | "inactive" | "air_hitam" | "palas" }>;
 }) {
+  const user = await getSession();
+  const canManage = isSuperAdmin(user);
+
   const params = await searchParams;
   const q = params.q || "";
   const filter = params.status || "active";
@@ -33,6 +37,15 @@ export default async function ArmadaPage({
               <ShieldCheck size={14} /> TPS WILAYAH AIR HITAM & PALAS
             </span>
             <span className="badge">UPDATE OKTOBER 2026</span>
+            {canManage ? (
+              <span className="badge" style={{ background: "#fef3c7", color: "#92400e", border: "1px solid #fde68a", fontWeight: 700 }}>
+                👑 Hak Akses: Master ADMIN (CRUD Master Armada Aktif)
+              </span>
+            ) : (
+              <span className="badge" style={{ background: "#f8fafc", color: "#64748b", border: "1px solid #cbd5e1" }}>
+                🔒 Hak Akses: Administrator (Mode Lihat Saja — CRUD Khusus Master ADMIN)
+              </span>
+            )}
           </div>
           <h1>Master Armada</h1>
           <p>
@@ -42,7 +55,7 @@ export default async function ArmadaPage({
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
           <ArmadaQuickQrModal vehicles={vehicles} />
-          <VehicleCreateForm lpsOptions={lps} />
+          {canManage && <VehicleCreateForm lpsOptions={lps} />}
         </div>
       </div>
 
@@ -170,10 +183,11 @@ export default async function ArmadaPage({
                       initialActive={vehicle.active}
                       plateNumber={vehicle.plate_number}
                       code={vehicle.code}
+                      disabled={!canManage}
                     />
                   </td>
                   <td className="num">
-                    <ArmadaRowActions vehicle={vehicle} lpsOptions={lps} />
+                    <ArmadaRowActions vehicle={vehicle} lpsOptions={lps} canManage={canManage} />
                   </td>
                 </tr>
               ))}

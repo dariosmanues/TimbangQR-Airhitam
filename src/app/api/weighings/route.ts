@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     if (input.measurementSource === "MANUAL") {
       if (!canManageTransactions(user)) {
         return NextResponse.json(
-          { error: "Akses ditolak: Hanya Super Admin, Administrator, atau Admin Transaksi yang dapat membuat transaksi manual." },
+          { error: "Akses ditolak: Hanya Master ADMIN yang dapat membuat transaksi manual." },
           { status: 403 }
         );
       }

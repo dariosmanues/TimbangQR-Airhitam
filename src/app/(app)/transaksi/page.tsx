@@ -43,62 +43,43 @@ export default async function TransactionsPage({
     <>
       <div className="page-head">
         <div>
-          {canManage && (
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-              {superAdmin ? (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 5,
-                    padding: "3px 10px",
-                    borderRadius: "12px",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    backgroundColor: "#fef3c7",
-                    color: "#92400e",
-                    border: "1px solid #fde68a",
-                  }}
-                >
-                  <Crown size={13} /> Hak Akses: Super Admin (CRUD Transaksi Aktif)
-                </span>
-              ) : txAdmin ? (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 5,
-                    padding: "3px 10px",
-                    borderRadius: "12px",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    backgroundColor: "#ecfdf5",
-                    color: "#065f46",
-                    border: "1px solid #a7f3d0",
-                  }}
-                >
-                  <ShieldCheck size={13} /> Hak Akses: Admin Transaksi (CRUD Transaksi Aktif)
-                </span>
-              ) : (
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 5,
-                    padding: "3px 10px",
-                    borderRadius: "12px",
-                    fontSize: 11,
-                    fontWeight: 700,
-                    backgroundColor: "#eff6ff",
-                    color: "#1e40af",
-                    border: "1px solid #bfdbfe",
-                  }}
-                >
-                  <ShieldCheck size={13} /> Hak Akses: Administrator (CRUD Transaksi Aktif)
-                </span>
-              )}
-            </div>
-          )}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+            {canManage ? (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  padding: "3px 10px",
+                  borderRadius: "12px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  backgroundColor: "#fef3c7",
+                  color: "#92400e",
+                  border: "1px solid #fde68a",
+                }}
+              >
+                <Crown size={13} /> Hak Akses: Master ADMIN (CRUD Transaksi Aktif)
+              </span>
+            ) : (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  padding: "3px 10px",
+                  borderRadius: "12px",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  backgroundColor: "#f8fafc",
+                  color: "#64748b",
+                  border: "1px solid #cbd5e1",
+                }}
+              >
+                🔒 Hak Akses: Administrator (Lihat Data Saja — CRUD Khusus Master ADMIN)
+              </span>
+            )}
+          </div>
           <h1>Transaksi penimbangan</h1>
           <p>
             Menampilkan maksimal 300 data sesuai filter.

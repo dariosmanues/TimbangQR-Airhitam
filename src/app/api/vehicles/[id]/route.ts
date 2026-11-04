@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession, canManageMasterArmada } from "@/lib/auth";
 import { dbOne, dbQuery, withTransaction } from "@/lib/db";
 import { displayPlate, normalizePlate, toInt } from "@/lib/utils";
 import type { VehicleRow } from "@/lib/types";
@@ -41,6 +41,12 @@ export async function PATCH(
 ) {
   const user = await getSession();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!canManageMasterArmada(user)) {
+    return NextResponse.json(
+      { error: "Akses ditolak: Hanya Master ADMIN yang dapat mengubah data Master Armada." },
+      { status: 403 }
+    );
+  }
 
   const { id } = await params;
   const vehicleId = Number(id);
@@ -273,6 +279,12 @@ export async function DELETE(
 ) {
   const user = await getSession();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!canManageMasterArmada(user)) {
+    return NextResponse.json(
+      { error: "Akses ditolak: Hanya Master ADMIN yang dapat menghapus data Master Armada." },
+      { status: 403 }
+    );
+  }
 
   const { id } = await params;
   const vehicleId = Number(id);
