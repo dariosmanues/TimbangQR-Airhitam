@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function ArmadaPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; status?: "active" | "all" | "inactive" | "air_hitam" | "palas" }>;
+  searchParams: Promise<{ q?: string; status?: "active" | "all" | "inactive" | "air_hitam" | "palas" | "harapan_jaya" }>;
 }) {
   const user = await getSession();
   const canManage = isSuperAdmin(user);
@@ -50,7 +50,7 @@ export default async function ArmadaPage({
           <h1>Master Armada</h1>
           <p>
             {formatNumber(vehicles.length)} armada terdaftar dalam database jembatan timbang
-            ({counts.airHitam} Air Hitam + {counts.palas} Palas).
+            ({counts.airHitam} Air Hitam + {counts.palas} Palas + {counts.harapanJaya || 0} Harapan Jaya).
           </p>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -91,6 +91,12 @@ export default async function ArmadaPage({
             className={`btn btn-sm ${filter === "palas" ? "btn-primary" : "btn-secondary"}`}
           >
             Palas ({counts.palas})
+          </Link>
+          <Link
+            href={`/armada?status=harapan_jaya${q ? `&q=${encodeURIComponent(q)}` : ""}`}
+            className={`btn btn-sm ${filter === "harapan_jaya" ? "btn-primary" : "btn-secondary"}`}
+          >
+            Harapan Jaya ({counts.harapanJaya || 0})
           </Link>
           <Link
             href={`/armada?status=all${q ? `&q=${encodeURIComponent(q)}` : ""}`}

@@ -110,7 +110,7 @@ export async function getDashboardData() {
 
 export async function listVehicles(
   search = "",
-  filter: "active" | "all" | "inactive" | "air_hitam" | "palas" = "active"
+  filter: "active" | "all" | "inactive" | "air_hitam" | "palas" | "harapan_jaya" = "active"
 ) {
   const term = `%${search.trim()}%`;
   return dbQuery<VehicleRow>(`
@@ -138,6 +138,7 @@ export async function listVehicles(
         OR ($2 = 'inactive' AND v.active = FALSE)
         OR ($2 = 'air_hitam' AND v.lokasi_tps = 'AIR HITAM')
         OR ($2 = 'palas' AND v.lokasi_tps = 'PALAS')
+        OR ($2 = 'harapan_jaya' AND v.lokasi_tps = 'HARAPAN JAYA')
       )
     GROUP BY v.id
     ORDER BY v.no_urut ASC NULLS LAST, v.code ASC
@@ -221,16 +222,18 @@ export async function getVehicleCounts() {
     inactive: number;
     airHitam: number;
     palas: number;
+    harapanJaya: number;
   }>(`
     SELECT
       COUNT(*)::int AS total,
       COUNT(*) FILTER (WHERE active = TRUE)::int AS active,
       COUNT(*) FILTER (WHERE active = FALSE)::int AS inactive,
       COUNT(*) FILTER (WHERE lokasi_tps = 'AIR HITAM')::int AS "airHitam",
-      COUNT(*) FILTER (WHERE lokasi_tps = 'PALAS')::int AS "palas"
+      COUNT(*) FILTER (WHERE lokasi_tps = 'PALAS')::int AS "palas",
+      COUNT(*) FILTER (WHERE lokasi_tps = 'HARAPAN JAYA')::int AS "harapanJaya"
     FROM vehicles
   `);
-  return row || { total: 0, active: 0, inactive: 0, airHitam: 0, palas: 0 };
+  return row || { total: 0, active: 0, inactive: 0, airHitam: 0, palas: 0, harapanJaya: 0 };
 }
 
 async function getDeviceListUncached() {
