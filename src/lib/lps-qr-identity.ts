@@ -35,7 +35,7 @@ export function normalizeLpsName(value: string) {
 // Hanya API LPS yang boleh mengesahkan QR; hasil regex BUKAN otorisasi.
 export function parseLpsQrToken(value: string): LpsIdentity | null {
   const token = value.trim();
-  const match = /^LPS-([A-Z]{1,3}\d{1,6}[A-Z]{0,4})-(\d{10,17}|[A-Fa-f0-9]{8})$/i.exec(token);
+  const match = /^LPS-([A-Z0-9]{3,16})-([A-Za-z0-9]{6,24})$/i.exec(token);
   return match ? { token, normalizedPlate: normalizePlate(match[1]) } : null;
 }
 
@@ -53,18 +53,17 @@ export function verifyLpsArmada(identity: LpsIdentity, body: unknown): LpsArmada
       typeof data.qrCode !== "string" || typeof data.isActive !== "boolean") {
     throw new LpsQrError("Data identitas armada dari API LPS tidak lengkap.", 502);
   }
-  if (!data.isActive || data.qrCode !== identity.token ||
-      normalizePlate(data.platNomor) !== identity.normalizedPlate ||
-      (data.normalizedPlate && normalizePlate(data.normalizedPlate) !== identity.normalizedPlate)) {
+  if (!data.isActive || data.qrCode !== identity.token) {
     throw new LpsQrError("QR LPS tidak cocok dengan identitas armada yang terdaftar.", 422);
   }
+  const authoritativePlate = normalizePlate(data.platNomor) || identity.normalizedPlate;
   if (!data.namaLps.trim() || !normalizeLpsName(data.namaLps)) {
     throw new LpsQrError("Nama LPS dari API belum dapat dicocokkan.", 422);
   }
   return {
     id: data.id,
     platNomor: data.platNomor.trim(),
-    normalizedPlate: identity.normalizedPlate,
+    normalizedPlate: authoritativePlate,
     namaLps: data.namaLps.trim(),
     namaSupir: typeof data.namaSupir === "string" ? data.namaSupir.trim() || null : null,
     noIzinOperasi: typeof data.noIzinOperasi === "string" ? data.noIzinOperasi.trim() || null : null,
@@ -73,4 +72,3 @@ export function verifyLpsArmada(identity: LpsIdentity, body: unknown): LpsArmada
     isActive: true,
   };
 }
-

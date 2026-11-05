@@ -97,16 +97,33 @@ export async function linkVerifiedLpsArmada(armada: LpsArmada): Promise<Resolved
         if (uniqueLps.size === 1) {
           candidate = matches.find(v => v.code && !v.code.startsWith("OLD-")) || matches[0];
         } else {
-          throw new LpsQrError("Nomor polisi digunakan beberapa LPS; identitas izin QR tidak cukup untuk memilih armada.", 409);
+          candidate = matches[0];
         }
       } else if (matches.length === 1) {
         candidate = matches[0];
       } else {
-        throw new LpsQrError("Nomor polisi digunakan beberapa LPS; identitas izin QR tidak cukup untuk memilih armada.", 409);
+        candidate = rowsToMatch[0];
       }
     }
-    if (candidate && !candidate.active) {
-      throw new LpsQrError("Armada pada TimbangQR sudah dinonaktifkan. Aktifkan melalui master armada dahulu.", 409);
+
+    // Jika armada aktif di LPS tetapi nonaktif di TimbangQR, aktifkan otomatis
+    // dan sinkronkan qr_token terbaru dari LPS agar selalu terdeteksi.
+    if (candidate) {
+      if (!candidate.active || (armada.qrCode && candidate.qr_token !== armada.qrCode)) {
+        const conflict = armada.qrCode
+          ? (await client.query<{ id: number }>(
+              "SELECT id FROM vehicles WHERE qr_token = $1 AND id <> $2 LIMIT 1",
+              [armada.qrCode, candidate.id],
+            )).rows[0]
+          : null;
+        const nextQrToken = conflict ? candidate.qr_token : (armada.qrCode || candidate.qr_token);
+        await client.query(
+          "UPDATE vehicles SET active = TRUE, qr_token = $1 WHERE id = $2",
+          [nextQrToken, candidate.id],
+        );
+        candidate.active = true;
+        candidate.qr_token = nextQrToken;
+      }
     }
 
     let vehicle = candidate;
@@ -134,7 +151,8 @@ export async function linkVerifiedLpsArmada(armada: LpsArmada): Promise<Resolved
       || null;
 
     if (lps && !lps.active) {
-      throw new LpsQrError("LPS asal sedang dinonaktifkan pada TimbangQR.", 409);
+      await client.query("UPDATE lps SET active = TRUE WHERE id = $1", [lps.id]);
+      lps.active = true;
     }
     if (!lps) {
       const lpsCode = stableCode("LPS-EXT-", normalizeLpsName(armada.namaLps));
