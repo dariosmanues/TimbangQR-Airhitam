@@ -15,6 +15,7 @@ import {
   QrCode,
   Truck,
   Usb,
+  Users,
   X,
 } from "lucide-react";
 import { useUiMode } from "./UiModeProvider";
@@ -28,6 +29,7 @@ const items = [
   { href: "/laporan", label: "Rekap & Laporan", shortLabel: "Laporan", icon: FileSpreadsheet },
   { href: "/uji-qr", label: "Uji Semua QR", shortLabel: "Uji QR", icon: ClipboardCheck },
   { href: "/perangkat", label: "Koneksi Timbangan", shortLabel: "Perangkat", icon: Usb },
+  { href: "/users", label: "User & Role Management", shortLabel: "Users", icon: Users, masterAdminOnly: true },
 ];
 
 export default function Sidebar({
@@ -107,7 +109,7 @@ export default function Sidebar({
 
   // Filter out disabled items for the mobile bottom bar so all 4 bottom tabs are active
   const primaryBottomItems = items
-    .filter((item) => !item.superAdminOnly || isSuper)
+    .filter((item) => (!item.superAdminOnly && !item.masterAdminOnly) || isSuper)
     .slice(0, 4);
 
   return (
@@ -126,6 +128,9 @@ export default function Sidebar({
         <div className="nav-section">Operasional</div>
         <nav>
           {items.map((item) => {
+            if (item.masterAdminOnly && !isSuper) {
+              return null;
+            }
             const Icon = item.icon;
             const isDisabled = Boolean(item.superAdminOnly && !isSuper);
             const active = !isDisabled && (pathname === item.href || pathname.startsWith(item.href + "/"));
@@ -168,9 +173,30 @@ export default function Sidebar({
             }
 
             return (
-              <Link key={item.href} className={`nav-link ${active ? "active" : ""}`} href={item.href}>
-                <Icon size={19} />
-                <span>{item.label}</span>
+              <Link
+                key={item.href}
+                className={`nav-link ${active ? "active" : ""}`}
+                href={item.href}
+                style={item.masterAdminOnly ? { justifyContent: "space-between" } : undefined}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <Icon size={19} />
+                  <span>{item.label}</span>
+                </div>
+                {item.masterAdminOnly && (
+                  <span
+                    style={{
+                      fontSize: 10,
+                      padding: "2px 6px",
+                      borderRadius: 8,
+                      background: "rgba(254, 243, 199, 0.18)",
+                      color: "#fde68a",
+                      fontWeight: 700,
+                    }}
+                  >
+                    👑
+                  </span>
+                )}
               </Link>
             );
           })}
@@ -254,6 +280,9 @@ export default function Sidebar({
 
             <div className="mobile-drawer-grid">
               {items.map((item) => {
+                if (item.masterAdminOnly && !isSuper) {
+                  return null;
+                }
                 const Icon = item.icon;
                 const isDisabled = Boolean(item.superAdminOnly && !isSuper);
                 const active = !isDisabled && (pathname === item.href || pathname.startsWith(item.href + "/"));
