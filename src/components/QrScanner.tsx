@@ -71,7 +71,7 @@ export default function QrScanner({
   onToken,
   canManualInput = false,
 }: {
-  onToken: (token: string) => void;
+  onToken: (token: string, isManual?: boolean) => void;
   canManualInput?: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -159,7 +159,7 @@ export default function QrScanner({
     setManual(item.plate_number);
     setManualError("");
     setShowDropdown(false);
-    onToken(item.plate_number);
+    onToken(item.plate_number, true);
   }
 
   function handleManualSubmit() {
@@ -185,7 +185,7 @@ export default function QrScanner({
 
     setManualError("");
     setShowDropdown(false);
-    onToken(matched.plate_number);
+    onToken(matched.plate_number, true);
   }
 
   const refreshCameras = useCallback(async () => {

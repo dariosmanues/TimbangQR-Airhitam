@@ -72,7 +72,7 @@ export default function WeighingWorkspace({
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState<{ ticketNumber: string; netto2Kg: number } | null>(null);
 
-  const loadVehicle = useCallback(async (nextToken: string, selectedMasterNo?: number) => {
+  const loadVehicle = useCallback(async (nextToken: string, selectedMasterNo?: number, isManual?: boolean) => {
     if (!nextToken) return;
     setLoadingVehicle(true);
     setArmadaChoices([]);
@@ -80,7 +80,11 @@ export default function WeighingWorkspace({
     setMessage("");
     setResult(null);
     try {
-      const url = `/api/qr/${encodeURIComponent(nextToken)}${selectedMasterNo ? `?masterNo=${selectedMasterNo}` : ""}`;
+      const qs = new URLSearchParams();
+      if (selectedMasterNo) qs.set("masterNo", String(selectedMasterNo));
+      if (isManual) qs.set("manual", "1");
+      const queryStr = qs.toString();
+      const url = `/api/qr/${encodeURIComponent(nextToken)}${queryStr ? `?${queryStr}` : ""}`;
       const response = await fetch(url, { cache: "no-store" });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "QR tidak valid");
@@ -351,7 +355,10 @@ export default function WeighingWorkspace({
       <div className="scan-layout">
         {/* STEP 1: QR SCANNER */}
         <div style={{ display: !useStepView || mobileStep === 1 ? "block" : "none" }}>
-          <QrScanner onToken={loadVehicle} canManualInput={canManualInput} />
+          <QrScanner
+            onToken={(scannedToken, isManual) => void loadVehicle(scannedToken, undefined, isManual)}
+            canManualInput={canManualInput}
+          />
           {useStepView && payload && (
             <div
               className="card"

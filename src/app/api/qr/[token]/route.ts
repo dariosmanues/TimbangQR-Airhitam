@@ -117,9 +117,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     }
   }
 
-  // 4. Cek otorisasi: Input nomor polisi / kode manual HANYA boleh diakses oleh Master ADMIN.
-  // Administrator biasa ditolak karena ketik plat manual telah dinonaktifkan.
-  if (!isSuperAdmin(user)) {
+  // 4. Cek otorisasi: Jika request berasal dari input ketik plat manual (?manual=1),
+  // HANYA boleh diakses oleh Master ADMIN. Hasil Scan QR kamera/gambar (termasuk kartu QR
+  // yang berisi plat nomor seperti BM8606QQ, kode armada, atau nomor izin) tetap diizinkan.
+  const isManualRequest = new URL(request.url).searchParams.get("manual") === "1";
+  if (isManualRequest && !isSuperAdmin(user)) {
     return NextResponse.json(
       {
         error: "Akses ditolak: Input nomor plat manual telah dinonaktifkan untuk Administrator. Seluruh transaksi wajib menggunakan Scan Barcode / QR Code resmi armada.",
