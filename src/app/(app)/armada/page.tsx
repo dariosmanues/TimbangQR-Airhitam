@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { QrCode, Search, ShieldCheck, Truck, MapPin, Building2, User } from "lucide-react";
+import { Search, ShieldCheck, Truck, MapPin, User, Lock, BarChart3, Camera } from "lucide-react";
 import VehicleCreateForm from "@/components/VehicleCreateForm";
 import VehicleStatusToggle from "@/components/VehicleStatusToggle";
 import ArmadaRowActions from "@/components/ArmadaRowActions";
@@ -19,6 +19,56 @@ export default async function ArmadaPage({
   const user = await getSession();
   const canManage = isSuperAdmin(user);
 
+  if (!canManage) {
+    return (
+      <article className="card" style={{ maxWidth: 640, margin: "32px auto", textAlign: "center", padding: "36px 24px" }}>
+        <div
+          style={{
+            width: 64,
+            height: 64,
+            borderRadius: 18,
+            background: "#fef3c7",
+            color: "#d97706",
+            display: "grid",
+            placeItems: "center",
+            margin: "0 auto 16px",
+            border: "1px solid #fde68a",
+          }}
+        >
+          <Lock size={30} />
+        </div>
+        <div style={{ marginBottom: 10 }}>
+          <span
+            className="badge"
+            style={{
+              backgroundColor: "#eff6ff",
+              color: "#1e40af",
+              border: "1px solid #bfdbfe",
+              fontSize: 12,
+              fontWeight: 700,
+            }}
+          >
+            🛡️ {user?.name || "Administrator LPS"} ({user?.email || "admin@lps.local"})
+          </span>
+        </div>
+        <h1 style={{ fontSize: 22, margin: "0 0 8px" }}>Menu Master Armada Dinonaktifkan</h1>
+        <p className="muted" style={{ fontSize: 14, lineHeight: 1.6, margin: "0 auto 24px", maxWidth: 480 }}>
+          Akses ke menu <strong>Master Armada</strong> telah dinonaktifkan khusus untuk akun{" "}
+          <strong>Administrator LPS ({user?.email || "admin@lps.local"})</strong>. Halaman ini hanya dapat diakses oleh{" "}
+          <strong>👑 Master ADMIN</strong>.
+        </p>
+        <div style={{ display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap" }}>
+          <Link href="/dashboard" className="btn btn-secondary">
+            <BarChart3 size={16} /> Ke Dashboard
+          </Link>
+          <Link href="/scan" className="btn btn-primary">
+            <Camera size={16} /> Scan & Timbang
+          </Link>
+        </div>
+      </article>
+    );
+  }
+
   const params = await searchParams;
   const q = params.q || "";
   const filter = params.status || "active";
@@ -32,7 +82,7 @@ export default async function ArmadaPage({
     <>
       <div className="page-head">
         <div>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 6, flexWrap: "wrap" }}>
             <span className="badge green">
               <ShieldCheck size={14} /> TPS WILAYAH AIR HITAM & PALAS
             </span>
@@ -73,7 +123,7 @@ export default async function ArmadaPage({
           </button>
         </form>
 
-        <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <div className="filter-pills" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
           <Link
             href={`/armada?status=active${q ? `&q=${encodeURIComponent(q)}` : ""}`}
             className={`btn btn-sm ${filter === "active" ? "btn-primary" : "btn-secondary"}`}
@@ -107,7 +157,8 @@ export default async function ArmadaPage({
         </div>
       </div>
 
-      <article className="card">
+      {/* DESKTOP MODE: FULL TABLE VIEW */}
+      <article className="card desktop-only-view">
         <div className="table-wrap">
           <table>
             <thead>
@@ -208,6 +259,72 @@ export default async function ArmadaPage({
           </table>
         </div>
       </article>
+
+      {/* MOBILE MODE: CARD LIST VIEW */}
+      <div className="mobile-only-view mobile-card-list">
+        {vehicles.map((vehicle, idx) => (
+          <article key={vehicle.id} className="card mobile-data-card">
+            <div className="mobile-card-top">
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span className="mobile-card-index">#{vehicle.no_urut || idx + 1}</span>
+                <span className="plate mobile-plate-badge">{vehicle.plate_number}</span>
+                <span className="badge" style={{ fontSize: 10 }}>
+                  <Truck size={11} /> {vehicle.vehicle_type}
+                </span>
+              </div>
+              <VehicleStatusToggle
+                vehicleId={vehicle.id}
+                initialActive={vehicle.active}
+                plateNumber={vehicle.plate_number}
+                code={vehicle.code}
+                disabled={!canManage}
+              />
+            </div>
+
+            <div className="mobile-card-body">
+              <div className="mobile-card-lps">
+                <strong>{vehicle.nama_lps || vehicle.lps_names || "Belum ditetapkan"}</strong>
+                {vehicle.nama_ketua_lps && (
+                  <span className="muted" style={{ fontSize: 12, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                    <User size={12} /> {vehicle.nama_ketua_lps}
+                  </span>
+                )}
+              </div>
+
+              <div className="mobile-card-meta-grid">
+                <div>
+                  <span className="meta-label">Kode & No. Izin</span>
+                  <strong>{vehicle.code}</strong>
+                  <small>{vehicle.nomor_izin || "-"}</small>
+                </div>
+                <div>
+                  <span className="meta-label">Tare Acuan</span>
+                  <strong>{vehicle.default_tare_kg ? `${formatNumber(vehicle.default_tare_kg)} kg` : "-"}</strong>
+                  <small>{vehicle.kelurahan_lps || vehicle.kecamatan_lps || "-"}</small>
+                </div>
+              </div>
+
+              {vehicle.wilayah_kerja && vehicle.wilayah_kerja !== "-" && (
+                <div style={{ fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 5, marginTop: 6 }}>
+                  <MapPin size={12} />
+                  <span>{vehicle.wilayah_kerja}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="mobile-card-footer">
+              <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 600 }}>Aksi Armada & QR:</span>
+              <ArmadaRowActions vehicle={vehicle} lpsOptions={lps} canManage={canManage} />
+            </div>
+          </article>
+        ))}
+
+        {vehicles.length === 0 && (
+          <article className="card empty">
+            Tidak ada armada yang cocok dengan kriteria pencarian.
+          </article>
+        )}
+      </div>
     </>
   );
 }

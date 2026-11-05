@@ -126,7 +126,9 @@ export default async function DashboardPage() {
           </div>
           <Link className="btn btn-secondary btn-sm" href="/transaksi">Lihat semua</Link>
         </div>
-        <div className="table-wrap" style={{ marginTop: 14 }}>
+
+        {/* DESKTOP TABLE */}
+        <div className="table-wrap desktop-only-view" style={{ marginTop: 14 }}>
           <table>
             <thead>
               <tr>
@@ -153,6 +155,37 @@ export default async function DashboardPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* MOBILE COMPACT LIST */}
+        <div className="mobile-only-view" style={{ padding: 14, display: "grid", gap: 10 }}>
+          {data.latest.map((row) => (
+            <div
+              key={row.id}
+              style={{
+                border: "1px solid var(--line)",
+                borderRadius: 13,
+                padding: 12,
+                background: "var(--surface-2)",
+                display: "grid",
+                gap: 8,
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span className="plate mobile-plate-badge">{row.plate_number}</span>
+                  <span className="badge" style={{ fontSize: 10 }}>#{row.ticket_number}</span>
+                </div>
+                <span style={{ fontSize: 11, color: "var(--muted)" }}>{formatDateTime(row.weighed_at)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13 }}>
+                <strong>{row.lps_name}</strong>
+                <span style={{ color: "var(--primary)", fontWeight: 800 }}>
+                  Netto: {formatNumber(row.netto_2_kg)} kg
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </article>
     </>
