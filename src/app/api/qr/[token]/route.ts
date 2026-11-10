@@ -49,22 +49,15 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     /^QR-ARMADA-/i.test(rawToken) ||
     Boolean(parseLegacyArmadaQr(rawToken));
 
+  let localBurnedCheck: { ticket_number: string; burned_at: string } | null = null;
   if (/^LPS-/i.test(rawToken) && !isMasterArmada) {
     try {
-      const burnedCheck = await dbOne<{ ticket_number: string; burned_at: string }>(`
+      localBurnedCheck = await dbOne<{ ticket_number: string; burned_at: string }>(`
         SELECT ticket_number, burned_at
         FROM burned_qr_tokens
         WHERE qr_token = $1
         LIMIT 1
       `, [rawToken]);
-
-      if (burnedCheck) {
-        return NextResponse.json({
-          error: `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${burnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`,
-          burned: true,
-          ticketNumber: burnedCheck.ticket_number,
-        }, { status: 400 });
-      }
     } catch (err) {
       console.warn("[QR Lookup] Pengecekan burned_qr_tokens lokal gagal:", err);
     }
@@ -92,11 +85,22 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
   }
 
   // 3. QR LPS wajib divalidasi secara server-to-server ke aplikasi LPS
+  //    (termasuk ketika localBurnedCheck ditemukan, agar kegagalan scan QR Hangus/Usang
+  //    tetap tercatat di Rekapitulasi Kegagalan Scan QR Armada di Dashboard LPS)
   const lpsIdentity = parseLpsQrToken(rawToken);
   let lpsFetchError: string | null = null;
   if (lpsIdentity) {
     try {
-      const remoteArmada = await fetchVerifiedLpsArmada(lpsIdentity);
+      const remoteArmada = await fetchVerifiedLpsArmada(lpsIdentity, {
+        localBurnedTicket: localBurnedCheck?.ticket_number || null,
+      });
+      if (localBurnedCheck) {
+        return NextResponse.json({
+          error: `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`,
+          burned: true,
+          ticketNumber: localBurnedCheck.ticket_number,
+        }, { status: 400 });
+      }
       const result = await linkVerifiedLpsArmada(remoteArmada);
       return NextResponse.json({
         ...result,
@@ -108,13 +112,26 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
       if (error instanceof LpsQrError && error.status === 400) {
         // QR LPS bersifat temporer / sekali pakai per perjalanan. Jika sudah hangus, tolak transaksi.
         return NextResponse.json(
-          { error: error.message, burned: true },
+          { error: error.message, burned: true, ticketNumber: localBurnedCheck?.ticket_number },
           { status: 400 }
         );
+      }
+      if (localBurnedCheck) {
+        return NextResponse.json({
+          error: `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`,
+          burned: true,
+          ticketNumber: localBurnedCheck.ticket_number,
+        }, { status: 400 });
       }
       lpsFetchError = error instanceof Error ? error.message : "Validasi QR LPS gagal.";
       console.warn("[LPS QR] Validasi API LPS gagal / offline. Mencoba fallback master kendaraan:", lpsFetchError);
     }
+  } else if (localBurnedCheck) {
+    return NextResponse.json({
+      error: `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`,
+      burned: true,
+      ticketNumber: localBurnedCheck.ticket_number,
+    }, { status: 400 });
   }
 
   // 4. Cek otorisasi: Jika request berasal dari input ketik plat manual (?manual=1),

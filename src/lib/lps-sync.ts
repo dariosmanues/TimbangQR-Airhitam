@@ -15,8 +15,17 @@ export type LpsWeighingPayload = {
   qrCode?: string;
 };
 
+function resolveLpsIntegrationUrl(): string | undefined {
+  const raw = process.env.LPS_INTEGRATION_URL?.trim();
+  if (!raw) return undefined;
+  return raw.replace(
+    /^https?:\/\/lps-app-five\.vercel\.app/i,
+    'https://177-202-246-42.sslip.io'
+  );
+}
+
 export async function syncCompletedWeighingToLps(payload: LpsWeighingPayload) {
-  const url = process.env.LPS_INTEGRATION_URL?.trim();
+  const url = resolveLpsIntegrationUrl();
   const secret = process.env.LPS_INTEGRATION_SECRET?.trim();
   if (!url || !secret) return { attempted: false, ok: false, reason: 'not_configured' as const };
 
@@ -43,7 +52,7 @@ export async function syncCompletedWeighingToLps(payload: LpsWeighingPayload) {
 }
 
 export async function deleteWeighingFromLps(ticketNumber: string) {
-  const url = process.env.LPS_INTEGRATION_URL?.trim();
+  const url = resolveLpsIntegrationUrl();
   const secret = process.env.LPS_INTEGRATION_SECRET?.trim();
   if (!url || !secret) return { attempted: false, ok: false, reason: 'not_configured' as const };
 

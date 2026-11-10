@@ -6,14 +6,25 @@ import { LpsQrError, normalizeLpsName, verifyLpsArmada } from "./lps-qr-identity
 import type { LpsIdentity, LpsArmada } from "./lps-qr-identity";
 export { LpsQrError, parseLpsQrToken } from "./lps-qr-identity";
 
-export async function fetchVerifiedLpsArmada(identity: LpsIdentity): Promise<LpsArmada> {
-  const baseUrl = process.env.LPS_ARMADA_API_URL?.trim()
+export async function fetchVerifiedLpsArmada(
+  identity: LpsIdentity,
+  options?: { localBurnedTicket?: string | null }
+): Promise<LpsArmada> {
+  const rawBaseUrl = process.env.LPS_ARMADA_API_URL?.trim()
     || "https://177-202-246-42.sslip.io/api/integrations/timbangqr/armada";
+  const baseUrl = rawBaseUrl.replace(
+    /^https?:\/\/lps-app-five\.vercel\.app/i,
+    "https://177-202-246-42.sslip.io"
+  );
   const url = new URL(baseUrl);
   if (url.protocol !== "https:" && !(process.env.NODE_ENV !== "production" && url.hostname === "localhost")) {
     throw new LpsQrError("Konfigurasi API LPS harus menggunakan HTTPS.", 503);
   }
   url.searchParams.set("code", identity.token);
+  url.searchParams.set("transdepo", process.env.LPS_TRANSDEPO?.trim() || "AIR_HITAM");
+  if (options?.localBurnedTicket) {
+    url.searchParams.set("burnedTicket", options.localBurnedTicket);
+  }
   const secret = process.env.LPS_INTEGRATION_SECRET?.trim();
   let response: Response;
   try {
