@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://airhitam-177-202-246-42.sslip.io/$1",
+      "permanent": false
+    }
+  ]
+}
+
