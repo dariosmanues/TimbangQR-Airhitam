@@ -1,10 +1,96 @@
 import { createHash } from "node:crypto";
-import { withTransaction } from "@/lib/db";
+import { dbOne, withTransaction } from "@/lib/db";
 import type { AssignmentRow, VehicleRow } from "@/lib/types";
 
 import { LpsQrError, normalizeLpsName, verifyLpsArmada } from "./lps-qr-identity";
 import type { LpsIdentity, LpsArmada } from "./lps-qr-identity";
 export { LpsQrError, parseLpsQrToken } from "./lps-qr-identity";
+
+const DEFAULT_INTEGRATION_SECRET = "a8f9c4e2b7d013589ef671234abcd567890ef123456789abcdef0123456789ab";
+
+function resolveLpsBaseOrigin(): string {
+  const rawBaseUrl = process.env.LPS_ARMADA_API_URL?.trim()
+    || "https://177-202-246-42.sslip.io/api/integrations/timbangqr/armada";
+  const normalized = rawBaseUrl.replace(
+    /^https?:\/\/lps-app-five\.vercel\.app/i,
+    "https://177-202-246-42.sslip.io"
+  );
+  try {
+    return new URL(normalized).origin;
+  } catch {
+    return "https://177-202-246-42.sslip.io";
+  }
+}
+
+export async function reportQrFailureToLps(params: {
+  qrCode: string;
+  platNomor?: string | null;
+  namaLps?: string | null;
+  kelurahan?: string | null;
+  kecamatan?: string | null;
+  kategoriAlasan: "HANGUS" | "USANG" | "KADALUARSA" | "TIDAK_TERDAFTAR" | "PLAT_TIDAK_SESUAI" | "LAINNYA";
+  keterangan: string;
+  tindakan?: string;
+  tiketNumberRef?: string | null;
+}): Promise<void> {
+  try {
+    let platNomor = params.platNomor || null;
+    let namaLps = params.namaLps || null;
+    let kelurahan = params.kelurahan || null;
+    let kecamatan = params.kecamatan || null;
+
+    if (!platNomor || !namaLps) {
+      const extractedPlate = params.qrCode.match(/^LPS-([A-Z0-9]+)-/i)?.[1]
+        || params.qrCode.replace(/^ARMADA-/i, "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
+      if (extractedPlate) {
+        const localVeh = await dbOne<{
+          plate_number: string;
+          nama_lps: string | null;
+          kelurahan_lps: string | null;
+          kecamatan_lps: string | null;
+        }>(
+          `SELECT v.plate_number, COALESCE(v.nama_lps, l.name) AS nama_lps, v.kelurahan_lps, v.kecamatan_lps
+           FROM vehicles v
+           LEFT JOIN vehicle_assignments va ON va.vehicle_id = v.id AND va.active = TRUE
+           LEFT JOIN lps l ON l.id = va.lps_id
+           WHERE v.qr_token = $1 OR v.plate_normalized = $2
+           ORDER BY va.is_primary DESC NULLS LAST, v.id LIMIT 1`,
+          [params.qrCode, extractedPlate]
+        ).catch(() => null);
+        if (localVeh) {
+          platNomor = platNomor || localVeh.plate_number;
+          namaLps = namaLps || localVeh.nama_lps;
+          kelurahan = kelurahan || localVeh.kelurahan_lps;
+          kecamatan = kecamatan || localVeh.kecamatan_lps;
+        } else if (!platNomor && /^[A-Z]{1,2}\d{1,4}[A-Z]{1,3}$/i.test(extractedPlate)) {
+          platNomor = extractedPlate;
+        }
+      }
+    }
+
+    const endpoint = `${resolveLpsBaseOrigin()}/api/rekap-gagal-qr`;
+    await fetch(endpoint, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        transdepo: process.env.LPS_TRANSDEPO?.trim() || "AIR_HITAM",
+        platNomor,
+        namaLps,
+        kelurahan,
+        kecamatan,
+        qrCode: params.qrCode,
+        kategoriAlasan: params.kategoriAlasan,
+        keterangan: params.keterangan,
+        tindakan: params.tindakan || (params.kategoriAlasan === "USANG" ? "DIARAHKAN_CETAK_ULANG" : "DITOLAK"),
+        operatorName: "Sistem Timbangan (Auto)",
+        tiketNumberRef: params.tiketNumberRef || null,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+  } catch (err) {
+    console.warn("[QR Failure Report] Gagal mengirim laporan kendala QR ke LPS:", err);
+  }
+}
 
 export async function fetchVerifiedLpsArmada(
   identity: LpsIdentity,
@@ -25,7 +111,10 @@ export async function fetchVerifiedLpsArmada(
   if (options?.localBurnedTicket) {
     url.searchParams.set("burnedTicket", options.localBurnedTicket);
   }
-  const secret = process.env.LPS_INTEGRATION_SECRET?.trim();
+  const secret =
+    process.env.LPS_INTEGRATION_SECRET?.trim() ||
+    process.env.TIMBANGQR_INTEGRATION_SECRET?.trim() ||
+    DEFAULT_INTEGRATION_SECRET;
   let response: Response;
   try {
     response = await fetch(url, {
@@ -35,31 +124,32 @@ export async function fetchVerifiedLpsArmada(
       signal: AbortSignal.timeout(7000),
     });
   } catch {
-    throw new LpsQrError("API LPS sedang tidak dapat dihubungi. Coba lagi.", 503);
+    throw new LpsQrError("API LPS sedang tidak dapat dihubungi. Coba lagi.", 503, false);
   }
   if (response.status === 404) {
-    throw new LpsQrError("Kode QR tidak terdaftar dalam master armada LPS.", 404);
+    throw new LpsQrError("Kode QR tidak terdaftar dalam master armada LPS.", 404, true);
   }
   if (response.status === 400) {
     let errBody: any;
     try {
       errBody = await response.json();
     } catch {}
-    if (errBody?.burned || errBody?.message?.includes("hangus")) {
+    if (errBody?.burned || errBody?.message?.includes("hangus") || errBody?.message?.includes("usang")) {
       throw new LpsQrError(
         errBody.message || "QR Code ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #...). Silakan Hubungi Ketua Atau Pengurus LPS Anda .",
         400,
+        true,
       );
     }
   }
   if (!response.ok) {
-    throw new LpsQrError("Validasi ke API LPS gagal (HTTP " + response.status + ").", 502);
+    throw new LpsQrError("Validasi ke API LPS gagal (HTTP " + response.status + ").", 502, false);
   }
   let body: unknown;
   try {
     body = await response.json();
   } catch {
-    throw new LpsQrError("Respons API LPS bukan JSON yang valid.", 502);
+    throw new LpsQrError("Respons API LPS bukan JSON yang valid.", 502, false);
   }
   return verifyLpsArmada(identity, body);
 }

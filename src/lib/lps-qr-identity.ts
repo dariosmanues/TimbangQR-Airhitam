@@ -13,9 +13,11 @@ export type LpsArmada = {
 
 export class LpsQrError extends Error {
   readonly status: number;
-  constructor(message: string, status: number) {
+  readonly remoteLogged: boolean;
+  constructor(message: string, status: number, remoteLogged = false) {
     super(message);
     this.status = status;
+    this.remoteLogged = remoteLogged;
     this.name = "LpsQrError";
   }
 }
