@@ -6,13 +6,13 @@ import { dbOne, dbQuery, hashDeviceKey, withTransaction } from "@/lib/db";
 export const runtime = "nodejs";
 const schema = z.object({
   device_id: z.string().min(1),
-  weight_kg: z.coerce.number().int().nonnegative(),
-  stable: z.boolean(),
+  weight_kg: z.coerce.number().int().nonnegative().optional(),
+  stable: z.boolean().optional(),
   indicator_raw: z.string().max(2000).optional().default(""),
   timestamp: z.string().optional(),
   serial_port: z.string().max(100).optional(),
   interface_type: z.enum(["RS232", "RS485"]).optional(),
-  dry_run: z.boolean().optional().default(false),
+  dry_run: z.boolean().optional(),
 });
 
 function secureEqual(left: string, right: string) {
@@ -60,12 +60,10 @@ export async function POST(request: Request) {
       }>(`
         INSERT INTO weighbridge_devices
           (device_code, location_name, api_key_hash, firmware_version, connection_type, port_name, baud_rate, protocol, active, last_seen_at)
-        VALUES ($1, 'Transdepo Harapan Jaya', $2, 'PC-SERIAL-BRIDGE', $3, $4, 9600, 'DIRECT_SERIAL', TRUE, NOW())
+        VALUES ($1, 'Transdepo Harapan Jaya', $2, 'PC-SERIAL-BRIDGE', $3, $4, 9600, 'DIRECT_SERIAL', FALSE, NOW())
         ON CONFLICT (device_code) DO UPDATE SET
           api_key_hash = EXCLUDED.api_key_hash,
-          protocol = 'DIRECT_SERIAL',
-          active = TRUE,
-          last_seen_at = NOW()
+          protocol = 'DIRECT_SERIAL'
         RETURNING id, device_code, api_key_hash, active
       `, [
         input.device_id,
@@ -79,8 +77,16 @@ export async function POST(request: Request) {
       device && (secureEqual(device.api_key_hash, incomingHash) || matchesEnvOrDefault)
     );
 
-    if (!device || !device.active || !keyValid) {
+    if (!device || !keyValid) {
       return NextResponse.json({ error: "Koneksi serial atau API key tidak valid." }, { status: 401 });
+    }
+
+    // Pengecekan aktif: jangan aktifkan otomatis, harus dihubungkan manual oleh Super Admin
+    if (!device.active) {
+      return NextResponse.json({
+        error: "Bridge timbangan sedang dinonaktifkan (belum dihubungkan secara manual oleh Super Admin).",
+        active: false,
+      }, { status: 403 });
     }
 
     const recordedAt = input.timestamp && !Number.isNaN(Date.parse(input.timestamp))
@@ -94,8 +100,7 @@ export async function POST(request: Request) {
         SET last_seen_at = NOW(),
             firmware_version = 'PC-SERIAL-BRIDGE',
             port_name = COALESCE($1, port_name),
-            connection_type = COALESCE($2, connection_type),
-            active = TRUE
+            connection_type = COALESCE($2, connection_type)
         WHERE id = $3
       `, [input.serial_port || null, input.interface_type || null, device.id]);
 
@@ -107,6 +112,9 @@ export async function POST(request: Request) {
       });
     }
 
+    const weightKg = Number(input.weight_kg ?? 0);
+    const isStable = Boolean(input.stable);
+
     const latest = await dbOne<{
       id: number;
       weight_kg: number;
@@ -117,25 +125,25 @@ export async function POST(request: Request) {
       SELECT id, weight_kg, stable, indicator_raw, recorded_at
       FROM device_readings
       WHERE device_id = $1
-      ORDER BY id DESC
+      ORDER BY recorded_at DESC, id DESC
       LIMIT 1
     `, [device.id]);
 
     if (
       latest
-      && latest.weight_kg === input.weight_kg
-      && latest.stable === input.stable
+      && latest.weight_kg === weightKg
+      && latest.stable === isStable
       && latest.indicator_raw === (input.indicator_raw || null)
       && Math.abs(Date.parse(recordedAt) - Date.parse(latest.recorded_at)) < 500
     ) {
       await dbQuery(`
         UPDATE weighbridge_devices
-        SET last_seen_at = NOW(),
-            port_name = COALESCE($1, port_name),
-            connection_type = COALESCE($2, connection_type)
-        WHERE id = $3
-      `, [input.serial_port || null, input.interface_type || null, device.id]);
-      return NextResponse.json({ ok: true, duplicate: true });
+        SET last_seen_at = $1::timestamptz,
+            port_name = COALESCE($2, port_name),
+            connection_type = COALESCE($3, connection_type)
+        WHERE id = $4
+      `, [recordedAt, input.serial_port || null, input.interface_type || null, device.id]);
+      return NextResponse.json({ ok: true, duplicate: true, active: true });
     }
 
     const readingId = await withTransaction(async (client) => {
@@ -143,15 +151,11 @@ export async function POST(request: Request) {
         INSERT INTO device_readings (device_id, weight_kg, stable, indicator_raw, recorded_at)
         VALUES ($1, $2, $3, $4, $5::timestamptz)
         RETURNING id
-      `, [device.id, input.weight_kg, input.stable, input.indicator_raw || null, recordedAt]);
+      `, [device.id, weightKg, isStable, input.indicator_raw || null, recordedAt]);
 
       await client.query(`
         UPDATE weighbridge_devices
-        SET last_seen_at = GREATEST(
-              COALESCE(last_seen_at, $1::timestamptz),
-              $1::timestamptz,
-              NOW()
-            ),
+        SET last_seen_at = $1::timestamptz,
             firmware_version = 'PC-SERIAL-BRIDGE',
             port_name = COALESCE($2, port_name),
             connection_type = COALESCE($3, connection_type)
@@ -161,7 +165,7 @@ export async function POST(request: Request) {
       return inserted.rows[0].id;
     });
 
-    return NextResponse.json({ ok: true, reading_id: readingId });
+    return NextResponse.json({ ok: true, reading_id: readingId, active: true });
   } catch (error) {
     return NextResponse.json({
       error: error instanceof Error ? error.message : "Payload serial tidak valid.",

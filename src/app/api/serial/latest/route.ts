@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { getSession, isSuperAdmin } from "@/lib/auth";
 import { dbOne } from "@/lib/db";
 import type { DeviceReading } from "@/lib/types";
 
@@ -38,7 +38,6 @@ export async function GET(request: Request) {
     device = await dbOne<WeighbridgeDeviceStatus>(`
       SELECT id, device_code, location_name, port_name, connection_type, baud_rate, last_seen_at, active
       FROM weighbridge_devices
-      WHERE active = TRUE
       ORDER BY last_seen_at DESC NULLS LAST, id ASC
       LIMIT 1
     `);
@@ -61,14 +60,26 @@ export async function GET(request: Request) {
     Number.isFinite(readingSeenMs) ? readingSeenMs : 0
   );
   const lastSeenAt = latestSeenMs > 0 ? new Date(latestSeenMs).toISOString() : null;
-  const bridgeOnline = Boolean(latestSeenMs > 0 && Date.now() - latestSeenMs <= 15 * 60 * 1000);
+  const bridgeOnline = Boolean(device?.active && latestSeenMs > 0 && Date.now() - latestSeenMs <= 15 * 60 * 1000);
 
   return NextResponse.json(
     {
       reading,
-      device,
+      device: device ? {
+        ...device,
+        code: device.device_code,
+        active: Boolean(device.active),
+      } : {
+        code: targetCode,
+        active: false,
+        port_name: "COM1",
+        connection_type: "RS232",
+        location_name: "Transdepo",
+        last_seen_at: null,
+      },
       lastSeenAt,
       bridgeOnline,
+      isSuperAdmin: isSuperAdmin(user),
     },
     { headers: { "Cache-Control": "no-store, max-age=0" } }
   );

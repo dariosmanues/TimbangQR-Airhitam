@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Cable, CircleStop, PlugZap, RefreshCw, Save, Send, Usb } from "lucide-react";
+import { Cable, CircleStop, Lock, PlugZap, RefreshCw, Save, Send, Usb } from "lucide-react";
 
 type PortInfo = {
   path: string;
@@ -66,7 +66,7 @@ const defaults: SerialConfig = {
   unstableRegex: "\\b(US|UNST|UNSTABLE)\\b",
   stableSamples: 3,
   stableToleranceKg: 1,
-  autoConnect: true,
+  autoConnect: false, // JANGAN AKTIFKAN SECARA OTOMATIS: HARUS MANUAL
 };
 
 function dateTime(value?: string | null) {
@@ -76,7 +76,11 @@ function dateTime(value?: string | null) {
   return new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "medium" }).format(date);
 }
 
-export default function SerialConnectionPanel() {
+export default function SerialConnectionPanel({
+  isSuperAdmin = false,
+}: {
+  isSuperAdmin?: boolean;
+}) {
   const configInitialized = useRef(false);
   const [status, setStatus] = useState<BridgeStatus | null>(null);
   const [config, setConfig] = useState<SerialConfig>(defaults);
@@ -279,11 +283,47 @@ export default function SerialConnectionPanel() {
             <button className="btn btn-secondary" type="button" onClick={refreshPorts} disabled={loading}><RefreshCw size={16} /> Deteksi port</button>
             <button className="btn btn-secondary" type="button" onClick={() => saveConfig(false)} disabled={loading}><Save size={16} /> Simpan</button>
             {status?.bridge.connected ? (
-              <button className="btn btn-danger" type="button" onClick={() => control("disconnect")} disabled={loading}><CircleStop size={16} /> Putuskan</button>
+              <button
+                className="btn btn-danger"
+                type="button"
+                onClick={() => control("disconnect")}
+                disabled={loading || !isSuperAdmin}
+                title={!isSuperAdmin ? "Hanya Super Admin yang dapat memutuskan koneksi" : undefined}
+                style={{ opacity: !isSuperAdmin ? 0.6 : 1 }}
+              >
+                <CircleStop size={16} /> Putuskan
+              </button>
             ) : (
-              <button className="btn btn-primary" type="button" onClick={() => saveConfig(true)} disabled={loading || !config.path}><PlugZap size={16} /> Simpan & hubungkan</button>
+              <button
+                className="btn btn-primary"
+                type="button"
+                onClick={() => saveConfig(true)}
+                disabled={loading || !config.path || !isSuperAdmin}
+                title={!isSuperAdmin ? "Hanya Super Admin yang dapat mengaktifkan koneksi" : undefined}
+                style={{ opacity: !isSuperAdmin ? 0.6 : 1 }}
+              >
+                <PlugZap size={16} /> Simpan & hubungkan
+              </button>
             )}
           </div>
+          {!isSuperAdmin && (
+            <div
+              style={{
+                marginTop: 10,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                color: "#b45309",
+                background: "#fef3c7",
+                padding: "8px 12px",
+                borderRadius: 6,
+                fontSize: "0.82rem",
+                fontWeight: 600,
+              }}
+            >
+              <Lock size={14} /> Hanya user Super Admin yang dapat mengaktifkan atau memutuskan koneksi bridge.
+            </div>
+          )}
           {message && <p className={message.includes("berhasil") || message.includes("terhubung") || message.includes("tersimpan") ? "success" : "error"}>{message}</p>}
           {status?.bridge.lastError && <p className="error">Kesalahan terakhir: {status.bridge.lastError}</p>}
         </div>

@@ -1,13 +1,16 @@
-import { Cable, ShieldCheck, Usb } from "lucide-react";
+import { Cable, Lock, ShieldCheck, Usb } from "lucide-react";
 import RemoteSerialStatusPanel from "@/components/RemoteSerialStatusPanel";
 import SerialConnectionPanel from "@/components/SerialConnectionPanel";
 import { getDeviceList } from "@/lib/queries";
 import { formatDateTime, formatNumber } from "@/lib/utils";
+import { getSession, isSuperAdmin } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export default async function DevicePage() {
+  const user = await getSession();
+  const superAdmin = isSuperAdmin(user);
   const devices = (await getDeviceList()).filter((device) => String(device.protocol || "") === "DIRECT_SERIAL");
   const bridgeMode = (process.env.SERIAL_BRIDGE_MODE || "").trim().toLowerCase();
   const isVercel = Boolean((process.env.VERCEL || "").trim());
@@ -20,10 +23,25 @@ export default async function DevicePage() {
           <h1>Koneksi Timbangan</h1>
           <p>Indikator terhubung langsung ke komputer melalui adapter USB–RS232 atau USB–RS485.</p>
         </div>
-        <span className="badge green"><Usb size={14} /> Tanpa ESP32</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          {superAdmin ? (
+            <span className="badge green" style={{ fontWeight: 700 }}>
+              <ShieldCheck size={14} /> Hak Akses: Super Admin (Kontrol Bridge Aktif)
+            </span>
+          ) : (
+            <span className="badge" style={{ background: "#f8fafc", color: "#64748b", border: "1px solid #cbd5e1" }}>
+              <Lock size={13} /> Hak Akses Terbatas (Hanya Super Admin yang dapat Mengubah Status Bridge)
+            </span>
+          )}
+          <span className="badge green"><Usb size={14} /> Tanpa ESP32</span>
+        </div>
       </div>
 
-      {localBridgeMode ? <SerialConnectionPanel /> : <RemoteSerialStatusPanel />}
+      {localBridgeMode ? (
+        <SerialConnectionPanel isSuperAdmin={superAdmin} />
+      ) : (
+        <RemoteSerialStatusPanel isSuperAdmin={superAdmin} />
+      )}
 
       <div style={{ height: 18 }} />
       <article className="card">
@@ -32,7 +50,7 @@ export default async function DevicePage() {
         </div>
         <div className="table-wrap" style={{ marginTop: 14 }}>
           <table>
-            <thead><tr><th>Connection ID</th><th>Lokasi</th><th>Port</th><th>Protokol</th><th className="num">Berat terakhir</th><th>Terakhir menerima</th></tr></thead>
+            <thead><tr><th>Connection ID</th><th>Lokasi</th><th>Port</th><th>Protokol</th><th>Status Bridge</th><th className="num">Berat terakhir</th><th>Terakhir menerima</th></tr></thead>
             <tbody>
               {devices.map((device) => (
                 <tr key={String(device.id)}>
@@ -40,6 +58,13 @@ export default async function DevicePage() {
                   <td>{String(device.location_name)}</td>
                   <td>{device.port_name ? String(device.port_name) : "Belum dipilih"}</td>
                   <td><span className="badge"><Cable size={12} /> {String(device.connection_type || "RS232")}</span></td>
+                  <td>
+                    {device.active ? (
+                      <span className="badge green"><span className="dot" /> Terhubung</span>
+                    ) : (
+                      <span className="badge red"><span className="dot" /> Terputus</span>
+                    )}
+                  </td>
                   <td className="num">{device.latest_weight == null ? "-" : `${formatNumber(Number(device.latest_weight))} kg`}</td>
                   <td>{formatDateTime(device.last_seen_at ? String(device.last_seen_at) : null)}</td>
                 </tr>

@@ -89,7 +89,7 @@ const defaultConfig = {
   unstableRegex: process.env.SERIAL_UNSTABLE_REGEX || "\\b(US|UNST|UNSTABLE)\\b",
   stableSamples: toNumber(process.env.SERIAL_STABLE_SAMPLES, 3),
   stableToleranceKg: toNumber(process.env.SERIAL_STABLE_TOLERANCE_KG, 1),
-  autoConnect: toBoolean(process.env.SERIAL_AUTO_CONNECT, true),
+  autoConnect: toBoolean(process.env.SERIAL_AUTO_CONNECT, false), // JANGAN AKTIFKAN OTOMATIS: HARUS MANUAL
 };
 
 function readJson(filePath, fallback) {

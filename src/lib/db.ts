@@ -190,10 +190,12 @@ async function createSchema(client: PoolClient) {
       port_name TEXT,
       baud_rate INTEGER NOT NULL DEFAULT 9600,
       protocol TEXT NOT NULL DEFAULT 'DIRECT_SERIAL',
-      active BOOLEAN NOT NULL DEFAULT TRUE,
+      active BOOLEAN NOT NULL DEFAULT FALSE,
       last_seen_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+    ALTER TABLE weighbridge_devices ALTER COLUMN active SET DEFAULT FALSE;
 
     CREATE TABLE IF NOT EXISTS device_readings (
       id BIGSERIAL PRIMARY KEY,
