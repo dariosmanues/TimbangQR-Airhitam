@@ -43,6 +43,9 @@ interface IncomingArmada {
   wilayahKerja?: string | null;
   lokasiTransdepo?: string | null;
   jenisArmada?: string | null;
+  defaultTareKg?: number | string | null;
+  default_tare_kg?: number | string | null;
+  tare?: number | string | null;
   noIzinOperasi?: string | null;
   nomorSkLps?: string | null;
   tanggalSkLps?: string | Date | null;
@@ -63,6 +66,7 @@ interface CachedVehicleRow {
   qr_token: string;
   nama_lps: string | null;
   kelurahan_lps: string | null;
+  default_tare_kg: number | null;
 }
 
 function formatDateString(val: string | Date | null | undefined): string | null {
@@ -117,7 +121,7 @@ export async function POST(request: Request) {
 
       // 2. Ambil master armada yang sudah ada dalam 1 query tunggal
       const existingVehicles = await client.query<CachedVehicleRow>(
-        `SELECT id, code, plate_number, plate_normalized, active, nomor_izin, qr_token, nama_lps, kelurahan_lps
+        `SELECT id, code, plate_number, plate_normalized, active, nomor_izin, qr_token, nama_lps, kelurahan_lps, default_tare_kg
          FROM vehicles
          WHERE plate_normalized = ANY($1::text[])
             OR (nomor_izin IS NOT NULL AND nomor_izin = ANY($2::text[]))`,
@@ -248,6 +252,16 @@ export async function POST(request: Request) {
           let vehicleId: number;
           let action: "updated" | "created";
 
+          // Parsing Tare Acuan dari LPS App
+          let tareAcuan: number | null = null;
+          const rawTare = item.defaultTareKg ?? item.default_tare_kg ?? item.tare;
+          if (rawTare !== undefined && rawTare !== null && rawTare !== "") {
+            const parsed = parseInt(String(rawTare).replace(/[^0-9]/g, ""), 10);
+            if (!isNaN(parsed) && parsed > 0) {
+              tareAcuan = parsed;
+            }
+          }
+
           let qrToken =
             item.qrCode ||
             `ARMADA-${plateNormalized}`;
@@ -283,9 +297,10 @@ export async function POST(request: Request) {
                 tanggal_terbit_izin = COALESCE($13, tanggal_terbit_izin),
                 qr_token = COALESCE($14, qr_token),
                 lokasi_tps = COALESCE($15, lokasi_tps, '${lokasiTpsDefault}'),
+                default_tare_kg = COALESCE($16, default_tare_kg),
                 active = TRUE,
                 updated_at = NOW()
-              WHERE id = $16`,
+              WHERE id = $17`,
               [
                 plateNumber,
                 plateNormalized,
@@ -302,9 +317,13 @@ export async function POST(request: Request) {
                 tglIzin,
                 qrToken,
                 item.lokasiTransdepo || lokasiTpsDefault,
+                tareAcuan,
                 vehicleId,
               ]
             );
+            if (tareAcuan !== null) {
+              vehicleRow.default_tare_kg = tareAcuan;
+            }
           } else {
             action = "created";
             let code = `${codePrefix}${String(nextCodeNum++).padStart(4, "0")}`;
@@ -321,16 +340,17 @@ export async function POST(request: Request) {
                 kecamatan, wilayah_kerja, lokasi_tps, tanggal_terbit_izin
               ) VALUES (
                 $1, $2, $3, $4, 'SAMPAH RUMAH TANGGA',
-                NULL, $5, TRUE, $6,
-                $7, $8, $9,
-                $10, $11, $12, $13,
-                $13, $14, $15, $16
+                $5, $6, TRUE, $7,
+                $8, $9, $10,
+                $11, $12, $13, $14,
+                $14, $15, $16, $17
               ) RETURNING id`,
               [
                 code,
                 plateNumber,
                 plateNormalized,
                 item.jenisArmada || "PICKUP",
+                tareAcuan,
                 qrToken,
                 item.noIzinOperasi || null,
                 item.nomorSkLps || null,
@@ -358,6 +378,7 @@ export async function POST(request: Request) {
               qr_token: qrToken,
               nama_lps: item.namaLps || null,
               kelurahan_lps: kelurahanNama || null,
+              default_tare_kg: tareAcuan,
             };
             vehicleByPlate.set(plateNormalized, newRow);
             if (item.noIzinOperasi) vehicleByIzin.set(item.noIzinOperasi, newRow);
@@ -386,8 +407,8 @@ export async function POST(request: Request) {
                 ]);
               }
               await client.query(
-                "UPDATE vehicle_assignments SET active = TRUE, is_primary = TRUE, driver_name = COALESCE($1, driver_name) WHERE id = $2",
-                [item.namaSupir || item.namaKetuaLps || null, assignCheck.rows[0].id]
+                "UPDATE vehicle_assignments SET active = TRUE, is_primary = TRUE, driver_name = COALESCE($1, driver_name), tare_kg = COALESCE($2, tare_kg) WHERE id = $3",
+                [item.namaSupir || item.namaKetuaLps || null, tareAcuan, assignCheck.rows[0].id]
               );
             } else {
               if (existingPrimary.rows[0]) {
@@ -397,8 +418,8 @@ export async function POST(request: Request) {
               }
               await client.query(
                 `INSERT INTO vehicle_assignments (vehicle_id, lps_id, driver_name, tare_kg, is_primary, active)
-                 VALUES ($1, $2, $3, NULL, TRUE, TRUE)`,
-                [vehicleId, lpsId, item.namaSupir || item.namaKetuaLps || null]
+                 VALUES ($1, $2, $3, $4, TRUE, TRUE)`,
+                [vehicleId, lpsId, item.namaSupir || item.namaKetuaLps || null, tareAcuan]
               );
             }
           }
