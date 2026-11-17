@@ -166,16 +166,18 @@ export async function POST(request: Request) {
         }
       }
 
-      // 4. Hitung awalan kode ARM-AH / ARM-HJ sesuai transdepo server
+      // 4. Hitung awalan kode ARM-AH / ARM-HJ berdasarkan nomor urut tertinggi (bukan sekedar COUNT)
       const serverTransdepo = getServerTransdepo();
       const codePrefix = serverTransdepo === "AIR_HITAM" ? "ARM-AH-" : "ARM-HJ-";
       const lokasiTpsDefault = serverTransdepo === "AIR_HITAM" ? "AIR HITAM" : "HARAPAN JAYA";
 
-      const countResult = await client.query<{ count: number }>(
-        "SELECT COUNT(*)::int AS count FROM vehicles WHERE code LIKE $1",
+      const maxCodeResult = await client.query<{ max_num: number }>(
+        `SELECT COALESCE(MAX(SUBSTRING(code FROM '[0-9]+')::int), 0) AS max_num 
+         FROM vehicles 
+         WHERE code LIKE $1`,
         [`${codePrefix}%`]
       );
-      let nextCodeNum = (countResult.rows[0]?.count || 0) + 1;
+      let nextCodeNum = (maxCodeResult.rows[0]?.max_num || 0) + 1;
 
       // 5. Proses setiap armada
       const innerResults = [];
@@ -305,7 +307,10 @@ export async function POST(request: Request) {
             );
           } else {
             action = "created";
-            const code = `${codePrefix}${String(nextCodeNum++).padStart(4, "0")}`;
+            let code = `${codePrefix}${String(nextCodeNum++).padStart(4, "0")}`;
+            while (await client.query("SELECT 1 FROM vehicles WHERE code = $1 LIMIT 1", [code]).then(r => (r.rowCount || 0) > 0)) {
+              code = `${codePrefix}${String(nextCodeNum++).padStart(4, "0")}`;
+            }
 
             const insertResult = await client.query<{ id: number }>(
               `INSERT INTO vehicles (
