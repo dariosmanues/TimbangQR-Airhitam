@@ -64,10 +64,30 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     }
   }
 
+  const isManualRequest = new URL(request.url).searchParams.get("manual") === "1";
+
   // 2. Format QR ARMADA Master / Permanen (ARMADA-BM8264QM)
   const legacyPlate = parseLegacyArmadaQr(rawToken);
   if (/^ARMADA-/i.test(rawToken) || (legacyPlate && !/^LPS-/i.test(rawToken))) {
     const plateToResolve = legacyPlate || rawToken.replace(/^ARMADA-/i, "").trim();
+    const normPlateToResolve = plateToResolve.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (normPlateToResolve === "BM8058QQ" && !(isManualRequest && isSuperAdmin(user))) {
+      const revokedMsg = "QR Master Armada Permanen (ARMADA-BM8058QQ) untuk armada BM 8058 QQ telah dinonaktifkan. Armada ini wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.";
+      await reportQrFailureToLps({
+        qrCode: rawToken,
+        platNomor: "BM 8058 QQ",
+        kategoriAlasan: "USANG",
+        keterangan: revokedMsg,
+        tindakan: "DIARAHKAN_CETAK_ULANG",
+      });
+      return NextResponse.json(
+        {
+          error: revokedMsg,
+          burned: true,
+        },
+        { status: 400 }
+      );
+    }
     try {
       const choice = new URL(request.url).searchParams.get("masterNo");
       const selectedNo = choice ? Number(choice) : undefined;
@@ -161,6 +181,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         }, { status: 400 });
       }
       lpsFetchError = error instanceof Error ? error.message : "Validasi QR LPS gagal.";
+      if (lpsIdentity.normalizedPlate === "BM8058QQ") {
+        return NextResponse.json({ error: lpsFetchError, burned: true }, { status: 400 });
+      }
       console.warn("[LPS QR] Validasi API LPS gagal / offline. Mencoba fallback master kendaraan:", lpsFetchError);
     }
   } else if (localBurnedCheck) {
@@ -182,7 +205,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
   // 4. Cek otorisasi: Jika request berasal dari input ketik plat manual (?manual=1),
   // HANYA boleh diakses oleh Master ADMIN. Hasil Scan QR kamera/gambar (termasuk kartu QR
   // yang berisi plat nomor seperti BM8606QQ, kode armada, atau nomor izin) tetap diizinkan.
-  const isManualRequest = new URL(request.url).searchParams.get("manual") === "1";
   if (isManualRequest && !isSuperAdmin(user)) {
     return NextResponse.json(
       {
@@ -194,6 +216,23 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
 
   // 4. Jalur fallback untuk QR internal TimbangQR, nomor polisi, izin, kode armada, atau LPS token yang hangus/offline
   const plateCompact = (lpsIdentity?.normalizedPlate || rawToken).toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (plateCompact.includes("BM8058QQ") && !(isManualRequest && isSuperAdmin(user))) {
+    const revokedMsg = "QR Master Armada Permanen (ARMADA-BM8058QQ) untuk armada BM 8058 QQ telah dinonaktifkan. Armada ini wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.";
+    await reportQrFailureToLps({
+      qrCode: rawToken,
+      platNomor: "BM 8058 QQ",
+      kategoriAlasan: "USANG",
+      keterangan: revokedMsg,
+      tindakan: "DIARAHKAN_CETAK_ULANG",
+    });
+    return NextResponse.json(
+      {
+        error: revokedMsg,
+        burned: true,
+      },
+      { status: 400 }
+    );
+  }
   let vehicle = await dbOne<VehicleRow>([
     "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type,",
     "default_tare_kg, qr_token, active FROM vehicles WHERE (",
@@ -202,6 +241,24 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     "OR UPPER(COALESCE(nomor_izin, '')) = UPPER($1)",
     ") ORDER BY active DESC, id LIMIT 1",
   ].join(" "), [rawToken, plateCompact]);
+
+  if (vehicle && vehicle.plate_normalized === "BM8058QQ" && !(isManualRequest && isSuperAdmin(user))) {
+    const revokedMsg = "QR Master Armada Permanen (ARMADA-BM8058QQ) untuk armada BM 8058 QQ telah dinonaktifkan. Armada ini wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.";
+    await reportQrFailureToLps({
+      qrCode: rawToken,
+      platNomor: "BM 8058 QQ",
+      kategoriAlasan: "USANG",
+      keterangan: revokedMsg,
+      tindakan: "DIARAHKAN_CETAK_ULANG",
+    });
+    return NextResponse.json(
+      {
+        error: revokedMsg,
+        burned: true,
+      },
+      { status: 400 }
+    );
+  }
 
   // Fallback pencocokan jika ada pergantian seri plat (misal BM <-> BA pada kartu fisik lama)
   if (!vehicle && plateCompact.length >= 6) {

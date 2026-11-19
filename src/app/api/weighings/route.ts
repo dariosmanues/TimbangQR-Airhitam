@@ -82,6 +82,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Armada atau LPS tidak ditemukan." }, { status: 404 });
     }
 
+    const cleanVehiclePlate = vehicle.plate_number.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (cleanVehiclePlate === "BM8058QQ" && !canManageTransactions(user)) {
+      if (!input.qrToken || !/^LPS-/i.test(input.qrToken.trim())) {
+        return NextResponse.json(
+          { error: "Transaksi ditolak: Armada BM 8058 QQ wajib menggunakan QR Code LPS sekali pakai terbaru (QR Master Permanen telah dinonaktifkan)." },
+          { status: 400 }
+        );
+      }
+    }
+
     const netto1 = input.grossKg - input.tareKg;
     const netto2 = netto1 - input.rafaksiKg;
     if (netto2 <= 0) {
