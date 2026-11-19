@@ -21,11 +21,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const format = url.searchParams.get("format");
   const isDownload = url.searchParams.get("download") === "1" || url.searchParams.get("download") === "true";
 
-  // Gunakan format QR Master ARMADA Permanen: ARMADA-{plate_normalized}
-  // Format ini konsisten dengan stiker fisik armada Harapan Jaya dan tidak pernah hangus.
   const cleanPlate = vehicle.plate_normalized || vehicle.plate_number.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-  if (cleanPlate === "BM8058QQ") {
-    return new NextResponse("QR Master Permanen untuk BM 8058 QQ telah dinonaktifkan. Silakan cetak QR LPS sekali pakai melalui Dashboard MyLPS.", { status: 403 });
+  if (cleanPlate) {
+    return new NextResponse("QR Master Permanen telah dinonaktifkan untuk seluruh armada. Silakan cetak QR LPS sekali pakai melalui Dashboard MyLPS.", { status: 403 });
   }
   const target = `ARMADA-${cleanPlate}`;
 

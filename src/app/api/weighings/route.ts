@@ -82,11 +82,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Armada atau LPS tidak ditemukan." }, { status: 404 });
     }
 
-    const cleanVehiclePlate = vehicle.plate_number.toUpperCase().replace(/[^A-Z0-9]/g, "");
-    if (cleanVehiclePlate === "BM8058QQ" && !canManageTransactions(user)) {
+    if (!canManageTransactions(user)) {
       if (!input.qrToken || !/^LPS-/i.test(input.qrToken.trim())) {
         return NextResponse.json(
-          { error: "Transaksi ditolak: Armada BM 8058 QQ wajib menggunakan QR Code LPS sekali pakai terbaru (QR Master Permanen telah dinonaktifkan)." },
+          { error: "Transaksi ditolak: Seluruh armada wajib menggunakan QR Code LPS sekali pakai terbaru (QR Master Permanen telah dinonaktifkan)." },
           { status: 400 }
         );
       }
@@ -153,15 +152,7 @@ export async function POST(request: Request) {
       ]);
       const id = inserted.rows[0].id;
 
-      // Catat token QR sebagai HANGUS agar tidak bisa discan/dipakai ulang
-      // PENTING: QR MASTER ARMADA bersifat PERMANEN dan TIDAK PERNAH DIHANGUSKAN!
-      // Hanya token slip sekali pakai LPS (berawalan LPS-) yang dicatat ke burned_qr_tokens.
-      const isMasterQr = !input.qrToken ||
-        /^ARMADA-/i.test(input.qrToken.trim()) ||
-        /^QR-ARMADA-/i.test(input.qrToken.trim()) ||
-        !input.qrToken.trim().toUpperCase().startsWith("LPS-");
-
-      if (input.qrToken && input.qrToken.trim() && !isMasterQr) {
+      if (input.qrToken && input.qrToken.trim()) {
         try {
           await client.query(`
             INSERT INTO burned_qr_tokens (qr_token, plate_number, ticket_number, vehicle_id, burned_at)
@@ -175,9 +166,14 @@ export async function POST(request: Request) {
         }
       }
 
+      const clientIp =
+        request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+        request.headers.get("x-real-ip")?.trim() ||
+        null;
+
       await client.query(`
-        INSERT INTO audit_logs (user_id, action, entity_type, entity_id, new_data)
-        VALUES ($1, 'CREATE', 'WEIGHING', $2, $3::jsonb)
+        INSERT INTO audit_logs (user_id, action, entity_type, entity_id, new_data, ip_address)
+        VALUES ($1, 'CREATE', 'WEIGHING', $2, $3::jsonb, $4)
       `, [user.id, id, JSON.stringify({
         ticket,
         vehicleId: vehicle.id,
@@ -188,7 +184,8 @@ export async function POST(request: Request) {
         measurementSource: input.measurementSource,
         deviceId: input.deviceId || null,
         qrToken: input.qrToken || null,
-      })]);
+        clientIp,
+      }), clientIp]);
 
       return { id, ticket, netto2, weighedAt };
     });

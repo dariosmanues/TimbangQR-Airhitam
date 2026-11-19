@@ -65,17 +65,16 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
   }
 
   const isManualRequest = new URL(request.url).searchParams.get("manual") === "1";
+  const allowMasterAdminManual = isManualRequest && isSuperAdmin(user);
 
-  // 2. Format QR ARMADA Master / Permanen (ARMADA-BM8264QM)
+  // 2. Format QR ARMADA Master / Permanen telah DINONAKTIFKAN untuk seluruh armada
   const legacyPlate = parseLegacyArmadaQr(rawToken);
-  if (/^ARMADA-/i.test(rawToken) || (legacyPlate && !/^LPS-/i.test(rawToken))) {
-    const plateToResolve = legacyPlate || rawToken.replace(/^ARMADA-/i, "").trim();
-    const normPlateToResolve = plateToResolve.toUpperCase().replace(/[^A-Z0-9]/g, "");
-    if (normPlateToResolve === "BM8058QQ" && !(isManualRequest && isSuperAdmin(user))) {
-      const revokedMsg = "QR Master Armada Permanen (ARMADA-BM8058QQ) untuk armada BM 8058 QQ telah dinonaktifkan. Armada ini wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.";
+  if (/^(?:QR-)?ARMADA-/i.test(rawToken) || (legacyPlate && !/^LPS-/i.test(rawToken))) {
+    if (!allowMasterAdminManual) {
+      const revokedMsg = `QR Master Armada Permanen (${rawToken}) telah dinonaktifkan. Seluruh armada wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.`;
       await reportQrFailureToLps({
         qrCode: rawToken,
-        platNomor: "BM 8058 QQ",
+        platNomor: legacyPlate || rawToken.replace(/^(?:QR-)?ARMADA-/i, "").trim(),
         kategoriAlasan: "USANG",
         keterangan: revokedMsg,
         tindakan: "DIARAHKAN_CETAK_ULANG",
@@ -87,21 +86,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         },
         { status: 400 }
       );
-    }
-    try {
-      const choice = new URL(request.url).searchParams.get("masterNo");
-      const selectedNo = choice ? Number(choice) : undefined;
-      if (choice && (selectedNo === undefined || !Number.isSafeInteger(selectedNo) || selectedNo < 1)) {
-        return NextResponse.json({ error: "Pilihan izin armada tidak valid." }, { status: 422 });
-      }
-      const record = await resolveLegacyArmadaQr(plateToResolve, selectedNo);
-      return NextResponse.json({
-        ...record,
-        qrToken: rawToken,
-      }, { headers: { "Cache-Control": "private, no-store" } });
-    } catch (error) {
-      console.error("[ARMADA QR] Gagal memuat armada dari master via resolveLegacyArmadaQr:", error);
-      // Jangan langsung tolak: lanjutkan ke fallback pencarian database vehicles di bawah
     }
   }
 
@@ -117,7 +101,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         localBurnedTicket: localBurnedCheck?.ticket_number || null,
       });
       if (localBurnedCheck) {
-        const msg = `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`;
+        const msg = `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan hubungi Ketua atau Pengurus LPS Anda untuk men-generate QR baru.`;
         await reportQrFailureToLps({
           qrCode: rawToken,
           platNomor: remoteArmada.platNomor,
@@ -163,7 +147,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         );
       }
       if (localBurnedCheck) {
-        const msg = `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`;
+        const msg = `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan hubungi Ketua atau Pengurus LPS Anda untuk men-generate QR baru.`;
         if (!lpsRemoteLogged) {
           await reportQrFailureToLps({
             qrCode: rawToken,
@@ -181,13 +165,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
         }, { status: 400 });
       }
       lpsFetchError = error instanceof Error ? error.message : "Validasi QR LPS gagal.";
-      if (lpsIdentity.normalizedPlate === "BM8058QQ") {
+      if (!allowMasterAdminManual) {
         return NextResponse.json({ error: lpsFetchError, burned: true }, { status: 400 });
       }
       console.warn("[LPS QR] Validasi API LPS gagal / offline. Mencoba fallback master kendaraan:", lpsFetchError);
     }
   } else if (localBurnedCheck) {
-    const msg = `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan gunakan QR Master Armada atau hubungi pengurus LPS Anda.`;
+    const msg = `QR Code LPS ini sudah hangus (sudah pernah digunakan untuk transaksi tiket #${localBurnedCheck.ticket_number}). Silakan hubungi Ketua atau Pengurus LPS Anda untuk men-generate QR baru.`;
     await reportQrFailureToLps({
       qrCode: rawToken,
       kategoriAlasan: "HANGUS",
@@ -202,25 +186,19 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     }, { status: 400 });
   }
 
-  // 4. Cek otorisasi: Jika request berasal dari input ketik plat manual (?manual=1),
-  // HANYA boleh diakses oleh Master ADMIN. Hasil Scan QR kamera/gambar (termasuk kartu QR
-  // yang berisi plat nomor seperti BM8606QQ, kode armada, atau nomor izin) tetap diizinkan.
-  if (isManualRequest && !isSuperAdmin(user)) {
-    return NextResponse.json(
-      {
-        error: "Akses ditolak: Input nomor plat manual telah dinonaktifkan untuk Administrator. Seluruh transaksi wajib menggunakan Scan Barcode / QR Code resmi armada.",
-      },
-      { status: 403 }
-    );
-  }
-
-  // 4. Jalur fallback untuk QR internal TimbangQR, nomor polisi, izin, kode armada, atau LPS token yang hangus/offline
-  const plateCompact = (lpsIdentity?.normalizedPlate || rawToken).toUpperCase().replace(/[^A-Z0-9]/g, "");
-  if (plateCompact.includes("BM8058QQ") && !(isManualRequest && isSuperAdmin(user))) {
-    const revokedMsg = "QR Master Armada Permanen (ARMADA-BM8058QQ) untuk armada BM 8058 QQ telah dinonaktifkan. Armada ini wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.";
+  // 4. Cek otorisasi: selain QR LPS sekali pakai yang valid, hanya Master ADMIN via input manual (?manual=1) yang diizinkan
+  if (!allowMasterAdminManual) {
+    if (isManualRequest) {
+      return NextResponse.json(
+        {
+          error: "Akses ditolak: Input nomor plat manual telah dinonaktifkan untuk Administrator. Seluruh transaksi wajib menggunakan Scan QR Code LPS sekali pakai.",
+        },
+        { status: 403 }
+      );
+    }
+    const revokedMsg = `QR Permanen / Barcode Plat (${rawToken}) telah dinonaktifkan. Seluruh armada wajib menggunakan QR Code LPS sekali pakai terbaru dari Pengurus/Ketua LPS.`;
     await reportQrFailureToLps({
       qrCode: rawToken,
-      platNomor: "BM 8058 QQ",
       kategoriAlasan: "USANG",
       keterangan: revokedMsg,
       tindakan: "DIARAHKAN_CETAK_ULANG",
@@ -233,6 +211,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
       { status: 400 }
     );
   }
+
+  // 5. Jalur pencarian khusus Master ADMIN (?manual=1)
+  const plateCompact = (lpsIdentity?.normalizedPlate || rawToken).toUpperCase().replace(/[^A-Z0-9]/g, "");
   let vehicle = await dbOne<VehicleRow>([
     "SELECT id, code, plate_number, plate_normalized, vehicle_type, waste_type,",
     "default_tare_kg, qr_token, active FROM vehicles WHERE (",
@@ -241,24 +222,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     "OR UPPER(COALESCE(nomor_izin, '')) = UPPER($1)",
     ") ORDER BY active DESC, id LIMIT 1",
   ].join(" "), [rawToken, plateCompact]);
-
-  if (vehicle && vehicle.plate_normalized === "BM8058QQ" && !(isManualRequest && isSuperAdmin(user))) {
-    const revokedMsg = "QR Master Armada Permanen (ARMADA-BM8058QQ) untuk armada BM 8058 QQ telah dinonaktifkan. Armada ini wajib menggunakan QR Code LPS sekali pakai terbaru. Silakan hubungi Ketua atau Pengurus LPS Anda.";
-    await reportQrFailureToLps({
-      qrCode: rawToken,
-      platNomor: "BM 8058 QQ",
-      kategoriAlasan: "USANG",
-      keterangan: revokedMsg,
-      tindakan: "DIARAHKAN_CETAK_ULANG",
-    });
-    return NextResponse.json(
-      {
-        error: revokedMsg,
-        burned: true,
-      },
-      { status: 400 }
-    );
-  }
 
   // Fallback pencocokan jika ada pergantian seri plat (misal BM <-> BA pada kartu fisik lama)
   if (!vehicle && plateCompact.length >= 6) {
