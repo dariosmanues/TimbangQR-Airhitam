@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       SELECT id, device_code, api_key_hash, active
       FROM weighbridge_devices
       WHERE device_code = $1
-    `, [input.device_id]);
+    `, [(process.env.SERIAL_DEVICE_ID || input.device_id || "TIMBANG-AH-SERIAL-01").trim()]);
 
     const incomingHash = hashDeviceKey(apiKey);
     const configuredKey = (process.env.SERIAL_API_KEY || "").trim();
@@ -60,13 +60,13 @@ export async function POST(request: Request) {
       }>(`
         INSERT INTO weighbridge_devices
           (device_code, location_name, api_key_hash, firmware_version, connection_type, port_name, baud_rate, protocol, active, last_seen_at)
-        VALUES ($1, 'Transdepo Harapan Jaya', $2, 'PC-SERIAL-BRIDGE', $3, $4, 9600, 'DIRECT_SERIAL', FALSE, NOW())
+        VALUES ($1, 'Transdepo Air Hitam', $2, 'PC-SERIAL-BRIDGE', $3, $4, 9600, 'DIRECT_SERIAL', FALSE, NOW())
         ON CONFLICT (device_code) DO UPDATE SET
           api_key_hash = EXCLUDED.api_key_hash,
           protocol = 'DIRECT_SERIAL'
         RETURNING id, device_code, api_key_hash, active
       `, [
-        input.device_id,
+        (process.env.SERIAL_DEVICE_ID || input.device_id || "TIMBANG-AH-SERIAL-01").trim(),
         incomingHash,
         input.interface_type || "RS232",
         input.serial_port || null,

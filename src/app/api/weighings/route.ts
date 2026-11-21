@@ -16,8 +16,7 @@ const schema = z.object({
   tareKg: z.coerce.number().int().nonnegative(),
   rafaksiKg: z.coerce.number().int().nonnegative().default(0),
   tareSource: z.enum(["DATABASE", "ACTUAL_WEIGHING", "MANUAL"]).default("DATABASE"),
-  measurementSource: z.enum(["SERIAL_BRIDGE", "DIRECT_SERIAL", "APPLICATION", "OCR_LED", "MANUAL"]).default("SERIAL_BRIDGE"),
-  deviceId: z.coerce.number().int().positive().nullable().optional(),
+  measurementSource: z.enum(["OCR_LED", "MANUAL"]).default("OCR_LED"),
   ocrStable: z.boolean().optional(),
   indicatorRaw: z.string().max(2000).optional().default(""),
   qrToken: z.string().max(255).optional().default(""),
@@ -56,6 +55,13 @@ export async function POST(request: Request) {
         return NextResponse.json(
           { error: "Akses ditolak: Hanya Master ADMIN yang dapat membuat transaksi manual." },
           { status: 403 }
+        );
+      }
+    } else {
+      if (!input.indicatorRaw.startsWith("OCR_LED:")) {
+        return NextResponse.json(
+          { error: "Pembacaan OCR LED tidak valid. Arahkan kamera ke display LED sampai status stabil." },
+          { status: 400 }
         );
       }
     }
@@ -98,22 +104,69 @@ export async function POST(request: Request) {
     }
 
     const result = await withTransaction(async (client) => {
+      const cleanToken = input.qrToken?.trim() || null;
+      const isPermanentLpsQr = Boolean(cleanToken && /^LPS-.*-PERMANEN$/i.test(cleanToken));
+
+      // 1. CEK ANTI-DOUBLE SUBMIT PADA LEVEL DATABASE:
+      // A. Cek apakah QR Token sudah pernah di-burn / digunakan sebelumnya
+      if (cleanToken && !isPermanentLpsQr) {
+        const burnedCheck = await client.query<{ ticket_number: string; burned_at: string }>(`
+          SELECT ticket_number, burned_at FROM burned_qr_tokens WHERE qr_token = $1
+        `, [cleanToken]);
+        if (burnedCheck.rows.length > 0) {
+          throw new Error(
+            `Transaksi ditolak (Double-Submit): QR Code ini sudah pernah diproses pada tiket #${burnedCheck.rows[0].ticket_number}.`
+          );
+        }
+      }
+
+      // B. Cek apakah armada yang sama baru saja menimbang dengan bobot gross yang sama (< 30 detik)
+      const rapidCheck = await client.query<{ ticket_number: string }>(`
+        SELECT ticket_number FROM weighings
+        WHERE vehicle_id = $1 
+          AND gross_kg = $2 
+          AND created_at >= NOW() - INTERVAL '30 seconds'
+        ORDER BY created_at DESC
+        LIMIT 1
+      `, [vehicle.id, input.grossKg]);
+      if (rapidCheck.rows.length > 0) {
+        throw new Error(
+          `Transaksi ditolak (Double-Submit): Transaksi identik untuk armada ini baru saja tersimpan pada tiket #${rapidCheck.rows[0].ticket_number} (dalam 30 detik terakhir).`
+        );
+      }
+
+      // C. Kunci token secara atomic di burned_qr_tokens sebelum generate nomor tiket
+      if (cleanToken && !isPermanentLpsQr) {
+        const burnLock = await client.query(`
+          INSERT INTO burned_qr_tokens (qr_token, plate_number, ticket_number, vehicle_id, burned_at)
+          VALUES ($1, $2, 'PENDING', $3, NOW())
+          ON CONFLICT (qr_token) DO NOTHING
+          RETURNING qr_token
+        `, [cleanToken, vehicle.plate_number, vehicle.id]);
+
+        if (burnLock.rowCount === 0) {
+          throw new Error(
+            `Transaksi dibatalkan (Double-Submit): QR Code ini sedang diproses oleh sesi lain secara bersamaan.`
+          );
+        }
+      }
+
       const ticket = await nextTicket(client);
+
+      // Definitifkan nomor tiket pada burned_qr_tokens
+      if (cleanToken && !isPermanentLpsQr) {
+        await client.query(`
+          UPDATE burned_qr_tokens 
+          SET ticket_number = $1 
+          WHERE qr_token = $2
+        `, [ticket, cleanToken]);
+      }
+
       const weighedAt = input.weighedAt && !isNaN(new Date(input.weighedAt).getTime())
         ? new Date(input.weighedAt).toISOString()
         : jakartaIsoNow();
-      const source = input.measurementSource === "MANUAL"
-        ? "MANUAL"
-        : input.measurementSource === "OCR_LED"
-          ? "OCR_LED"
-          : "APPLICATION";
-      const sourceNote = input.sourceNote?.trim() || (
-        input.measurementSource === "MANUAL"
-          ? "Input manual oleh Super Admin / Admin"
-          : input.measurementSource === "SERIAL_BRIDGE" || input.measurementSource === "DIRECT_SERIAL"
-            ? "TimbangQR Bridge (RS232/RS485)"
-            : null
-      );
+      const source = input.measurementSource === "MANUAL" ? "MANUAL" : "OCR_LED";
+      const sourceNote = input.sourceNote?.trim() || (input.measurementSource === "MANUAL" ? "Input manual oleh Super Admin / Admin" : null);
 
       const inserted = await client.query<{ id: number }>(`
         INSERT INTO weighings (
@@ -123,8 +176,8 @@ export async function POST(request: Request) {
           source_note, created_by, qr_token
         ) VALUES (
           $1, $2::timestamptz, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-          $12, $13, $14, 1, $15, $16, $17, 'COMPLETED', $18,
-          $19, $20, $21
+          $12, $13, $14, 1, $15, NULL, $16, 'COMPLETED', $17,
+          $18, $19, $20
         )
         RETURNING id
       `, [
@@ -143,28 +196,13 @@ export async function POST(request: Request) {
         input.rafaksiKg,
         netto2,
         input.tareSource,
-        input.deviceId || null,
         input.indicatorRaw || null,
         source,
         sourceNote,
         user.id,
-        input.qrToken?.trim() || null,
+        cleanToken,
       ]);
       const id = inserted.rows[0].id;
-
-      if (input.qrToken && input.qrToken.trim()) {
-        try {
-          await client.query(`
-            INSERT INTO burned_qr_tokens (qr_token, plate_number, ticket_number, vehicle_id, burned_at)
-            VALUES ($1, $2, $3, $4, NOW())
-            ON CONFLICT (qr_token) DO UPDATE SET
-              ticket_number = EXCLUDED.ticket_number,
-              burned_at = NOW()
-          `, [input.qrToken.trim(), vehicle.plate_number, ticket, vehicle.id]);
-        } catch (e) {
-          console.warn("[Weighings] Gagal mencatat burned_qr_tokens:", e);
-        }
-      }
 
       const clientIp =
         request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
@@ -182,7 +220,6 @@ export async function POST(request: Request) {
         tareKg: input.tareKg,
         netto2Kg: netto2,
         measurementSource: input.measurementSource,
-        deviceId: input.deviceId || null,
         qrToken: input.qrToken || null,
         clientIp,
       }), clientIp]);
@@ -194,7 +231,7 @@ export async function POST(request: Request) {
       ticketNumber: result.ticket,
       plateNumber: vehicle.plate_number,
       lpsName: lps.name,
-      transdepo: process.env.LPS_TRANSDEPO || "AIR_HITAM",
+      transdepo: process.env.LPS_TRANSDEPO || "HARAPAN_JAYA",
       weighedAt: result.weighedAt,
       grossKg: input.grossKg,
       tareKg: input.tareKg,

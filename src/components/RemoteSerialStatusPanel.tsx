@@ -50,7 +50,7 @@ export default function RemoteSerialStatusPanel({
 }) {
   const [reading, setReading] = useState<RemoteReading | null>(null);
   const [device, setDevice] = useState<RemoteDevice>({
-    code: "TIMBANG-HJ-SERIAL-01",
+    code: "TIMBANG-AH-SERIAL-01",
     active: false, // TIDAK AKTIF OTOMATIS: HARUS MANUAL
     port_name: "COM1",
     connection_type: "RS232",
@@ -74,7 +74,7 @@ export default function RemoteSerialStatusPanel({
       if (data.device) {
         setDevice({
           ...data.device,
-          code: data.device.code || data.device.device_code || "TIMBANG-HJ-SERIAL-01",
+          code: data.device.code || data.device.device_code || "TIMBANG-AH-SERIAL-01",
           active: Boolean(data.device.active),
         });
       }
@@ -156,7 +156,7 @@ export default function RemoteSerialStatusPanel({
   const raw = isConnected
     ? reading?.indicator_raw || (isFresh ? "PING_TEST (Bridge Terhubung)" : "-")
     : "Bridge Terputus (Non-Aktif)";
-  const deviceCode = device.code || reading?.device_code || "TIMBANG-HJ-SERIAL-01";
+  const deviceCode = device.code || reading?.device_code || "TIMBANG-AH-SERIAL-01";
   const portInfo = device.port_name
     ? `${device.port_name} (${device.connection_type || "RS232"})`
     : `COM1 (${device.connection_type || "RS232"})`;

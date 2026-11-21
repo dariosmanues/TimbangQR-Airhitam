@@ -190,12 +190,10 @@ async function createSchema(client: PoolClient) {
       port_name TEXT,
       baud_rate INTEGER NOT NULL DEFAULT 9600,
       protocol TEXT NOT NULL DEFAULT 'DIRECT_SERIAL',
-      active BOOLEAN NOT NULL DEFAULT FALSE,
+      active BOOLEAN NOT NULL DEFAULT TRUE,
       last_seen_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
-
-    ALTER TABLE weighbridge_devices ALTER COLUMN active SET DEFAULT FALSE;
 
     CREATE TABLE IF NOT EXISTS device_readings (
       id BIGSERIAL PRIMARY KEY,
@@ -452,10 +450,11 @@ export async function ensureAdminUsers(client: PoolClient) {
 
   await client.query(`
     INSERT INTO users (email, name, password_hash, role, active)
-    VALUES ($1, 'Administrator LPS', $2, 'ADMIN', TRUE)
+    VALUES ($1, 'Administrator LPS (Nonaktif)', $2, 'ADMIN', FALSE)
     ON CONFLICT (email) DO UPDATE SET
       role = 'ADMIN',
-      active = TRUE
+      name = 'Administrator LPS (Nonaktif)',
+      active = FALSE
   `, [adminEmail, bcrypt.hashSync(adminPassword, 12)]);
 
   await client.query(`

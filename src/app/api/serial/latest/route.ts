@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const url = new URL(request.url);
-  const explicitCode = url.searchParams.get("device")?.trim();
+  const explicitCode = (url.searchParams.get("device") || process.env.SERIAL_DEVICE_ID || "TIMBANG-AH-SERIAL-01").trim();
 
   let device: WeighbridgeDeviceStatus | null = null;
   if (explicitCode) {
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
     `);
   }
 
-  const targetCode = device?.device_code || explicitCode || process.env.SERIAL_DEVICE_ID || "TIMBANG-HJ-SERIAL-01";
+  const targetCode = device?.device_code || explicitCode || process.env.SERIAL_DEVICE_ID || "TIMBANG-AH-SERIAL-01";
   const reading = await dbOne<DeviceReading>(`
     SELECT r.id, r.device_id, d.device_code, r.weight_kg, r.stable, r.indicator_raw, r.recorded_at
     FROM device_readings r

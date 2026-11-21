@@ -51,7 +51,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ toke
     Boolean(parseLegacyArmadaQr(rawToken));
 
   let localBurnedCheck: { ticket_number: string; burned_at: string } | null = null;
-  if (/^LPS-/i.test(rawToken) && !isMasterArmada) {
+  const isPermanentLpsQr = /^LPS-.*-PERMANEN$/i.test(rawToken);
+  if (/^LPS-/i.test(rawToken) && !isMasterArmada && !isPermanentLpsQr) {
     try {
       localBurnedCheck = await dbOne<{ ticket_number: string; burned_at: string }>(`
         SELECT ticket_number, burned_at
