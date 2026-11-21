@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CheckCircle2,
   CircleStop,
@@ -63,8 +63,11 @@ export default function RemoteSerialStatusPanel({
   const [loading, setLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [now, setNow] = useState(0);
+  const inFlightRef = useRef(false);
 
   const refresh = useCallback(async (silent = false) => {
+    if (silent && inFlightRef.current) return;
+    inFlightRef.current = true;
     if (!silent) setLoading(true);
     try {
       const response = await fetch("/api/serial/latest", { cache: "no-store" });
@@ -87,6 +90,7 @@ export default function RemoteSerialStatusPanel({
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal membaca data timbangan dari server.");
     } finally {
+      inFlightRef.current = false;
       if (!silent) setLoading(false);
     }
   }, []);
@@ -99,7 +103,7 @@ export default function RemoteSerialStatusPanel({
     const timer = window.setInterval(() => {
       if (typeof document !== "undefined" && document.hidden) return;
       void refresh(true);
-    }, 3000);
+    }, 800);
     const clock = window.setInterval(() => setNow(Date.now()), 3000);
     return () => {
       window.clearTimeout(initial);

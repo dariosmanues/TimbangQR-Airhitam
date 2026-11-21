@@ -104,6 +104,7 @@ export default function WeighingWorkspace({
   const [loadingBridge, setLoadingBridge] = useState(false);
   const [activeSource, setActiveSource] = useState<"SERIAL_BRIDGE" | "OCR_LED">("SERIAL_BRIDGE");
   const lastAppliedReadingIdRef = useRef<number | null>(null);
+  const bridgeInFlightRef = useRef(false);
 
   const [lpsId, setLpsId] = useState("");
   const [driverName, setDriverName] = useState("");
@@ -127,6 +128,8 @@ export default function WeighingWorkspace({
   }, [payload]);
 
   const refreshBridge = useCallback(async (silent = false) => {
+    if (silent && bridgeInFlightRef.current) return;
+    bridgeInFlightRef.current = true;
     if (!silent) setLoadingBridge(true);
     try {
       const response = await fetch("/api/serial/latest", {
@@ -175,6 +178,7 @@ export default function WeighingWorkspace({
     } catch {
       // Ignore transient polling error
     } finally {
+      bridgeInFlightRef.current = false;
       if (!silent) setLoadingBridge(false);
     }
   }, []);
@@ -184,10 +188,17 @@ export default function WeighingWorkspace({
     const interval = window.setInterval(() => {
       if (typeof document !== "undefined" && document.hidden) return;
       void refreshBridge(true);
-    }, 1000);
+    }, 500);
+    const onVisible = () => {
+      if (typeof document !== "undefined" && !document.hidden) {
+        void refreshBridge(true);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       window.clearTimeout(initial);
       window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, [refreshBridge]);
 
